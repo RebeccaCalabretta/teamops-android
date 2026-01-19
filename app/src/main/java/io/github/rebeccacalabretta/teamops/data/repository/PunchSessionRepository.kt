@@ -1,6 +1,6 @@
-package io.github.rebeccacalabretta.teamops.ui.data.repository
+package io.github.rebeccacalabretta.teamops.data.repository
 
-import io.github.rebeccacalabretta.teamops.ui.data.db.PunchSessionEntity
+import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import kotlinx.coroutines.flow.Flow
 
 interface PunchSessionRepository {

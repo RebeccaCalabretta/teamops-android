@@ -1,4 +1,4 @@
-package io.github.rebeccacalabretta.teamops.ui.data.db
+package io.github.rebeccacalabretta.teamops.data.db
 
 import androidx.room.Dao
 import androidx.room.Insert
