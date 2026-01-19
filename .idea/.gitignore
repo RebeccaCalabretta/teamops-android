@@ -3,8 +3,8 @@
 /workspace.xml
 
 .idea/deploymentTargetSelector.xml
-.idea/androidProjectSystem.xml
-.idea/projectDefault.xml
+.idea/AndroidProjectSystem.xml
+.idea/inspectionProfiles/
 .idea/misc.xml
 .idea/compiler.xml
 .idea/gradle.xml

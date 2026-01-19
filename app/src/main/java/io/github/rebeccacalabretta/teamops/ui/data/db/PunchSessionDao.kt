@@ -13,17 +13,25 @@ interface PunchSessionDao {
     @Query("SELECT * FROM punch_sessions WHERE endTime IS NULL LIMIT 1")
     suspend fun getOpenSessionOrNull(): PunchSessionEntity?
 
-    @Query("SELECT * FROM punch_sessions ORDER BY startTime DESC")
-    fun getAllSessionsDesc(): Flow<List<PunchSessionEntity>>
+    @Query(
+        """
+            SELECT * FROM (
+                SELECT * FROM punch_sessions
+                ORDER BY startTime DESC
+                LIMIT :limit
+            )
+            ORDER BY startTime ASC
+        """
+    )
+    fun getLatestSessions(limit: Int = 20): Flow<List<PunchSessionEntity>>
 
-    @Query("SELECT * FROM punch_sessions ORDER BY startTime DESC LIMIT :limit")
-    fun getLatestSessions(limit: Int): Flow<List<PunchSessionEntity>>
-
-    @Query("""
-        SELECT * FROM punch_sessions
-        WHERE monthKey = :monthKey
-        ORDER BY startTime DESC
-    """)
+    @Query(
+        """
+            SELECT * FROM punch_sessions
+            WHERE monthKey = :monthKey
+            ORDER BY startTime ASC
+        """
+    )
     fun getSessionsForMonth(monthKey: String): Flow<List<PunchSessionEntity>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
