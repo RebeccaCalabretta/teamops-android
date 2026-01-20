@@ -2,6 +2,7 @@ package io.github.rebeccacalabretta.teamops.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,8 +12,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PunchSessionViewModel(
+@HiltViewModel
+class PunchSessionViewModel @Inject constructor(
     private val repository: PunchSessionRepository
 ) : ViewModel() {
 

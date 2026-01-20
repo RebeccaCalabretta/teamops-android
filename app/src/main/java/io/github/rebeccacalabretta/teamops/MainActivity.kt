@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import io.github.rebeccacalabretta.teamops.ui.PunchScreen
+import io.github.rebeccacalabretta.teamops.ui.AppStart
 import io.github.rebeccacalabretta.teamops.ui.theme.TeamOpsTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TeamOpsTheme {
-                PunchScreen()
+                AppStart()
             }
         }
     }
