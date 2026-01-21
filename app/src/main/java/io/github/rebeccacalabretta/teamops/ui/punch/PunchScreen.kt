@@ -45,6 +45,9 @@ fun PunchScreen(
                 .fillMaxWidth(),
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
+            stickyHeader {
+                SessionHeaderRow()
+            }
             items(latestSessions) { session ->
                 SessionRow(session = session)
             }

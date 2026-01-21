@@ -14,6 +14,48 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
 
 @Composable
+fun SessionHeaderRow(
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Cell(
+            text = "Datum",
+            modifier = Modifier.weight(1f),
+            align = TextAlign.Start,
+            isHeader = true
+        )
+        Cell(
+            text = "Objekt",
+            modifier = Modifier.weight(1.8f),
+            align = TextAlign.Start,
+            isHeader = true
+        )
+        Cell(
+            text = "Start",
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.End,
+            isHeader = true
+        )
+        Cell(
+            text = "Ende",
+            modifier = Modifier.weight(0.7f),
+            align = TextAlign.End,
+            isHeader = true
+        )
+        Cell(
+            text = "Dauer",
+            modifier = Modifier.weight(0.8f),
+            align = TextAlign.End,
+            isHeader = true
+        )
+    }
+}
+
+@Composable
 fun SessionRow(
     session: PunchSessionEntity,
     modifier: Modifier = Modifier
@@ -50,7 +92,7 @@ fun SessionRow(
         )
         Cell(
             text = duration,
-            modifier = Modifier.weight(0.9f),
+            modifier = Modifier.weight(0.8f),
             align = TextAlign.End
         )
     }
@@ -58,14 +100,18 @@ fun SessionRow(
 
 @Composable
 fun Cell(
-text: String,
-modifier: Modifier = Modifier,
-align: TextAlign = TextAlign.Start
+    text: String,
+    modifier: Modifier = Modifier,
+    align: TextAlign = TextAlign.Start,
+    isHeader: Boolean = false
 ) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.bodySmall,
+        style = if (isHeader)
+            MaterialTheme.typography.labelMedium
+        else
+            MaterialTheme.typography.bodySmall,
         textAlign = align,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
