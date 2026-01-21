@@ -21,10 +21,12 @@ object SessionFormat {
             .atZone(ZoneId.systemDefault())
             .format(dateFormatter)
 
-    fun formatTime(timestamp: Long): String =
-        Instant.ofEpochMilli(timestamp)
-            .atZone(ZoneId.systemDefault())
-            .format(timeFormatter)
+    fun formatTime(timestamp: Long?): String =
+        if (timestamp == null) "-"
+        else
+            Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .format(timeFormatter)
 
     fun formatDuration(startTime: Long, endTime: Long?): String {
         if (endTime == null) return "--"
