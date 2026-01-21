@@ -22,6 +22,9 @@ class PunchSessionViewModel @Inject constructor(
     private val _openSession = MutableStateFlow<PunchSessionEntity?>(null)
     val openSession: StateFlow<PunchSessionEntity?> = _openSession.asStateFlow()
 
+    private val _isProcessing = MutableStateFlow(false)
+    val isProcessing = _isProcessing.asStateFlow()
+
     val isCheckedIn: StateFlow<Boolean> =
         openSession
             .map { it != null }
@@ -32,7 +35,7 @@ class PunchSessionViewModel @Inject constructor(
             )
 
     val latestSessions: StateFlow<List<PunchSessionEntity>> =
-        repository.getLatestSessions(limit = 20)
+        repository.getLatestSessions(limit = 40)
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
@@ -43,18 +46,26 @@ class PunchSessionViewModel @Inject constructor(
         refreshOpenSession()
     }
 
-    fun checkIn(objectId: String) {
+    private fun runWithLoading(block: suspend () -> Unit) {
+        if (_isProcessing.value) return
+
         viewModelScope.launch {
-            repository.checkIn(objectId)
-            refreshOpenSession()
+            _isProcessing.value = true
+            try {
+                block()
+                refreshOpenSession()
+            } finally {
+                _isProcessing.value = false
+            }
         }
     }
 
-    fun checkOut() {
-        viewModelScope.launch {
-            repository.checkOut()
-            refreshOpenSession()
-        }
+    fun checkIn(objectId: String) = runWithLoading {
+        repository.checkIn(objectId)
+    }
+
+    fun checkOut() = runWithLoading {
+        repository.checkOut()
     }
 
     fun refreshOpenSession() {

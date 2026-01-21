@@ -13,9 +13,11 @@ fun AppStart() {
 
     val isCheckedIn by vm.isCheckedIn.collectAsStateWithLifecycle()
     val latestSessions by vm.latestSessions.collectAsStateWithLifecycle()
+    val isProcessing by vm.isProcessing.collectAsStateWithLifecycle()
 
     PunchScreen(
         isCheckedIn = isCheckedIn,
+        isProcessing = isProcessing,
         onCheckInClick = { vm.checkIn(objectId = "Dummy") },
         onCheckOutClick = { vm.checkOut() },
         latestSessions = latestSessions

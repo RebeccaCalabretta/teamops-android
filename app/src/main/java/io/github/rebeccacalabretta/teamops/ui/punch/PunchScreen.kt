@@ -1,5 +1,6 @@
 package io.github.rebeccacalabretta.teamops.ui.punch
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 @Composable
 fun PunchScreen(
     isCheckedIn: Boolean = false,
+    isProcessing: Boolean = false,
     latestSessions: List<PunchSessionEntity> = emptyList(),
     onCheckInClick: () -> Unit = {},
     onCheckOutClick: () -> Unit = {}
@@ -46,7 +48,12 @@ fun PunchScreen(
             contentPadding = PaddingValues(vertical = 16.dp)
         ) {
             stickyHeader {
-                SessionHeaderRow()
+                SessionHeaderRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(vertical = 4.dp)
+                )
             }
             items(latestSessions) { session ->
                 SessionRow(session = session)
@@ -61,6 +68,7 @@ fun PunchScreen(
 
         Button(
             onClick = onButtonClick,
+            enabled = !isProcessing,
             modifier = Modifier.fillMaxWidth(0.5f)
         ) {
             Text(text = buttonText)
