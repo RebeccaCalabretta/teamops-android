@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.rebeccacalabretta.teamops.data.db.AppDatabase
+import io.github.rebeccacalabretta.teamops.data.db.ObjectDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositoryImpl
@@ -39,4 +40,9 @@ object DataModule {
         dao: PunchSessionDao
     ): PunchSessionRepository =
         PunchSessionRepositoryImpl(dao)
+
+    @Provides
+    fun provideObjectDao(
+        db: AppDatabase
+    ) : ObjectDao = db.objectDao()
 }
