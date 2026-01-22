@@ -25,11 +25,17 @@ class PunchSessionRepositoryImpl(
 
     override suspend fun checkOut() {
         val open = dao.getOpenSessionOrNull()
-        if (open == null) throw IllegalStateException("No open session to check out.")
+            ?: throw IllegalStateException("No open session to check out.")
 
-        dao.update(
-            open.copy(endTime = System.currentTimeMillis())
-        )
+        val endTime = System.currentTimeMillis()
+        val duration = endTime - open.startTime
+        if (duration < 60_000) {
+            dao.delete(open)
+        } else {
+            dao.update(
+                open.copy(endTime = endTime)
+            )
+        }
     }
 
     override suspend fun getOpenSessionOrNull(): PunchSessionEntity? {
