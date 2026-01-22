@@ -27,7 +27,9 @@ object DataModule {
             context,
             AppDatabase::class.java,
             "teamops.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
 
     @Provides
     fun providePunchSessionDao(
@@ -44,5 +46,5 @@ object DataModule {
     @Provides
     fun provideObjectDao(
         db: AppDatabase
-    ) : ObjectDao = db.objectDao()
+    ): ObjectDao = db.objectDao()
 }

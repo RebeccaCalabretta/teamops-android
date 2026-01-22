@@ -9,5 +9,6 @@ data class ObjectEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val name: String,
     val latitude: Double,
-    val longitude: Double
+    val longitude: Double,
+    val radiusMeters: Int
 )
