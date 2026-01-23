@@ -38,15 +38,15 @@ class PunchSessionRepositoryImpl(
         }
     }
 
-    override suspend fun getOpenSessionOrNull(): PunchSessionEntity? {
-        return dao.getOpenSessionOrNull()
-    }
+    override suspend fun getOpenSessionOrNull(): PunchSessionEntity? =
+        dao.getOpenSessionOrNull()
 
-    override fun getLatestSessions(limit: Int): Flow<List<PunchSessionEntity>> {
-        return dao.getLatestSessions(limit)
-    }
 
-    override fun getSessionsForMonth(monthKey: String): Flow<List<PunchSessionEntity>> {
-        return dao.getSessionsForMonth(monthKey)
-    }
+    override fun getLatestSessions(limit: Int): Flow<List<PunchSessionEntity>> =
+        dao.getLatestSessions(limit)
+
+
+    override fun getSessionsForMonth(monthKey: String): Flow<List<PunchSessionEntity>> =
+        dao.getSessionsForMonth(monthKey)
+
 }

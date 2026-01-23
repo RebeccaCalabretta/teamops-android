@@ -10,6 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import io.github.rebeccacalabretta.teamops.data.db.AppDatabase
 import io.github.rebeccacalabretta.teamops.data.db.ObjectDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
+import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
+import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositoryImpl
 import javax.inject.Singleton
@@ -47,4 +49,10 @@ object DataModule {
     fun provideObjectDao(
         db: AppDatabase
     ): ObjectDao = db.objectDao()
+
+    @Provides
+    fun provideObjectRepository(
+        dao: ObjectDao
+    ): ObjectRepository =
+        ObjectRepositoryImpl(dao)
 }
