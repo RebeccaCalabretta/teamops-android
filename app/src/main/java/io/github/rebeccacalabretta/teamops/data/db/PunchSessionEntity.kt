@@ -25,5 +25,7 @@ data class PunchSessionEntity(
     val endDistanceMeters: Float? = null,
     val endWithinRadius: Boolean? = null,
 
-    val monthKey: String
+    val monthKey: String,
+
+    val checkOutDistanceMeters: Double? = null
 )

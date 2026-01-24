@@ -1,7 +1,10 @@
 package io.github.rebeccacalabretta.teamops.data.repository
 
+import android.location.Location
+import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
+import io.github.rebeccacalabretta.teamops.util.GeoDistance
 import io.github.rebeccacalabretta.teamops.util.MonthKey
 import kotlinx.coroutines.flow.Flow
 
@@ -23,17 +26,31 @@ class PunchSessionRepositoryImpl(
         )
     }
 
-    override suspend fun checkOut() {
+    override suspend fun checkOut(
+        endLocation: Location,
+        objectEntity: ObjectEntity
+    ) {
         val open = dao.getOpenSessionOrNull()
             ?: throw IllegalStateException("No open session to check out.")
 
         val endTime = System.currentTimeMillis()
         val duration = endTime - open.startTime
+
+        val distance = GeoDistance.distanceInMeters(
+            lat1 = endLocation.latitude,
+            lon1 = endLocation.longitude,
+            lat2 = objectEntity.latitude,
+            lon2 = objectEntity.longitude
+        )
+
         if (duration < 60_000) {
             dao.delete(open)
         } else {
             dao.update(
-                open.copy(endTime = endTime)
+                open.copy(
+                    endTime = endTime,
+                    checkOutDistanceMeters = distance
+                    )
             )
         }
     }

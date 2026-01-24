@@ -90,7 +90,13 @@ class PunchSessionViewModel @Inject constructor(
     }
 
     fun checkOut() = runWithLoading {
-        punchSessionRepository.checkOut()
+        val location = locationProvider.getCurrentLocationOrNull() ?: return@runWithLoading
+        val objects = objectRepository.getAllObjects().first()
+        val matched = ObjectMatcher.matchNearestObject(objects, location) ?: return@runWithLoading
+        punchSessionRepository.checkOut(
+            endLocation = location,
+            objectEntity = matched
+        )
     }
 
     fun refreshOpenSession() {

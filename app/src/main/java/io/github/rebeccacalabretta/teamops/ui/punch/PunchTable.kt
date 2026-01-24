@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -65,6 +66,11 @@ fun SessionRow(
     val end = SessionFormat.formatTime(session.endTime)
     val duration = SessionFormat.formatDuration(session.startTime, session.endTime)
 
+    val isCheckedOutOutsideRadius =
+        session.checkOutDistanceMeters != null && session.checkOutDistanceMeters > 200
+
+    val textColor = if (isCheckedOutOutsideRadius) Color.Red else Color.Unspecified
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -103,11 +109,13 @@ fun Cell(
     text: String,
     modifier: Modifier = Modifier,
     align: TextAlign = TextAlign.Start,
-    isHeader: Boolean = false
+    isHeader: Boolean = false,
+    textColor: Color = Color.Unspecified
 ) {
     Text(
         text = text,
         modifier = modifier,
+        color = textColor,
         style = if (isHeader)
             MaterialTheme.typography.labelMedium
         else
