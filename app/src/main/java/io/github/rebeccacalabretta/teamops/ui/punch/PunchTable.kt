@@ -48,7 +48,7 @@ fun SessionHeaderRow(
         )
         Cell(
             text = "Dauer",
-            modifier = Modifier.weight(0.8f),
+            modifier = Modifier.weight(0.9f),
             align = TextAlign.End,
             isHeader = true
         )
@@ -92,7 +92,7 @@ fun SessionRow(
         )
         Cell(
             text = duration,
-            modifier = Modifier.weight(0.8f),
+            modifier = Modifier.weight(0.9f),
             align = TextAlign.End
         )
     }

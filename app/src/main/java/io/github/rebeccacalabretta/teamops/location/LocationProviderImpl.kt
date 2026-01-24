@@ -8,6 +8,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.tasks.await
 
+private const val TAG = "LocationProvider"
+
 class LocationProviderImpl(
     private val context: Context
 ) : LocationProvider {
@@ -25,9 +27,5 @@ class LocationProviderImpl(
             Log.d(TAG, "Location error: ${e.message} ")
             null
         }
-    }
-
-    private companion object {
-        const val TAG = "LocationProvider"
     }
 }

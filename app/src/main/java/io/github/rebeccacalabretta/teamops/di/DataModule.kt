@@ -14,6 +14,8 @@ import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositoryImpl
+import io.github.rebeccacalabretta.teamops.location.LocationProvider
+import io.github.rebeccacalabretta.teamops.location.LocationProviderImpl
 import javax.inject.Singleton
 
 @Module
@@ -55,4 +57,11 @@ object DataModule {
         dao: ObjectDao
     ): ObjectRepository =
         ObjectRepositoryImpl(dao)
+
+    @Provides
+    @Singleton
+    fun LocationProvider(
+        @ApplicationContext context: Context
+    ): LocationProvider =
+        LocationProviderImpl(context)
 }

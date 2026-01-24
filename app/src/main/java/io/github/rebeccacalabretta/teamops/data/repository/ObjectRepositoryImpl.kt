@@ -9,5 +9,4 @@ class ObjectRepositoryImpl(
 ) : ObjectRepository {
     override fun getAllObjects(): Flow<List<ObjectEntity>> =
         dao.getAllObjects()
-
 }
