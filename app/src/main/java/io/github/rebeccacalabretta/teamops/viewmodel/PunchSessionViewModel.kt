@@ -8,11 +8,14 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
+import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
 import io.github.rebeccacalabretta.teamops.util.ObjectMatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -50,6 +53,24 @@ class PunchSessionViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = emptyList()
             )
+
+    val sessionRows: StateFlow<List<SessionUiModel>> =
+        combine(
+            punchSessionRepository.getLatestSessions(limit = 40),
+            objectRepository.getAllObjects()
+        ) { sessions, objects ->
+            val objectsById = objects.associateBy { it.id }
+            sessions.map { session ->
+                mapToSessionUiModel(
+                    session = session,
+                    obj = objectsById[session.objectId]
+                )
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 
     init {
         refreshOpenSession()

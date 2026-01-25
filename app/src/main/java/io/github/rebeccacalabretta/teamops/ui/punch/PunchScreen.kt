@@ -19,13 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
+import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 
 @Composable
 fun PunchScreen(
     isCheckedIn: Boolean = false,
     isProcessing: Boolean = false,
-    latestSessions: List<PunchSessionEntity> = emptyList(),
+    sessionRows: List<SessionUiModel> = emptyList(),
     onCheckInClick: () -> Unit = {},
     onCheckOutClick: () -> Unit = {}
 ) {
@@ -55,8 +55,8 @@ fun PunchScreen(
                         .padding(vertical = 4.dp)
                 )
             }
-            items(latestSessions) { session ->
-                SessionRow(session = session)
+            items(sessionRows) { row ->
+                SessionRow(row = row)
             }
         }
 

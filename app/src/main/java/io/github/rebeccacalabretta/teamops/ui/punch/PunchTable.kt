@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
+import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
 
 @Composable
@@ -38,19 +38,19 @@ fun SessionHeaderRow(
         Cell(
             text = "Start",
             modifier = Modifier.weight(0.7f),
-            align = TextAlign.End,
+            align = TextAlign.Center,
             isHeader = true
         )
         Cell(
             text = "Ende",
             modifier = Modifier.weight(0.7f),
-            align = TextAlign.End,
+            align = TextAlign.Center,
             isHeader = true
         )
         Cell(
             text = "Dauer",
-            modifier = Modifier.weight(0.9f),
-            align = TextAlign.End,
+            modifier = Modifier.weight(1f),
+            align = TextAlign.Center,
             isHeader = true
         )
     }
@@ -58,18 +58,15 @@ fun SessionHeaderRow(
 
 @Composable
 fun SessionRow(
-    session: PunchSessionEntity,
+    row: SessionUiModel,
     modifier: Modifier = Modifier
 ) {
-    val date = SessionFormat.formatDate(session.startTime)
-    val start = SessionFormat.formatTime(session.startTime)
-    val end = SessionFormat.formatTime(session.endTime)
-    val duration = SessionFormat.formatDuration(session.startTime, session.endTime)
+    val date = SessionFormat.formatDate(row.startTime)
+    val start = SessionFormat.formatTime(row.startTime)
+    val end = SessionFormat.formatTime(row.endTime)
+    val duration = SessionFormat.formatDuration(row.startTime, row.endTime)
 
-    val isCheckedOutOutsideRadius =
-        session.checkOutDistanceMeters != null && session.checkOutDistanceMeters > 200
-
-    val textColor = if (isCheckedOutOutsideRadius) Color.Red else Color.Unspecified
+    val textColor = if (row.isCheckedOutOutsideRadius) Color.Red else Color.Unspecified
 
     Row(
         modifier = modifier
@@ -82,7 +79,7 @@ fun SessionRow(
             align = TextAlign.Start
         )
         Cell(
-            text = session.objectId,
+            text = row.objectName,
             modifier = Modifier.weight(1.8f),
             align = TextAlign.Start
         )
@@ -94,11 +91,12 @@ fun SessionRow(
         Cell(
             text = end,
             modifier = Modifier.weight(0.7f),
-            align = TextAlign.End
+            align = TextAlign.End,
+            textColor = textColor
         )
         Cell(
             text = duration,
-            modifier = Modifier.weight(0.9f),
+            modifier = Modifier.weight(1f),
             align = TextAlign.End
         )
     }

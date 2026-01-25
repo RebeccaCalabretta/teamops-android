@@ -32,7 +32,7 @@ fun AppStart() {
     val vm: PunchSessionViewModel = hiltViewModel()
 
     val isCheckedIn by vm.isCheckedIn.collectAsStateWithLifecycle()
-    val latestSessions by vm.latestSessions.collectAsStateWithLifecycle()
+    val sessionRows by vm.sessionRows.collectAsStateWithLifecycle()
     val isProcessing by vm.isProcessing.collectAsStateWithLifecycle()
 
     PunchScreen(
@@ -40,6 +40,6 @@ fun AppStart() {
         isProcessing = isProcessing,
         onCheckInClick = { vm.checkIn() },
         onCheckOutClick = { vm.checkOut() },
-        latestSessions = latestSessions
+        sessionRows = sessionRows
     )
 }
