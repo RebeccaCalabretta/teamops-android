@@ -23,6 +23,7 @@ import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 
 @Composable
 fun PunchScreen(
+    modifier: Modifier = Modifier,
     isCheckedIn: Boolean = false,
     isProcessing: Boolean = false,
     sessionRows: List<SessionUiModel> = emptyList(),
@@ -34,7 +35,7 @@ fun PunchScreen(
     val onButtonClick = if (isCheckedIn) onCheckOutClick else onCheckInClick
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .statusBarsPadding()
             .navigationBarsPadding()
