@@ -9,7 +9,7 @@ import kotlin.math.max
 object SessionFormat {
 
     private val dateFormatter =
-        DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        DateTimeFormatter.ofPattern("dd.MM.")
             .withLocale(Locale.getDefault())
 
     private val timeFormatter =

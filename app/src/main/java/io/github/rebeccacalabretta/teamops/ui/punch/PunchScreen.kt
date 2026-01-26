@@ -31,7 +31,7 @@ fun PunchScreen(
     onCheckOutClick: () -> Unit = {}
 ) {
     val statusText = if (isCheckedIn) "Status: eingestempelt" else "Status: ausgestempelt"
-    val buttonText = if (isCheckedIn) "Check Out" else "Check In"
+    val buttonText = if(isProcessing) "Suche Standort..." else if (isCheckedIn) "Check Out" else "Check In"
     val onButtonClick = if (isCheckedIn) onCheckOutClick else onCheckInClick
 
     Column(

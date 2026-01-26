@@ -25,32 +25,32 @@ fun SessionHeaderRow(
     ) {
         Cell(
             text = "Datum",
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.7f),
             align = TextAlign.Start,
             isHeader = true
         )
         Cell(
             text = "Objekt",
-            modifier = Modifier.weight(1.8f),
+            modifier = Modifier.weight(1.6f),
             align = TextAlign.Start,
             isHeader = true
         )
         Cell(
             text = "Start",
-            modifier = Modifier.weight(0.7f),
-            align = TextAlign.Center,
+            modifier = Modifier.weight(0.6f),
+            align = TextAlign.End,
             isHeader = true
         )
         Cell(
             text = "Ende",
-            modifier = Modifier.weight(0.7f),
-            align = TextAlign.Center,
+            modifier = Modifier.weight(0.6f),
+            align = TextAlign.End,
             isHeader = true
         )
         Cell(
             text = "Dauer",
-            modifier = Modifier.weight(1f),
-            align = TextAlign.Center,
+            modifier = Modifier.weight(0.9f),
+            align = TextAlign.End,
             isHeader = true
         )
     }
@@ -75,28 +75,28 @@ fun SessionRow(
     ) {
         Cell(
             text = date,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.7f),
             align = TextAlign.Start
         )
         Cell(
             text = row.objectName,
-            modifier = Modifier.weight(1.8f),
+            modifier = Modifier.weight(1.6f),
             align = TextAlign.Start
         )
         Cell(
             text = start,
-            modifier = Modifier.weight(0.7f),
+            modifier = Modifier.weight(0.6f),
             align = TextAlign.End
         )
         Cell(
             text = end,
-            modifier = Modifier.weight(0.7f),
+            modifier = Modifier.weight(0.6f),
             align = TextAlign.End,
             textColor = textColor
         )
         Cell(
             text = duration,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.9f),
             align = TextAlign.End
         )
     }
