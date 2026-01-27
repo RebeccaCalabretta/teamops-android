@@ -90,11 +90,10 @@ class PunchSessionViewModel @Inject constructor(
     }
 
     fun checkIn() = runWithLoading {
-        Log.d(TAG, "Check-in started")
 
         val location = locationProvider.getCurrentLocationOrNull()
         if (location == null) {
-            Log.d(TAG, "No location available")
+            Log.w(TAG, "checkIn: No location available")
             _uiMessage.value = "Standort nicht verfügbar"
             return@runWithLoading
         }
@@ -103,20 +102,18 @@ class PunchSessionViewModel @Inject constructor(
         val matched = ObjectMatcher.matchNearestObject(objects, location)
 
         if (matched == null) {
-            Log.d(TAG, "No matching object found")
+            Log.w(TAG, "checkIn: No matching object found")
             _uiMessage.value = "Kein Objekt in der Nähe gefunden"
             return@runWithLoading
         }
-        Log.d(TAG, "Matched object: ${matched.name}")
         punchSessionRepository.checkIn(objectId = matched.id)
     }
 
     fun checkOut() = runWithLoading {
-        Log.d(TAG, "Check-out started")
 
         val location = locationProvider.getCurrentLocationOrNull()
         if (location == null) {
-            Log.d(TAG, "No location available")
+            Log.w(TAG, "checkOut: No location available")
             _uiMessage.value = "Standort nicht verfügbar"
             return@runWithLoading
         }
@@ -125,12 +122,11 @@ class PunchSessionViewModel @Inject constructor(
         val matched = ObjectMatcher.matchNearestObject(objects, location)
 
         if (matched == null) {
-            Log.d(TAG, "No matching object found")
+            Log.w(TAG, "checkOut: No matching object found")
             _uiMessage.value = "Kein Objekt in der Nähe gefunden"
             return@runWithLoading
         }
 
-        Log.d(TAG, "Matched object: ${matched.name}")
         punchSessionRepository.checkOut(
             endLocation = location,
             objectEntity = matched
