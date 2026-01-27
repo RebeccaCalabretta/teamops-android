@@ -18,6 +18,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -34,16 +38,38 @@ fun PunchScreen(
 ) {
     val statusText = if (isCheckedIn) "Status: eingestempelt" else "Status: ausgestempelt"
     val buttonText =
-        if (isProcessing) "Suche Standort..." else if (isCheckedIn) "Check Out" else "Check In"
-    val onButtonClick = if (isCheckedIn) onCheckOutClick else onCheckInClick
+        if (isProcessing) "Suche Standort..."
+        else if (isCheckedIn) "Check Out"
+        else "Check In"
+
+    var showCheckOutDialog by rememberSaveable { mutableStateOf(false) }
+
+    val onButtonClick = {
+        if (isCheckedIn) {
+            showCheckOutDialog = true
+        } else {
+            onCheckInClick()
+        }
+    }
 
     val listState = rememberLazyListState()
     val activeIndex = sessionRows.indexOfFirst { it.isCheckedIn }
+
 
     LaunchedEffect(activeIndex) {
         if (activeIndex >= 0) {
             listState.animateScrollToItem(activeIndex)
         }
+    }
+
+    if (showCheckOutDialog) {
+        CheckoutConfirmDialog(
+            onConfirm = {
+                showCheckOutDialog = false
+                onCheckOutClick()
+            },
+            onDismiss = { showCheckOutDialog = false }
+        )
     }
 
     Column(
