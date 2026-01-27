@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -34,6 +36,15 @@ fun PunchScreen(
     val buttonText =
         if (isProcessing) "Suche Standort..." else if (isCheckedIn) "Check Out" else "Check In"
     val onButtonClick = if (isCheckedIn) onCheckOutClick else onCheckInClick
+
+    val listState = rememberLazyListState()
+    val activeIndex = sessionRows.indexOfFirst { it.isCheckedIn }
+
+    LaunchedEffect(activeIndex) {
+        if (activeIndex >= 0) {
+            listState.animateScrollToItem(activeIndex)
+        }
+    }
 
     Column(
         modifier = modifier
@@ -62,6 +73,7 @@ fun PunchScreen(
 
         } else {
             LazyColumn(
+                state = listState,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
@@ -80,7 +92,6 @@ fun PunchScreen(
                 }
             }
         }
-
 
         Text(
             text = statusText,
