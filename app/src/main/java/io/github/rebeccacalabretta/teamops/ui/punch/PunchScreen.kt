@@ -46,7 +46,11 @@ fun PunchScreen(
 
     val onButtonClick = {
         if (isCheckedIn) {
-            showCheckOutDialog = true
+            if(shouldConfirmCheckout(sessionRows)) {
+                showCheckOutDialog = true
+            } else {
+                onCheckOutClick()
+            }
         } else {
             onCheckInClick()
         }
@@ -137,3 +141,8 @@ fun PunchScreen(
     }
 }
 
+private fun shouldConfirmCheckout(sessionRows: List<SessionUiModel>): Boolean {
+    val active = sessionRows.firstOrNull { it.isCheckedIn } ?: return false
+    val durationMillis = System.currentTimeMillis() - active.startTime
+    return durationMillis >= 60_000L
+}
