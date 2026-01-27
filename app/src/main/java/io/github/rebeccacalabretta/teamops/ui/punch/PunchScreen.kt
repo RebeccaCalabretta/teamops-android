@@ -31,7 +31,8 @@ fun PunchScreen(
     onCheckOutClick: () -> Unit = {}
 ) {
     val statusText = if (isCheckedIn) "Status: eingestempelt" else "Status: ausgestempelt"
-    val buttonText = if(isProcessing) "Suche Standort..." else if (isCheckedIn) "Check Out" else "Check In"
+    val buttonText =
+        if (isProcessing) "Suche Standort..." else if (isCheckedIn) "Check Out" else "Check In"
     val onButtonClick = if (isCheckedIn) onCheckOutClick else onCheckInClick
 
     Column(
@@ -42,24 +43,44 @@ fun PunchScreen(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentPadding = PaddingValues(vertical = 16.dp)
-        ) {
-            stickyHeader {
-                SessionHeaderRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(vertical = 4.dp)
+        if (sessionRows.isEmpty()) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.weight(1f))
+
+                Text(
+                    text = "Noch keine Arbeitszeiten vorhanden"
                 )
+
+                Spacer(modifier = Modifier.weight(1f))
+
             }
-            items(sessionRows) { row ->
-                SessionRow(row = row)
+
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentPadding = PaddingValues(vertical = 16.dp)
+            ) {
+                stickyHeader {
+                    SessionHeaderRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surface)
+                            .padding(vertical = 4.dp)
+                    )
+                }
+                items(sessionRows) { row ->
+                    SessionRow(row = row)
+                }
             }
         }
+
 
         Text(
             text = statusText,
@@ -70,7 +91,9 @@ fun PunchScreen(
         Button(
             onClick = onButtonClick,
             enabled = !isProcessing,
-            modifier = Modifier.fillMaxWidth(0.5f)
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .padding(bottom = 24.dp)
         ) {
             Text(text = buttonText)
         }
