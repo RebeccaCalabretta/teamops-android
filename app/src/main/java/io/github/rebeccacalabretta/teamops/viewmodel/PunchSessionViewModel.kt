@@ -11,6 +11,8 @@ import io.github.rebeccacalabretta.teamops.location.LocationProvider
 import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
 import io.github.rebeccacalabretta.teamops.util.ObjectMatcher
+import io.github.rebeccacalabretta.teamops.util.WorkTimeCalculator
+import io.github.rebeccacalabretta.teamops.util.WorkTimeFormatter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.YearMonth
+import java.time.ZoneId
 import javax.inject.Inject
 
 
@@ -69,6 +72,39 @@ class PunchSessionViewModel @Inject constructor(
         selectedMonth.flatMapLatest { month ->
             punchSessionRepository.getSessionsForMonth(month)
         }
+
+    private val zone = ZoneId.systemDefault()
+
+    val monthWorkText: StateFlow<String> =
+        monthlySessions
+            .map { sessions ->
+                val millis = WorkTimeCalculator.monthWorkMillis(
+                    sessions = sessions,
+                    nowMillis = System.currentTimeMillis()
+                )
+                WorkTimeFormatter.formatMillis(millis)
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                "0 h 00 min"
+            )
+
+    val todayWorkText: StateFlow<String> =
+        monthlySessions
+            .map { sessions ->
+                val millis = WorkTimeCalculator.todayWorkMillis(
+                    sessions = sessions,
+                    nowMillis = System.currentTimeMillis(),
+                    zone = zone
+                )
+                WorkTimeFormatter.formatMillis(millis)
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                "0 h 00 min"
+            )
 
     val sessionRows: StateFlow<List<SessionUiModel>> =
         combine(

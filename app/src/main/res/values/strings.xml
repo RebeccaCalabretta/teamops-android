@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TeamOps</string>
+    <string name="work_time_today">Heute: %1$s</string>
+    <string name="work_time_month">Diesen Monat: %1$s</string>
 </resources>

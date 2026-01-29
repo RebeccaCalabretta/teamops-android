@@ -23,9 +23,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
+import io.github.rebeccacalabretta.teamops.ui.components.WorkTimeSummaryRow
 import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 import java.time.YearMonth
 
@@ -35,6 +38,8 @@ fun PunchScreen(
     selectedMonth: YearMonth,
     onPrevMonthCLick: () -> Unit,
     onNextMonthCLick: () -> Unit,
+    todayWorkText: String,
+    monthWorkText: String,
     isCheckedIn: Boolean = false,
     isProcessing: Boolean = false,
     sessionRows: List<SessionUiModel> = emptyList(),
@@ -94,6 +99,11 @@ fun PunchScreen(
             onPrevMonth = onPrevMonthCLick,
             onNextMonth = onNextMonthCLick,
             modifier = Modifier.fillMaxWidth()
+        )
+
+        WorkTimeSummaryRow(
+            todayText = stringResource(R.string.work_time_today, todayWorkText),
+            monthText = stringResource(R.string.work_time_month, monthWorkText)
         )
 
         if (sessionRows.isEmpty()) {

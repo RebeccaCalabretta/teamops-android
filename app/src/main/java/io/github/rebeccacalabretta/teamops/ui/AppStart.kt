@@ -64,6 +64,8 @@ fun AppStart() {
     val isProcessing by vm.isProcessing.collectAsStateWithLifecycle()
     val uiMessage by vm.uiMessage.collectAsStateWithLifecycle()
     val selectedMonth by vm.selectedMonth.collectAsStateWithLifecycle()
+    val todayWorkText by vm.todayWorkText.collectAsStateWithLifecycle()
+    val monthWorkText by vm.monthWorkText.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiMessage) {
         val message = uiMessage ?: return@LaunchedEffect
@@ -93,6 +95,8 @@ fun AppStart() {
             selectedMonth = selectedMonth,
             onPrevMonthCLick = vm::prevMonth,
             onNextMonthCLick = vm::nextMonth,
+            todayWorkText = todayWorkText,
+            monthWorkText = monthWorkText,
             isCheckedIn = isCheckedIn,
             isProcessing = isProcessing,
             onCheckInClick = vm::checkIn,
