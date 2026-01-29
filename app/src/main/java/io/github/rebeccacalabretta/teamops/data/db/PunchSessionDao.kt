@@ -16,6 +16,19 @@ interface PunchSessionDao {
 
     @Query(
         """
+            SELECT * FROM punch_sessions
+            WHERE startTime >= :fromMillis
+            AND startTime < :toMillis
+            ORDER BY startTime ASC
+        """
+    )
+    fun getSessionBetween(
+        fromMillis: Long,
+        toMillis: Long
+    ): Flow<List<PunchSessionEntity>>
+
+    @Query(
+        """
             SELECT * FROM (
                 SELECT * FROM punch_sessions
                 ORDER BY startTime DESC
@@ -25,15 +38,6 @@ interface PunchSessionDao {
         """
     )
     fun getLatestSessions(limit: Int = 20): Flow<List<PunchSessionEntity>>
-
-    @Query(
-        """
-            SELECT * FROM punch_sessions
-            WHERE monthKey = :monthKey
-            ORDER BY startTime ASC
-        """
-    )
-    fun getSessionsForMonth(monthKey: String): Flow<List<PunchSessionEntity>>
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(session: PunchSessionEntity)

@@ -4,6 +4,7 @@ import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.YearMonth
 
 interface PunchSessionRepository {
     suspend fun checkIn(objectId: String)
@@ -14,7 +15,8 @@ interface PunchSessionRepository {
     )
     suspend fun getOpenSessionOrNull(): PunchSessionEntity?
 
+    fun getSessionsForMonth(yearMonth: YearMonth): Flow<List<PunchSessionEntity>>
+
     fun getLatestSessions(limit: Int = 20): Flow<List<PunchSessionEntity>>
 
-    fun getSessionsForMonth(monthKey: String): Flow<List<PunchSessionEntity>>
 }

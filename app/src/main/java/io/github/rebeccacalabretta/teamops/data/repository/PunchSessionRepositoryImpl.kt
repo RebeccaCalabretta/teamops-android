@@ -7,6 +7,8 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import io.github.rebeccacalabretta.teamops.util.GeoDistance
 import io.github.rebeccacalabretta.teamops.util.MonthKey
 import kotlinx.coroutines.flow.Flow
+import java.time.YearMonth
+import java.time.ZoneId
 
 class PunchSessionRepositoryImpl(
     private val dao: PunchSessionDao
@@ -63,7 +65,23 @@ class PunchSessionRepositoryImpl(
         dao.getLatestSessions(limit)
 
 
-    override fun getSessionsForMonth(monthKey: String): Flow<List<PunchSessionEntity>> =
-        dao.getSessionsForMonth(monthKey)
+    override fun getSessionsForMonth(yearMonth: YearMonth): Flow<List<PunchSessionEntity>> {
+        val zone = ZoneId.systemDefault()
+
+        val fromMillis = yearMonth
+            .atDay(1)
+            .atStartOfDay(zone)
+            .toInstant()
+            .toEpochMilli()
+
+        val toMillis = yearMonth
+            .plusMonths(1)
+            .atDay(1)
+            .atStartOfDay(zone)
+            .toInstant()
+            .toEpochMilli()
+
+        return dao.getSessionBetween(fromMillis, toMillis)
+    }
 
 }
