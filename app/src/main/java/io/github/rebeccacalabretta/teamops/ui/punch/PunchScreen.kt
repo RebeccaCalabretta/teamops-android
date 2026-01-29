@@ -25,11 +25,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
+import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
 import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import java.time.YearMonth
 
 @Composable
 fun PunchScreen(
     modifier: Modifier = Modifier,
+    selectedMonth: YearMonth,
+    onPrevMonthCLick: () -> Unit,
+    onNextMonthCLick: () -> Unit,
     isCheckedIn: Boolean = false,
     isProcessing: Boolean = false,
     sessionRows: List<SessionUiModel> = emptyList(),
@@ -84,6 +89,13 @@ fun PunchScreen(
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        MonthStepper(
+            month = selectedMonth,
+            onPrevMonth = onPrevMonthCLick,
+            onNextMonth = onNextMonthCLick,
+            modifier = Modifier.fillMaxWidth()
+        )
+
         if (sessionRows.isEmpty()) {
             Column(
                 modifier = Modifier

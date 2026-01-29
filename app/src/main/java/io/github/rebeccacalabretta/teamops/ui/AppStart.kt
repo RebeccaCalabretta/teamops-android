@@ -63,6 +63,7 @@ fun AppStart() {
     val sessionRows by vm.sessionRows.collectAsStateWithLifecycle()
     val isProcessing by vm.isProcessing.collectAsStateWithLifecycle()
     val uiMessage by vm.uiMessage.collectAsStateWithLifecycle()
+    val selectedMonth by vm.selectedMonth.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiMessage) {
         val message = uiMessage ?: return@LaunchedEffect
@@ -89,10 +90,13 @@ fun AppStart() {
     ) { padding ->
         PunchScreen(
             modifier = Modifier.padding(padding),
+            selectedMonth = selectedMonth,
+            onPrevMonthCLick = vm::prevMonth,
+            onNextMonthCLick = vm::nextMonth,
             isCheckedIn = isCheckedIn,
             isProcessing = isProcessing,
-            onCheckInClick = { vm.checkIn() },
-            onCheckOutClick = { vm.checkOut() },
+            onCheckInClick = vm::checkIn,
+            onCheckOutClick = vm::checkOut,
             sessionRows = sessionRows
         )
     }

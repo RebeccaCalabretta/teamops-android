@@ -41,13 +41,13 @@ fun SessionHeaderRow(
         Cell(
             text = "Start",
             modifier = Modifier.weight(0.6f),
-            align = TextAlign.End,
+            align = TextAlign.Center,
             isHeader = true
         )
         Cell(
             text = "Ende",
             modifier = Modifier.weight(0.6f),
-            align = TextAlign.End,
+            align = TextAlign.Center,
             isHeader = true
         )
         Cell(
@@ -96,12 +96,12 @@ fun SessionRow(
         Cell(
             text = start,
             modifier = Modifier.weight(0.6f),
-            align = TextAlign.End
+            align = TextAlign.Center
         )
         Cell(
             text = end,
             modifier = Modifier.weight(0.6f),
-            align = TextAlign.End,
+            align = TextAlign.Center,
             textColor = textColor
         )
         Cell(
