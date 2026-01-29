@@ -17,10 +17,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.YearMonth
 import javax.inject.Inject
+
 
 private const val TAG = "PunchSessionVM"
 
@@ -33,6 +37,13 @@ class PunchSessionViewModel @Inject constructor(
 
     private val _openSession = MutableStateFlow<PunchSessionEntity?>(null)
     val openSession: StateFlow<PunchSessionEntity?> = _openSession.asStateFlow()
+
+    private val _selectedMonth = MutableStateFlow(YearMonth.now())
+    val selectedMonth: StateFlow<YearMonth> = _selectedMonth.asStateFlow()
+
+    fun prevMonth() = _selectedMonth.update { it.minusMonths(1) }
+
+    fun nextMonth() = _selectedMonth.update { it.plusMonths(1) }
 
     private val _isProcessing = MutableStateFlow(false)
     val isProcessing = _isProcessing.asStateFlow()
@@ -53,9 +64,15 @@ class PunchSessionViewModel @Inject constructor(
                 initialValue = false
             )
 
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private val monthlySessions =
+        selectedMonth.flatMapLatest { month ->
+            punchSessionRepository.getSessionsForMonth(month)
+        }
+
     val sessionRows: StateFlow<List<SessionUiModel>> =
         combine(
-            punchSessionRepository.getLatestSessions(limit = 40),
+            monthlySessions,
             objectRepository.getAllObjects()
         ) { sessions, objects ->
             val objectsById = objects.associateBy { it.id }
