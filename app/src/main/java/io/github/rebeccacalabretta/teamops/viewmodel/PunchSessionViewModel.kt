@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
+import io.github.rebeccacalabretta.teamops.data.export.ExportSessionRow
+import io.github.rebeccacalabretta.teamops.data.export.mapToExportSessionRow
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
@@ -121,6 +123,27 @@ class PunchSessionViewModel @Inject constructor(
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
+
+    val exportRows: StateFlow<List<ExportSessionRow>> =
+        combine(
+            monthlySessions,
+            objectRepository.getAllObjects()
+        ) { sessions, objects ->
+            val objectById = objects.associateBy { it.id }
+
+            sessions.map { session ->
+                val objectName = objectById[session.objectId]?.name ?: "Unbekannt"
+                mapToExportSessionRow(
+                    session = session,
+                    objectName = objectName,
+                    employeeName = "-"
+                )
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
             initialValue = emptyList()
         )
 
