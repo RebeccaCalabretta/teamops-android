@@ -10,6 +10,8 @@ import dagger.hilt.components.SingletonComponent
 import io.github.rebeccacalabretta.teamops.data.db.AppDatabase
 import io.github.rebeccacalabretta.teamops.data.db.ObjectDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
+import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
+import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
@@ -60,8 +62,13 @@ object DataModule {
 
     @Provides
     @Singleton
-    fun LocationProvider(
+    fun provideLocationProvider(
         @ApplicationContext context: Context
     ): LocationProvider =
         LocationProviderImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideEmployeeRepository(): EmployeeRepository =
+        EmployeeRepositoryImpl()
 }
