@@ -182,7 +182,10 @@ class PunchSessionViewModel @Inject constructor(
             _uiMessage.value = "Kein Objekt in der Nähe gefunden"
             return@runWithLoading
         }
-        punchSessionRepository.checkIn(objectId = matched.id)
+        punchSessionRepository.checkIn(
+            objectId = matched.id,
+            employeeId = "emp_001"
+        )
     }
 
     fun checkOut() = runWithLoading {

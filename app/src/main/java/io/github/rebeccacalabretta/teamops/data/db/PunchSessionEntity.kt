@@ -9,6 +9,7 @@ data class PunchSessionEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
 
     val objectId: String,
+    val employeeId: String,
 
     val startTime: Long,
     val endTime: Long? = null,

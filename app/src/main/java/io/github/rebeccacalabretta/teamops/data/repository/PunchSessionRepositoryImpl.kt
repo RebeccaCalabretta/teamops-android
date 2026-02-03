@@ -13,7 +13,7 @@ import java.time.ZoneId
 class PunchSessionRepositoryImpl(
     private val dao: PunchSessionDao
 ) : PunchSessionRepository {
-    override suspend fun checkIn(objectId: String) {
+    override suspend fun checkIn(objectId: String, employeeId: String) {
         val open = dao.getOpenSessionOrNull()
         if (open != null) throw IllegalStateException("There is already an open session.")
 
@@ -21,6 +21,7 @@ class PunchSessionRepositoryImpl(
         dao.insert(
             PunchSessionEntity(
                 objectId = objectId,
+                employeeId = employeeId,
                 startTime = now,
                 endTime = null,
                 monthKey = MonthKey.fromTimestamp(now)
@@ -84,4 +85,6 @@ class PunchSessionRepositoryImpl(
         return dao.getSessionBetween(fromMillis, toMillis)
     }
 
+    override fun getSessionsForEmployee(employeeId: String): Flow<List<PunchSessionEntity>> =
+        dao.getSessionsForEmployee(employeeId)
 }

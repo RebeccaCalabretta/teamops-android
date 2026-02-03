@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 
 interface PunchSessionRepository {
-    suspend fun checkIn(objectId: String)
+    suspend fun checkIn(objectId: String, employeeId: String)
 
     suspend fun checkOut(
         endLocation: Location,
@@ -19,4 +19,5 @@ interface PunchSessionRepository {
 
     fun getLatestSessions(limit: Int = 20): Flow<List<PunchSessionEntity>>
 
+    fun getSessionsForEmployee(employeeId: String): Flow<List<PunchSessionEntity>>
 }

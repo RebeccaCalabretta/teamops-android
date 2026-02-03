@@ -29,6 +29,18 @@ interface PunchSessionDao {
 
     @Query(
         """
+            SELECT * FROM punch_sessions
+            WHERE employeeId = :employeeId
+            ORDER BY startTime DESC
+        """
+    )
+    fun getSessionsForEmployee(
+        employeeId: String
+    ): Flow<List<PunchSessionEntity>>
+
+
+    @Query(
+        """
             SELECT * FROM (
                 SELECT * FROM punch_sessions
                 ORDER BY startTime DESC
