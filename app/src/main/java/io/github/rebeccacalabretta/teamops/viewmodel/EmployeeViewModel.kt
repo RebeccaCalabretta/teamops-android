@@ -12,8 +12,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EmployeeViewModel @Inject constructor(
-    employeeRepository: EmployeeRepository
+    private val employeeRepository: EmployeeRepository
 ) : ViewModel() {
+
     val employees: StateFlow<List<EmployeeEntity>> =
         employeeRepository.getEmployees()
             .stateIn(
@@ -21,5 +22,4 @@ class EmployeeViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = emptyList()
             )
-
 }
