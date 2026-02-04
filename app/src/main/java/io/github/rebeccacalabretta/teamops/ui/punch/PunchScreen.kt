@@ -56,7 +56,7 @@ fun PunchScreen(
 
     val onButtonClick = {
         if (isCheckedIn) {
-            if(shouldConfirmCheckout(sessionRows)) {
+            if (shouldConfirmCheckout(sessionRows)) {
                 showCheckOutDialog = true
             } else {
                 onCheckOutClick()
@@ -140,7 +140,11 @@ fun PunchScreen(
                     )
                 }
                 items(sessionRows) { row ->
-                    SessionRow(row = row)
+                    SessionRow(
+                        row = row,
+                        canEdit = false,
+                        onEditClick = {}
+                    )
                 }
             }
         }

@@ -1,13 +1,21 @@
 package io.github.rebeccacalabretta.teamops.ui.punch
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -19,7 +27,8 @@ import io.github.rebeccacalabretta.teamops.util.SessionFormat
 
 @Composable
 fun SessionHeaderRow(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showEditColumn: Boolean = false
 ) {
     Row(
         modifier = modifier
@@ -56,13 +65,18 @@ fun SessionHeaderRow(
             align = TextAlign.End,
             isHeader = true
         )
+        if (showEditColumn) {
+            Spacer(modifier = Modifier.width(40.dp))
+        }
     }
 }
 
 @Composable
 fun SessionRow(
     row: SessionUiModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    canEdit: Boolean,
+    onEditClick: (SessionUiModel) -> Unit
 ) {
     val date = SessionFormat.formatDate(row.startTime)
     val start = SessionFormat.formatTime(row.startTime)
@@ -74,8 +88,8 @@ fun SessionRow(
     val background =
         if (row.isCheckedIn)
             MaterialTheme.colorScheme.primary.copy(alpha = 0.06f)
-    else
-        Color.Transparent
+        else
+            Color.Transparent
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -109,6 +123,17 @@ fun SessionRow(
             modifier = Modifier.weight(0.9f),
             align = TextAlign.End
         )
+        if (canEdit) {
+            Icon(
+                imageVector = Icons.Outlined.Edit,
+                contentDescription = "Edit",
+                modifier = Modifier
+                    .width(40.dp)
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
+                    .clickable { onEditClick(row) }
+            )
+        }
     }
 }
 
