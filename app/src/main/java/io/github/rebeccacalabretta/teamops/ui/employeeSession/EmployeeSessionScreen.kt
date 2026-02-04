@@ -17,12 +17,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeSelectDropdown
+import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionHeaderRow
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionRow
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeSessionViewModel
@@ -37,6 +41,9 @@ fun EmployeeSessionScreen(
     val employees by employeeViewModel.employees.collectAsStateWithLifecycle()
     val selectedEmployeeId by sessionViewModel.selectedEmployeeId.collectAsStateWithLifecycle()
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
+
+    var selectedSession: SessionUiModel? by remember { mutableStateOf(null) }
+    var showEditDialog by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()
 
@@ -97,10 +104,27 @@ fun EmployeeSessionScreen(
                     SessionRow(
                         row = row,
                         canEdit = true,
-                        onEditClick = {}
+                        onEditClick = {
+                            selectedSession = it
+                            showEditDialog = true
+                        }
                     )
                 }
             }
+        }
+        val session = selectedSession
+        if (showEditDialog && session != null) {
+            EditSessionDialog(
+                session = session,
+                onDismiss = {
+                    showEditDialog = false
+                    selectedSession = null
+                },
+                onSave = { _, _ ->
+                    showEditDialog = false
+                    selectedSession = null
+                }
+            )
         }
     }
 }
