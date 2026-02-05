@@ -9,6 +9,7 @@ import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
+import io.github.rebeccacalabretta.teamops.util.SessionFormat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,8 +17,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -63,5 +66,31 @@ class EmployeeSessionViewModel @Inject constructor(
 
     fun loadSessions(employeeId: String) {
         _selectedEmployeeId.value = employeeId
+    }
+
+    fun saveEditedSession(
+        sessionId: String,
+        dateMillis: Long,
+        startTimeText: String,
+        endTimeText: String
+    ) {
+        val employeeId = selectedEmployeeId.value ?: return
+
+        val startMillis = SessionFormat.parseTimeToMillis(dateMillis, startTimeText)
+        val endMillis = SessionFormat.parseTimeToMillis(dateMillis, endTimeText)
+
+        viewModelScope.launch {
+            val session = punchSessionRepository
+                .getSessionsForEmployee(employeeId)
+                .first()
+                .first { it.id == sessionId }
+
+            punchSessionRepository.updateSession(
+                session.copy(
+                    startTime = startMillis,
+                    endTime = endMillis
+                )
+            )
+        }
     }
 }

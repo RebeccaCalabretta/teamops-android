@@ -13,7 +13,10 @@ interface PunchSessionRepository {
         endLocation: Location,
         objectEntity: ObjectEntity
     )
+
     suspend fun getOpenSessionOrNull(): PunchSessionEntity?
+
+    suspend fun updateSession(session: PunchSessionEntity)
 
     fun getSessionsForMonth(yearMonth: YearMonth): Flow<List<PunchSessionEntity>>
 

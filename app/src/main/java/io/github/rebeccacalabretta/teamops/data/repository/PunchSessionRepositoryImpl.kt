@@ -61,10 +61,11 @@ class PunchSessionRepositoryImpl(
     override suspend fun getOpenSessionOrNull(): PunchSessionEntity? =
         dao.getOpenSessionOrNull()
 
+    override suspend fun updateSession(session: PunchSessionEntity) =
+        dao.update(session)
 
     override fun getLatestSessions(limit: Int): Flow<List<PunchSessionEntity>> =
         dao.getLatestSessions(limit)
-
 
     override fun getSessionsForMonth(yearMonth: YearMonth): Flow<List<PunchSessionEntity>> {
         val zone = ZoneId.systemDefault()

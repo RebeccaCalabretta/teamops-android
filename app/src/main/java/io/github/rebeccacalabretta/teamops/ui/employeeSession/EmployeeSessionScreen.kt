@@ -120,7 +120,13 @@ fun EmployeeSessionScreen(
                     showEditDialog = false
                     selectedSession = null
                 },
-                onSave = { _, _ ->
+                onSave = { startText, endText ->
+                    sessionViewModel.saveEditedSession(
+                        sessionId = session.id,
+                        dateMillis = session.startTime,
+                        startTimeText = startText,
+                        endTimeText = endText
+                    )
                     showEditDialog = false
                     selectedSession = null
                 }

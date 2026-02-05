@@ -1,8 +1,10 @@
 package io.github.rebeccacalabretta.teamops.util
 
 import java.time.Instant
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.Locale
 import kotlin.math.max
 
@@ -38,5 +40,26 @@ object SessionFormat {
         val minutes = totalMinutes % 60
 
         return if (hours > 0) "$hours h $minutes m" else "$minutes m"
+    }
+
+    fun parseTimeToMillis(
+        dateMillis: Long,
+        timeText: String
+    ): Long {
+        val localTime = try {
+            LocalTime.parse(timeText.trim(), timeFormatter)
+        } catch (e: DateTimeParseException) {
+            throw IllegalArgumentException("Invalid time format: $timeText")
+        }
+
+        val zone = ZoneId.systemDefault()
+
+        return Instant.ofEpochMilli(dateMillis)
+            .atZone(zone)
+            .toLocalDate()
+            .atTime(localTime)
+            .atZone(zone)
+            .toInstant()
+            .toEpochMilli()
     }
 }
