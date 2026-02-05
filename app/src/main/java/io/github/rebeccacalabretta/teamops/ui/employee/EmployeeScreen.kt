@@ -18,7 +18,8 @@ import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 @Composable
 fun EmployeeScreen(
     modifier: Modifier = Modifier,
-    viewModel: EmployeeViewModel = hiltViewModel()
+    viewModel: EmployeeViewModel = hiltViewModel(),
+    onEmployeeClick: (String) -> Unit
 ) {
     val employees = viewModel.employees.collectAsStateWithLifecycle().value
 
@@ -34,10 +35,11 @@ fun EmployeeScreen(
             )
         } else {
             LazyColumn {
-                items(employees) {employee ->
+                items(employees) { employee ->
                     EmployeeRow(
                         name = employee.name,
-                        role = employee.role
+                        role = employee.role,
+                        onClick = { onEmployeeClick(employee.id) }
                     )
 
                 }

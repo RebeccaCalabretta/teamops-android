@@ -7,7 +7,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer
+import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
 
 @Composable
 fun AppStart() {
@@ -16,9 +16,13 @@ fun AppStart() {
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { padding ->
-        PunchContainer(
+        AppNavHost(
+            snackbarHostState = snackbarHostState,
+            modifier = Modifier.padding(padding)
+        )
+        /*PunchContainer(
             modifier = Modifier.padding(padding),
             snackbarHostState = snackbarHostState
-        )
+        )*/
     }
 }
