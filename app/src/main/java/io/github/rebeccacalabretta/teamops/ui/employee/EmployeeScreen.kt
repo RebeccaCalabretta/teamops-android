@@ -21,7 +21,7 @@ fun EmployeeScreen(
     viewModel: EmployeeViewModel = hiltViewModel(),
     onEmployeeClick: (String) -> Unit
 ) {
-    val employees = viewModel.employees.collectAsStateWithLifecycle().value
+    val employees = viewModel.employeeRows.collectAsStateWithLifecycle().value
 
     Column(
         modifier = modifier
@@ -38,7 +38,7 @@ fun EmployeeScreen(
                 items(employees) { employee ->
                     EmployeeRow(
                         name = employee.name,
-                        role = employee.role,
+                        monthlyWorkTime = employee.monthlyWorkText,
                         onClick = { onEmployeeClick(employee.id) }
                     )
 

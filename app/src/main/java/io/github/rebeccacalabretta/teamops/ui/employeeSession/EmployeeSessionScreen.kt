@@ -48,8 +48,8 @@ fun EmployeeSessionScreen(
         sessionViewModel.loadSessions(employeeId)
     }
 
-    val employees by employeeViewModel.employees.collectAsStateWithLifecycle()
-    val employeeName = employees.firstOrNull { it.id == employeeId }?.name ?: "Employee"
+    val employeeRows by employeeViewModel.employeeRows.collectAsStateWithLifecycle()
+    val employeeName = employeeRows.firstOrNull { it.id == employeeId }?.name ?: "Employee"
 
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
 

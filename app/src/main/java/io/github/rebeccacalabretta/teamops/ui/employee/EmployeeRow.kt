@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun EmployeeRow(
     name: String,
-    role: String,
+    monthlyWorkTime: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,8 +31,8 @@ fun EmployeeRow(
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = role,
-            style = MaterialTheme.typography.bodySmall
+            text = monthlyWorkTime,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }

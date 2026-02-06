@@ -31,7 +31,7 @@ interface PunchSessionDao {
         """
             SELECT * FROM punch_sessions
             WHERE employeeId = :employeeId
-            ORDER BY startTime DESC
+            ORDER BY startTime ASC
         """
     )
     fun getSessionsForEmployee(
