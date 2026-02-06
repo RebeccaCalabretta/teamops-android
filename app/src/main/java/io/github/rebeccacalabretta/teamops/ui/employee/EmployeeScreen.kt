@@ -8,6 +8,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,6 +26,8 @@ fun EmployeeScreen(
     onEmployeeClick: (String) -> Unit
 ) {
     val employees = viewModel.employeeRows.collectAsStateWithLifecycle().value
+
+    var expandedEmployeeId by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = modifier
@@ -39,7 +45,15 @@ fun EmployeeScreen(
                     EmployeeRow(
                         name = employee.name,
                         monthlyWorkTime = employee.monthlyWorkText,
-                        onClick = { onEmployeeClick(employee.id) }
+                        expanded = expandedEmployeeId == employee.id,
+                        onToggleExpand = {
+                            expandedEmployeeId =
+                                if (expandedEmployeeId == employee.id) null else employee.id
+                        },
+                        onRowClick = { onEmployeeClick(employee.id) },
+                        onSessionsClick = { onEmployeeClick(employee.id)},
+                        onScheduleClick = {},
+                        onVacationClick = {}
                     )
 
                 }
