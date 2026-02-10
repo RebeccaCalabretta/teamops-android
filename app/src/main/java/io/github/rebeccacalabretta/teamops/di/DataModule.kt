@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.rebeccacalabretta.teamops.data.db.AppDatabase
+import io.github.rebeccacalabretta.teamops.data.db.EmployeeDao
 import io.github.rebeccacalabretta.teamops.data.db.ObjectDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
@@ -55,6 +56,7 @@ object DataModule {
     ): ObjectDao = db.objectDao()
 
     @Provides
+    @Singleton
     fun provideObjectRepository(
         dao: ObjectDao
     ): ObjectRepository =
@@ -68,7 +70,14 @@ object DataModule {
         LocationProviderImpl(context)
 
     @Provides
+    fun provideEmployeeDao(
+        db: AppDatabase
+    ): EmployeeDao = db.employeeDao()
+
+    @Provides
     @Singleton
-    fun provideEmployeeRepository(): EmployeeRepository =
-        EmployeeRepositoryImpl()
+    fun provideEmployeeRepository(
+        dao: EmployeeDao
+    ): EmployeeRepository =
+        EmployeeRepositoryImpl(dao)
 }
