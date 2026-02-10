@@ -5,4 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface EmployeeRepository {
     fun getEmployees(): Flow<List<EmployeeEntity>>
+
+    suspend fun seedIfEmpty()
 }
