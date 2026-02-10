@@ -1,19 +1,41 @@
 package io.github.rebeccacalabretta.teamops.data.repository
 
 import io.github.rebeccacalabretta.teamops.data.db.EmployeeEntity
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class EmployeeRepositoryImpl @Inject constructor() : EmployeeRepository {
+
     override fun getEmployees(): Flow<List<EmployeeEntity>> =
         flowOf(
             listOf(
-                EmployeeEntity("emp_001", "Rainer Zufall", "worker"),
-                EmployeeEntity("emp_002", "Isolde Maduschen", "worker"),
-                EmployeeEntity("emp_003", "Alda Audi", "objectmanager"),
-                EmployeeEntity("emp_004", "Klara Fall", "office"),
-                EmployeeEntity("emp_005", "Hella Wahnsinn", "admin")
+                EmployeeEntity(
+                    id = "emp_001",
+                    name = "Rainer Zufall",
+                    role = EmployeeRole.WORKER
+                ),
+                EmployeeEntity(
+                    id = "emp_002",
+                    name = "Isolde Maduschen",
+                    role = EmployeeRole.WORKER
+                ),
+                EmployeeEntity(
+                    id = "emp_003",
+                    name = "Alda Audi",
+                    role = EmployeeRole.MANAGER
+                ),
+                EmployeeEntity(
+                    id = "emp_004",
+                    name = "Klara Fall",
+                    role = EmployeeRole.HR
+                ),
+                EmployeeEntity(
+                    id = "emp_005",
+                    name = "Hella Wahnsinn",
+                    role = EmployeeRole.ADMIN
+                )
             )
         )
 }
