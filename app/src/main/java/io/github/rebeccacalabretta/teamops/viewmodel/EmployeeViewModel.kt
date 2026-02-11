@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.ui.model.EmployeeRowUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.toEmployeeRowUiModel
 import io.github.rebeccacalabretta.teamops.util.WorkTimeCalculator
 import io.github.rebeccacalabretta.teamops.util.WorkTimeFormatter
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,10 +41,7 @@ class EmployeeViewModel @Inject constructor(
                         nowMillis = nowMillis
                     )
 
-                EmployeeRowUiModel(
-                    id = employee.id,
-                    name = employee.name,
-                    role = employee.role,
+                employee.toEmployeeRowUiModel(
                     monthlyWorkText = WorkTimeFormatter.formatMillis(monthMillis)
                 )
             }
