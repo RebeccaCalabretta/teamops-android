@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmployeeScreen(
     modifier: Modifier = Modifier,
@@ -32,30 +35,39 @@ fun EmployeeScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
-        if (employees.isEmpty()) {
-            Text(
-                text = "Keine Mitarbeiter vorhanden",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        } else {
-            LazyColumn {
-                items(employees) { employee ->
-                    EmployeeRow(
-                        name = employee.name,
-                        monthlyWorkTime = employee.monthlyWorkText,
-                        expanded = expandedEmployeeId == employee.id,
-                        onToggleExpand = {
-                            expandedEmployeeId =
-                                if (expandedEmployeeId == employee.id) null else employee.id
-                        },
-                        onRowClick = { onEmployeeClick(employee.id) },
-                        onSessionsClick = { onEmployeeClick(employee.id)},
-                        onScheduleClick = {},
-                        onVacationClick = {}
-                    )
+        TopAppBar(
+            title = { Text("Mitarbeiter") }
+        )
 
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            if (employees.isEmpty()) {
+                Text(
+                    text = "Keine Mitarbeiter vorhanden",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            } else {
+                LazyColumn {
+                    items(employees) { employee ->
+                        EmployeeRow(
+                            name = employee.name,
+                            monthlyWorkTime = employee.monthlyWorkText,
+                            expanded = expandedEmployeeId == employee.id,
+                            onToggleExpand = {
+                                expandedEmployeeId =
+                                    if (expandedEmployeeId == employee.id) null else employee.id
+                            },
+                            onRowClick = { onEmployeeClick(employee.id) },
+                            onSessionsClick = { onEmployeeClick(employee.id) },
+                            onScheduleClick = {},
+                            onVacationClick = {}
+                        )
+
+                    }
                 }
             }
         }

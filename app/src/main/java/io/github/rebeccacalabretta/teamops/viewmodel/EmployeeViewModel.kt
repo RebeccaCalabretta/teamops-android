@@ -43,6 +43,7 @@ class EmployeeViewModel @Inject constructor(
                 EmployeeRowUiModel(
                     id = employee.id,
                     name = employee.name,
+                    role = employee.role,
                     monthlyWorkText = WorkTimeFormatter.formatMillis(monthMillis)
                 )
             }

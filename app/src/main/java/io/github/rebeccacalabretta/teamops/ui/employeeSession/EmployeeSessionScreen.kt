@@ -49,10 +49,11 @@ fun EmployeeSessionScreen(
     }
 
     val employeeRows by employeeViewModel.employeeRows.collectAsStateWithLifecycle()
-    val employeeName = employeeRows.firstOrNull { it.id == employeeId }?.name ?: "Employee"
+    val employee = employeeRows.firstOrNull { it.id == employeeId }
+    val employeeName = employee?.name ?: "Mitarbeiter"
+    val employeeRole = employee?.role
 
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
-
 
     var selectedSession: SessionUiModel? by remember { mutableStateOf(null) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -61,8 +62,7 @@ fun EmployeeSessionScreen(
 
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TopAppBar(
@@ -77,47 +77,63 @@ fun EmployeeSessionScreen(
             }
         )
 
-        if (sessionRows.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.weight(1f))
-                Text(text = "Noch keine Arbeitszeiten vorhanden")
-                Spacer(modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            employeeRole?.let {
+                Text(
+                    text = it.displayRole,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 6.dp, bottom = 10.dp)
+                )
             }
-        } else {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-                stickyHeader {
-                    SessionHeaderRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(vertical = 4.dp),
-                        showEditColumn = true
-                    )
+
+            if (sessionRows.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = "Noch keine Arbeitszeiten vorhanden")
+                    Spacer(modifier = Modifier.weight(1f))
                 }
-                items(sessionRows) { row ->
-                    SessionRow(
-                        row = row,
-                        canEdit = true,
-                        onEditClick = {
-                            selectedSession = it
-                            showEditDialog = true
-                        }
-                    )
+            } else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    stickyHeader {
+                        SessionHeaderRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surface)
+                                .padding(vertical = 4.dp),
+                            showEditColumn = true
+                        )
+                    }
+                    items(sessionRows) { row ->
+                        SessionRow(
+                            row = row,
+                            canEdit = true,
+                            onEditClick = {
+                                selectedSession = it
+                                showEditDialog = true
+                            }
+                        )
+                    }
                 }
             }
         }
-
         val session = selectedSession
         if (showEditDialog && session != null) {
             EditSessionDialog(
