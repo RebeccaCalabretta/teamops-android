@@ -2,6 +2,7 @@ package io.github.rebeccacalabretta.teamops.data.repository
 
 import io.github.rebeccacalabretta.teamops.data.db.EmployeeDao
 import io.github.rebeccacalabretta.teamops.data.db.EmployeeEntity
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.sample.SampleEmployees
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -13,6 +14,9 @@ class EmployeeRepositoryImpl @Inject constructor(
 
     override fun getEmployees(): Flow<List<EmployeeEntity>> =
         employeeDao.getAllEmployees()
+
+    override fun getEmployeesByRole(role: EmployeeRole): Flow<List<EmployeeEntity>> =
+    employeeDao.getEmployeesByRole(role)
 
     override suspend fun seedIfEmpty() {
         val existing = employeeDao.getAllEmployees().first()
