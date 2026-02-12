@@ -29,6 +29,7 @@ fun EmployeeScreen(
     onEmployeeClick: (String) -> Unit
 ) {
     val employees = viewModel.employeeRows.collectAsStateWithLifecycle().value
+    val selectedRole = viewModel.roleFilter.collectAsStateWithLifecycle().value
 
     var expandedEmployeeId by remember { mutableStateOf<String?>(null) }
 
@@ -41,10 +42,15 @@ fun EmployeeScreen(
         )
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            RoleFilterRow(
+                selectedRole = selectedRole,
+                onRoleSelected = viewModel::setRoleFilter
+            )
+
             if (employees.isEmpty()) {
                 Text(
                     text = "Keine Mitarbeiter vorhanden",
@@ -52,7 +58,10 @@ fun EmployeeScreen(
                 )
             } else {
                 LazyColumn {
-                    items(employees) { employee ->
+                    items(
+                        items = employees,
+                        key = { it.id }
+                    ) { employee ->
                         EmployeeRow(
                             name = employee.name,
                             monthlyWorkTime = employee.monthlyWorkText,

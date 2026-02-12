@@ -3,8 +3,8 @@ package io.github.rebeccacalabretta.teamops.data.model
 enum class EmployeeRole(
     val displayRole: String
 ) {
-    WORKER("Arbeiter"),
+    WORKER("Mitarbeiter"),
     MANAGER("Objektleiter"),
-    HR("Personalabteilung"),
+    HR("HR"),
     ADMIN("Admin")
 }
