@@ -34,15 +34,17 @@ fun AppNavHost(
             EmployeeScreen(
                 onEmployeeClick = { employeeId ->
 
-                    val currentUserId = "CURRENT_USER_ID"
+                    val currentUserId = "emp_003"
                     val currentRole = EmployeeRole.MANAGER
+                    val managedEmployeeIds = setOf("emp_001", "emp_002")
                     // TODO replace with UserSessionState
 
                     if (
                         canAccessEmployee(
                             currentUserId = currentUserId,
                             currentRole = currentRole,
-                            targetEmployeeId = employeeId
+                            targetEmployeeId = employeeId,
+                            managedEmployeeIds = managedEmployeeIds
                         )
                     ) {
                         navController.navigate(EmployeeSessionRoute(employeeId))

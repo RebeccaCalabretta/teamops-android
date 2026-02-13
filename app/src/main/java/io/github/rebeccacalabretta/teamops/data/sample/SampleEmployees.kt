@@ -8,12 +8,14 @@ object SampleEmployees {
         EmployeeEntity(
             id = "emp_001",
             name = "Rainer Zufall",
-            role = EmployeeRole.WORKER
+            role = EmployeeRole.WORKER,
+            managerId = "emp_003"
         ),
         EmployeeEntity(
             id = "emp_002",
             name = "Isolde Maduschen",
-            role = EmployeeRole.WORKER
+            role = EmployeeRole.WORKER,
+            managerId = "emp_003"
         ),
         EmployeeEntity(
             id = "emp_003",
