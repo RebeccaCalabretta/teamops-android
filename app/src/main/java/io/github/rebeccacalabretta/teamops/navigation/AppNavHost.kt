@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
+import io.github.rebeccacalabretta.teamops.domain.canAccessEmployee
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer
@@ -31,7 +33,20 @@ fun AppNavHost(
         composable<EmployeeRoute> {
             EmployeeScreen(
                 onEmployeeClick = { employeeId ->
-                    navController.navigate(EmployeeSessionRoute(employeeId))
+
+                    val currentUserId = "CURRENT_USER_ID"
+                    val currentRole = EmployeeRole.MANAGER
+                    // TODO replace with UserSessionState
+
+                    if (
+                        canAccessEmployee(
+                            currentUserId = currentUserId,
+                            currentRole = currentRole,
+                            targetEmployeeId = employeeId
+                        )
+                    ) {
+                        navController.navigate(EmployeeSessionRoute(employeeId))
+                    }
                 }
             )
         }
