@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
-import io.github.rebeccacalabretta.teamops.domain.canAccessEmployee
+import io.github.rebeccacalabretta.teamops.domain.access.canAccessEmployee
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer

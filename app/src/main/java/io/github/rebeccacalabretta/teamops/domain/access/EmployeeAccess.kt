@@ -1,4 +1,4 @@
-package io.github.rebeccacalabretta.teamops.domain
+package io.github.rebeccacalabretta.teamops.domain.access
 
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 

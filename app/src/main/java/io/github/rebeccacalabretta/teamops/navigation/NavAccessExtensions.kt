@@ -2,7 +2,7 @@ package io.github.rebeccacalabretta.teamops.navigation
 
 import androidx.navigation.NavHostController
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
-import io.github.rebeccacalabretta.teamops.domain.canAccessEmployee
+import io.github.rebeccacalabretta.teamops.domain.access.canAccessEmployee
 
 fun NavHostController.navigateIfAllowed(
     currentUserId: String,
