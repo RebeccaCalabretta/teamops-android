@@ -12,6 +12,7 @@ import io.github.rebeccacalabretta.teamops.domain.access.canAccessEmployee
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer
+import io.github.rebeccacalabretta.teamops.ui.schedule.ScheduleScreen
 
 @Composable
 fun AppNavHost(
@@ -28,6 +29,10 @@ fun AppNavHost(
             PunchContainer(
                 snackbarHostState = snackbarHostState
             )
+        }
+
+        composable<ScheduleRoute> {
+            ScheduleScreen()
         }
 
         composable<EmployeeRoute> {
