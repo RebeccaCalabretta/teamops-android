@@ -13,6 +13,8 @@ import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer
 import io.github.rebeccacalabretta.teamops.ui.schedule.ScheduleScreen
+import io.github.rebeccacalabretta.teamops.ui.vacation.VacationScreen
+
 
 @Composable
 fun AppNavHost(
@@ -33,6 +35,10 @@ fun AppNavHost(
 
         composable<ScheduleRoute> {
             ScheduleScreen()
+        }
+
+        composable<VacationRoute> {
+            VacationScreen()
         }
 
         composable<EmployeeRoute> {

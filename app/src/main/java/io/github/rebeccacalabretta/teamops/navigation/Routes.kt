@@ -12,6 +12,9 @@ object EmployeeRoute
 object ScheduleRoute
 
 @Serializable
+object VacationRoute
+
+@Serializable
 data class EmployeeSessionRoute(
     val employeeId: String
 )
