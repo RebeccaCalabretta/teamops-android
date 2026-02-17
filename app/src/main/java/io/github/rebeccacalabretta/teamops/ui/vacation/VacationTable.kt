@@ -1,67 +1,60 @@
-package io.github.rebeccacalabretta.teamops.ui.schedule
+package io.github.rebeccacalabretta.teamops.ui.vacation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import io.github.rebeccacalabretta.teamops.domain.schedule.ScheduleEntry
+import io.github.rebeccacalabretta.teamops.domain.vacation.VacationEntry
 
 @Composable
-fun ScheduleTable(
-    entries: List<ScheduleEntry>,
+fun VacationTable(
+    entries: List<VacationEntry>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        item { ScheduleHeaderRow() }
+        item { VacationHeaderRow() }
 
         items(entries, key = { it.id }) { entry ->
-            ScheduleRow(entry)
+            VacationRow(entry)
         }
     }
 }
 
 @Composable
-fun ScheduleHeaderRow() {
+fun VacationHeaderRow() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
-    ) {
-        ScheduleCell("Datum", Modifier.weight(1.2f), TextAlign.Start, true)
-        ScheduleCell("Objekt", Modifier.weight(1.6f), TextAlign.Start, true)
-        ScheduleCell("Start", Modifier.weight(0.8f), TextAlign.Center, true)
-        ScheduleCell("Ende", Modifier.weight(0.8f), TextAlign.Center, true)
-    }
-}
-
-@Composable
-fun ScheduleRow(entry: ScheduleEntry) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.04f))
             .padding(vertical = 6.dp)
     ) {
-        ScheduleCell(entry.date.toString(), Modifier.weight(1.2f))
-        ScheduleCell(entry.objectId, Modifier.weight(1.6f))
-        ScheduleCell(entry.startTime.toString(), Modifier.weight(0.8f), TextAlign.Center)
-        ScheduleCell(entry.endTime.toString(), Modifier.weight(0.8f), TextAlign.Center)
+        VacationCell("Start", Modifier.weight(1f), TextAlign.Start, true)
+        VacationCell("Ende", Modifier.weight(1f), TextAlign.Start, true)
+        VacationCell("Status", Modifier.weight(1f), TextAlign.Center, true)
     }
 }
 
 @Composable
-fun ScheduleCell(
+fun VacationRow(entry: VacationEntry) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp)
+    ) {
+        VacationCell(entry.startDate.toString(), Modifier.weight(1f))
+        VacationCell(entry.endDate.toString(), Modifier.weight(1f))
+        VacationCell(entry.status.name, Modifier.weight(1f), TextAlign.Center)
+    }
+}
+
+@Composable
+fun VacationCell(
     text: String,
     modifier: Modifier = Modifier,
     align: TextAlign = TextAlign.Start,
