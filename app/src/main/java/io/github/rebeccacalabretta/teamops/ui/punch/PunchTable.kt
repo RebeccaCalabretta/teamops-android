@@ -2,12 +2,15 @@ package io.github.rebeccacalabretta.teamops.ui.punch
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
@@ -24,6 +27,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
+
+@Composable
+fun PunchTable(
+    rows: List<SessionUiModel>,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        stickyHeader {
+            SessionHeaderRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(vertical = 4.dp)
+            )
+        }
+
+        items(rows) { row ->
+            SessionRow(
+                row = row,
+                canEdit = false,
+                onEditClick = {}
+            )
+        }
+    }
+}
 
 @Composable
 fun SessionHeaderRow(

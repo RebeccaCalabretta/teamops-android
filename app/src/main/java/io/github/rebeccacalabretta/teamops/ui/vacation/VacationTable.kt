@@ -1,5 +1,6 @@
 package io.github.rebeccacalabretta.teamops.ui.vacation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,7 +20,15 @@ fun VacationTable(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        item { VacationHeaderRow() }
+
+        stickyHeader {
+            VacationHeaderRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(vertical = 4.dp)
+            )
+        }
 
         items(entries, key = { it.id }) { entry ->
             VacationRow(entry)
@@ -28,11 +37,13 @@ fun VacationTable(
 }
 
 @Composable
-fun VacationHeaderRow() {
+fun VacationHeaderRow(
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp)
+            .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
         VacationCell("Start", Modifier.weight(1f), TextAlign.Start, true)
         VacationCell("Ende", Modifier.weight(1f), TextAlign.Start, true)

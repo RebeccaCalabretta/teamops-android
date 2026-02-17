@@ -22,7 +22,15 @@ fun ScheduleTable(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        item { ScheduleHeaderRow() }
+
+        stickyHeader {
+            ScheduleHeaderRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(vertical = 4.dp)
+            )
+        }
 
         items(entries, key = { it.id }) { entry ->
             ScheduleRow(entry)
@@ -31,11 +39,13 @@ fun ScheduleTable(
 }
 
 @Composable
-fun ScheduleHeaderRow() {
+fun ScheduleHeaderRow(
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
         ScheduleCell("Datum", Modifier.weight(1.2f), TextAlign.Start, true)
         ScheduleCell("Objekt", Modifier.weight(1.6f), TextAlign.Start, true)
