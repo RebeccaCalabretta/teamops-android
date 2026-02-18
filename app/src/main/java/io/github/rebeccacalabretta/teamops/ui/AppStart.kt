@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.domain.menu.RoleMenuConfig
 import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
 import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
@@ -23,11 +24,13 @@ fun AppStart() {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
+    val currentRole = EmployeeRole.MANAGER
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             DrawerMenu(
-                items = RoleMenuConfig.menuItems,
+                items = RoleMenuConfig.itemsForRole(currentRole),
                 onItemClick = { item ->
                     navController.navigate(item.id)
                 }
