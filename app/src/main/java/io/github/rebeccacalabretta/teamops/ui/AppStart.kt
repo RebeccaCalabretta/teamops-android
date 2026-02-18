@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import io.github.rebeccacalabretta.teamops.domain.menu.RoleMenuConfig
 import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
+import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
 
 @Composable
 fun AppStart() {
@@ -23,7 +25,14 @@ fun AppStart() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
-        drawerContent = {}
+        drawerContent = {
+            DrawerMenu(
+                items = RoleMenuConfig.menuItems,
+                onItemClick = { item ->
+                    navController.navigate(item.id)
+                }
+            )
+        }
     ) {
         Scaffold(
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
