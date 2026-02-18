@@ -10,12 +10,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.domain.menu.RoleMenuConfig
 import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
 import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
+import kotlinx.coroutines.launch
 
 @Composable
 fun AppStart() {
@@ -23,6 +25,7 @@ fun AppStart() {
     val navController = rememberNavController()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     val currentRole = EmployeeRole.MANAGER
 
@@ -33,6 +36,10 @@ fun AppStart() {
                 items = RoleMenuConfig.itemsForRole(currentRole),
                 onItemClick = { item ->
                     navController.navigate(item.id)
+
+                    scope.launch {
+                        drawerState.close()
+                    }
                 }
             )
         }
