@@ -6,69 +6,49 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
-import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
-import io.github.rebeccacalabretta.teamops.domain.access.canAccessEmployee
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer
 import io.github.rebeccacalabretta.teamops.ui.schedule.ScheduleScreen
 import io.github.rebeccacalabretta.teamops.ui.vacation.VacationScreen
 
-
 @Composable
 fun AppNavHost(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState,
+    onSetTopBarTitle: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = EmployeeRoute,
+        startDestination = "schedule",
         modifier = modifier
     ) {
-        composable<PunchRoute> {
-            PunchContainer(
-                snackbarHostState = snackbarHostState
-            )
+        composable("punch") {
+            PunchContainer(snackbarHostState = snackbarHostState)
         }
 
-        composable<ScheduleRoute> {
+        composable("schedule") {
             ScheduleScreen()
         }
 
-        composable<VacationRoute> {
+        composable("vacation") {
             VacationScreen()
         }
 
-        composable<EmployeeRoute> {
+        composable("employees") {
             EmployeeScreen(
                 onEmployeeClick = { employeeId ->
-
-                    val currentUserId = "emp_003"
-                    val currentRole = EmployeeRole.MANAGER
-                    val managedEmployeeIds = setOf("emp_001", "emp_002")
-                    // TODO replace with UserSessionState
-
-                    if (
-                        canAccessEmployee(
-                            currentUserId = currentUserId,
-                            currentRole = currentRole,
-                            targetEmployeeId = employeeId,
-                            managedEmployeeIds = managedEmployeeIds
-                        )
-                    ) {
-                        navController.navigate(EmployeeSessionRoute(employeeId))
-                    }
+                    navController.navigate("employeeSession/$employeeId")
                 }
             )
         }
 
-        composable<EmployeeSessionRoute> { entry ->
-            val route = entry.toRoute<EmployeeSessionRoute>()
+        composable("employeeSession/{employeeId}") { entry ->
+            val employeeId = entry.arguments?.getString("employeeId") ?: return@composable
             EmployeeSessionScreen(
-                employeeId = route.employeeId,
-                onBackClick = navController::popBackStack
+                employeeId = employeeId,
+                setTopBarTitle = onSetTopBarTitle
             )
         }
     }

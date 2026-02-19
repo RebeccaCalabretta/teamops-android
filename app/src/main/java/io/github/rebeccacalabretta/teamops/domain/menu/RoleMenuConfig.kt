@@ -24,15 +24,27 @@ object RoleMenuConfig {
             )
         ),
         MenuItem(
-            id = "objects",
-            title = "Objekte",
+            id = "schedule",
+            title = "Arbeitsplan",
             allowedRoles = setOf(
+                EmployeeRole.MANAGER,
+                EmployeeRole.HR,
+                EmployeeRole.ADMIN
+            )
+        ),
+        MenuItem(
+            id = "vacation",
+            title = "Urlaub",
+            allowedRoles = setOf(
+                EmployeeRole.WORKER,
                 EmployeeRole.MANAGER,
                 EmployeeRole.HR,
                 EmployeeRole.ADMIN
             )
         )
     )
+
+
 
     fun itemsForRole(role: EmployeeRole): List<MenuItem> =
         menuItems.filter { role in it.allowedRoles }

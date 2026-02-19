@@ -10,14 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,7 +34,7 @@ import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 @Composable
 fun EmployeeSessionScreen(
     employeeId: String,
-    onBackClick: () -> Unit,
+    setTopBarTitle: (String) -> Unit,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel = hiltViewModel(),
     sessionViewModel: EmployeeSessionViewModel = hiltViewModel()
@@ -50,9 +45,12 @@ fun EmployeeSessionScreen(
 
     val employeeRows by employeeViewModel.employeeRows.collectAsStateWithLifecycle()
     val employee = employeeRows.firstOrNull { it.id == employeeId }
-    val employeeName = employee?.name ?: "Mitarbeiter"
     val employeeRole = employee?.role
+    val employeeName = employee?.name ?: "Mitarbeiter"
 
+    LaunchedEffect(employeeName) {
+        setTopBarTitle(employeeName)
+    }
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
 
     var selectedSession: SessionUiModel? by remember { mutableStateOf(null) }
@@ -61,22 +59,9 @@ fun EmployeeSessionScreen(
     val listState = rememberLazyListState()
 
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        TopAppBar(
-            title = { Text(employeeName) },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            }
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()

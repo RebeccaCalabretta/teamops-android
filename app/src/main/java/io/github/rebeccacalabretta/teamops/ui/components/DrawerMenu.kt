@@ -1,5 +1,6 @@
 package io.github.rebeccacalabretta.teamops.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,14 +17,19 @@ fun DrawerMenu(
     items: List<MenuItem>,
     onItemClick: (MenuItem) -> Unit
 ) {
-    Column(modifier = Modifier.padding(top = 24.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(0.75f)
+            .background(MaterialTheme.colorScheme.surface) // ← DAS FEHLT
+            .padding(top = 24.dp)
+    ) {
         items.forEach { item ->
             Text(
                 text = item.title,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .clickable { onItemClick(item)}
+                    .fillMaxWidth()
+                    .clickable { onItemClick(item) }
                     .padding(horizontal = 16.dp, vertical = 16.dp)
             )
         }

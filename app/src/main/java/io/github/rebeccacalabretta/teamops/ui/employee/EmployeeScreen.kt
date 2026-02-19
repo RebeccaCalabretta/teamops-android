@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,10 +36,6 @@ fun EmployeeScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        TopAppBar(
-            title = { Text("Mitarbeiter") }
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
