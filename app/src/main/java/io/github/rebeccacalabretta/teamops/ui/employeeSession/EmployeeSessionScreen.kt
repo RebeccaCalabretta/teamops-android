@@ -43,14 +43,16 @@ fun EmployeeSessionScreen(
         sessionViewModel.loadSessions(employeeId)
     }
 
-    val employeeRows by employeeViewModel.employeeRows.collectAsStateWithLifecycle()
-    val employee = employeeRows.firstOrNull { it.id == employeeId }
-    val employeeRole = employee?.role
+    val allEmployees by employeeViewModel.allEmployees.collectAsStateWithLifecycle()
+
+    val employee = allEmployees.firstOrNull { it.id == employeeId }
     val employeeName = employee?.name ?: "Mitarbeiter"
+    val employeeRole = employee?.role
 
     LaunchedEffect(employeeName) {
         setTopBarTitle(employeeName)
     }
+
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
 
     var selectedSession: SessionUiModel? by remember { mutableStateOf(null) }

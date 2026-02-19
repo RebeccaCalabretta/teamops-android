@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 
 
@@ -29,8 +30,11 @@ fun EmployeeScreen(
 ) {
     val employees = viewModel.employeeRows.collectAsStateWithLifecycle().value
     val selectedRole = viewModel.roleFilter.collectAsStateWithLifecycle().value
+    val visibility = viewModel.visibility.collectAsStateWithLifecycle().value
+    val currentRole = visibility.currentRole
 
     var expandedEmployeeId by remember { mutableStateOf<String?>(null) }
+
 
     Column(
         modifier = modifier
@@ -41,10 +45,12 @@ fun EmployeeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            RoleFilterRow(
-                selectedRole = selectedRole,
-                onRoleSelected = viewModel::setRoleFilter
-            )
+            if (currentRole == EmployeeRole.HR || currentRole == EmployeeRole.ADMIN) {
+                RoleFilterRow(
+                    selectedRole = selectedRole,
+                    onRoleSelected = viewModel::setRoleFilter
+                )
+            }
 
             if (employees.isEmpty()) {
                 Text(

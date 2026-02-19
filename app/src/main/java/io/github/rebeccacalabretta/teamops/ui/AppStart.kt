@@ -38,7 +38,17 @@ fun AppStart() {
 
     var dynamicTitle by remember { mutableStateOf<String?>(null) }
 
+    /*val currentUserId = "emp_001"
+    val currentRole = EmployeeRole.WORKER
+    val teamMemberIds: Set<String> = emptySet()*/
+
+    /*val currentUserId = "emp_003"
     val currentRole = EmployeeRole.MANAGER
+    val teamMemberIds = setOf("emp_001", "emp_002")*/
+
+    val currentUserId = "emp_004"
+    val currentRole = EmployeeRole.HR
+    val teamMemberIds: Set<String> = emptySet()
 
     val topBarConfig = when {
         currentRoute == "punch" ->
@@ -53,7 +63,7 @@ fun AppStart() {
         currentRoute == "vacation" ->
             TopBarConfig.Root("Urlaub")
 
-        currentRoute?.startsWith("employeeSession/") == true ->
+        currentRoute?.startsWith("employeeSession") == true ->
             TopBarConfig.Child(dynamicTitle ?: "Mitarbeiter")
 
         else ->
@@ -105,6 +115,9 @@ fun AppStart() {
             AppNavHost(
                 navController = navController,
                 snackbarHostState = snackbarHostState,
+                currentUserId = currentUserId,
+                currentRole = currentRole,
+                teamMemberIds = teamMemberIds,
                 onSetTopBarTitle = { title ->
                     dynamicTitle = title
                 },

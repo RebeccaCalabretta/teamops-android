@@ -8,13 +8,15 @@ fun NavHostController.navigateIfAllowed(
     currentUserId: String,
     currentRole: EmployeeRole,
     targetEmployeeId: String,
-    route: Any
+    route: String,
+    teamMemberIds: Set<String> = emptySet()
 ) {
     if(
         canAccessEmployee(
             currentUserId = currentUserId,
             currentRole = currentRole,
-            targetEmployeeId = targetEmployeeId
+            targetEmployeeId = targetEmployeeId,
+            teamMemberIds = teamMemberIds
         )
     ) {
         navigate(route)

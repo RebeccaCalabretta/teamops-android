@@ -27,6 +27,7 @@ object RoleMenuConfig {
             id = "schedule",
             title = "Arbeitsplan",
             allowedRoles = setOf(
+                EmployeeRole.WORKER,
                 EmployeeRole.MANAGER,
                 EmployeeRole.HR,
                 EmployeeRole.ADMIN

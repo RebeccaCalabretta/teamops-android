@@ -6,7 +6,7 @@ fun canAccessEmployee(
     currentUserId: String,
     currentRole: EmployeeRole,
     targetEmployeeId: String,
-    managedEmployeeIds: Set<String> = emptySet()
+    teamMemberIds: Set<String> = emptySet()
 ): Boolean {
     return when (currentRole) {
         EmployeeRole.WORKER ->
@@ -14,7 +14,7 @@ fun canAccessEmployee(
 
         EmployeeRole.MANAGER ->
             currentUserId == targetEmployeeId ||
-                    managedEmployeeIds.contains(targetEmployeeId)
+                    teamMemberIds.contains(targetEmployeeId)
 
         EmployeeRole.HR,
         EmployeeRole.ADMIN ->
