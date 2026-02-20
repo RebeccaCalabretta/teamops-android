@@ -7,7 +7,8 @@ import androidx.room.RoomDatabase
     entities = [
         PunchSessionEntity::class,
         ObjectEntity::class,
-        EmployeeEntity::class
+        EmployeeEntity::class,
+        ScheduleEntity::class
     ],
     version = 3,
     exportSchema = false
@@ -16,4 +17,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun punchSessionDao(): PunchSessionDao
     abstract fun objectDao(): ObjectDao
     abstract fun employeeDao(): EmployeeDao
+    abstract fun scheduleDao(): ScheduleDao
 }

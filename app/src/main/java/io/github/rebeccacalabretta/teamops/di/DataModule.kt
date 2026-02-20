@@ -11,6 +11,7 @@ import io.github.rebeccacalabretta.teamops.data.db.AppDatabase
 import io.github.rebeccacalabretta.teamops.data.db.EmployeeDao
 import io.github.rebeccacalabretta.teamops.data.db.ObjectDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
+import io.github.rebeccacalabretta.teamops.data.db.ScheduleDao
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
@@ -80,4 +81,9 @@ object DataModule {
         dao: EmployeeDao
     ): EmployeeRepository =
         EmployeeRepositoryImpl(dao)
+
+    @Provides
+    fun provideScheduleDao(
+        db: AppDatabase
+    ): ScheduleDao = db.scheduleDao()
 }
