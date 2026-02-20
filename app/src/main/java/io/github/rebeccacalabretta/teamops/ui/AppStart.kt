@@ -20,6 +20,10 @@ import androidx.navigation.compose.rememberNavController
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.domain.menu.RoleMenuConfig
 import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
+import io.github.rebeccacalabretta.teamops.navigation.EmployeeRoute
+import io.github.rebeccacalabretta.teamops.navigation.PunchRoute
+import io.github.rebeccacalabretta.teamops.navigation.ScheduleRoute
+import io.github.rebeccacalabretta.teamops.navigation.VacationRoute
 import io.github.rebeccacalabretta.teamops.ui.components.AppTopBar
 import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
 import io.github.rebeccacalabretta.teamops.ui.state.TopBarConfig
@@ -51,19 +55,19 @@ fun AppStart() {
     val teamMemberIds: Set<String> = emptySet()
 
     val topBarConfig = when {
-        currentRoute == "punch" ->
+        currentRoute?.contains("PunchRoute") == true ->
             TopBarConfig.Root("Zeiterfassung")
 
-        currentRoute == "employees" ->
+        currentRoute?.contains("EmployeeRoute") == true ->
             TopBarConfig.Root("Mitarbeiter")
 
-        currentRoute == "schedule" ->
+        currentRoute?.contains("ScheduleRoute") == true ->
             TopBarConfig.Root("Arbeitsplan")
 
-        currentRoute == "vacation" ->
+        currentRoute?.contains("VacationRoute") == true ->
             TopBarConfig.Root("Urlaub")
 
-        currentRoute?.startsWith("employeeSession") == true ->
+        currentRoute?.contains("EmployeeSessionRoute") == true ->
             TopBarConfig.Child(dynamicTitle ?: "Mitarbeiter")
 
         else ->
@@ -77,19 +81,20 @@ fun AppStart() {
                 items = RoleMenuConfig.itemsForRole(currentRole),
                 onItemClick = { item ->
                     val targetRoute = when (item.id) {
-                        "punch" -> "punch"
-                        "employees" -> "employees"
-                        "schedule" -> "schedule"
-                        "vacation" -> "vacation"
+                        "punch" -> PunchRoute
+                        "employees" -> EmployeeRoute
+                        "schedule" -> ScheduleRoute
+                        "vacation" -> VacationRoute
                         else -> null
                     }
 
                     targetRoute?.let { route ->
                         navController.navigate(route) {
                             launchSingleTop = true
-                            restoreState = true
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+                            restoreState = false
+
+                            popUpTo(0) {
+                                inclusive = false
                             }
                         }
                     }

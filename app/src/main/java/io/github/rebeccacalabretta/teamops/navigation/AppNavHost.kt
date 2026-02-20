@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
@@ -29,22 +30,22 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "schedule",
+        startDestination = ScheduleRoute,
         modifier = modifier
     ) {
-        composable("punch") {
+        composable<PunchRoute> {
             PunchContainer(snackbarHostState = snackbarHostState)
         }
 
-        composable("schedule") {
+        composable<ScheduleRoute> {
             ScheduleScreen()
         }
 
-        composable("vacation") {
+        composable<VacationRoute> {
             VacationScreen()
         }
 
-        composable("employees") {
+        composable<EmployeeRoute> {
             if (currentRole == EmployeeRole.WORKER) {
                 navController.popBackStack()
                 return@composable
@@ -68,16 +69,17 @@ fun AppNavHost(
                         currentUserId = currentUserId,
                         currentRole = currentRole,
                         targetEmployeeId = employeeId,
-                        route = "employeeSession/$employeeId",
                         teamMemberIds = teamMemberIds
-                    )
+                    ) {
+                        navController.navigate(EmployeeSessionRoute(employeeId))
+                    }
                 }
             )
         }
 
-        composable("employeeSession/{employeeId}") { entry ->
-            val employeeId =
-                entry.arguments?.getString("employeeId") ?: return@composable
+        composable<EmployeeSessionRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<EmployeeSessionRoute>()
+            val employeeId = route.employeeId
 
             EmployeeSessionScreen(
                 employeeId = employeeId,

@@ -8,10 +8,10 @@ fun NavHostController.navigateIfAllowed(
     currentUserId: String,
     currentRole: EmployeeRole,
     targetEmployeeId: String,
-    route: String,
-    teamMemberIds: Set<String> = emptySet()
+    teamMemberIds: Set<String> = emptySet(),
+    onAllowed: () -> Unit
 ) {
-    if(
+    if (
         canAccessEmployee(
             currentUserId = currentUserId,
             currentRole = currentRole,
@@ -19,6 +19,6 @@ fun NavHostController.navigateIfAllowed(
             teamMemberIds = teamMemberIds
         )
     ) {
-        navigate(route)
+        onAllowed()
     }
 }
