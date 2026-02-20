@@ -3,6 +3,7 @@ package io.github.rebeccacalabretta.teamops.data.db
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ScheduleDao {
@@ -14,7 +15,7 @@ interface ScheduleDao {
             ORDER BY date ASC, startTime ASC
         """
     )
-    fun getScheduleForEmployee(employeeId: String)
+    fun getScheduleForEmployee(employeeId: String): Flow<List<ScheduleEntity>>
 
     @Upsert
     suspend fun upsertSchedule(entry: ScheduleEntity)
