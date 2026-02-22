@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionHeaderRow
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionRow
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeSessionViewModel
@@ -55,7 +55,7 @@ fun EmployeeSessionScreen(
 
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
 
-    var selectedSession: SessionUiModel? by remember { mutableStateOf(null) }
+    var selectedSession: SessionRowUiModel? by remember { mutableStateOf(null) }
     var showEditDialog by remember { mutableStateOf(false) }
 
     val listState = rememberLazyListState()

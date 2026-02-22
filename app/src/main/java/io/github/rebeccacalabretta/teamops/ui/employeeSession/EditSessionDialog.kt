@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -19,7 +19,7 @@ import java.time.format.DateTimeParseException
 
 @Composable
 fun EditSessionDialog(
-    session: SessionUiModel,
+    session: SessionRowUiModel,
     onDismiss: () -> Unit,
     onSave: (String, String) -> Unit
 ) {

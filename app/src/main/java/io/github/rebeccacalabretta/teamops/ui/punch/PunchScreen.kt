@@ -25,7 +25,7 @@ import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
 import io.github.rebeccacalabretta.teamops.ui.components.WorkTimeSummaryRow
-import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import java.time.YearMonth
 
 @Composable
@@ -38,7 +38,7 @@ fun PunchScreen(
     monthWorkText: String,
     isCheckedIn: Boolean = false,
     isProcessing: Boolean = false,
-    sessionRows: List<SessionUiModel> = emptyList(),
+    sessionRows: List<SessionRowUiModel> = emptyList(),
     onCheckInClick: () -> Unit = {},
     onCheckOutClick: () -> Unit = {}
 ) {
@@ -145,7 +145,7 @@ fun PunchScreen(
     }
 }
 
-private fun shouldConfirmCheckout(sessionRows: List<SessionUiModel>): Boolean {
+private fun shouldConfirmCheckout(sessionRows: List<SessionRowUiModel>): Boolean {
     val active = sessionRows.firstOrNull { it.isCheckedIn } ?: return false
     val durationMillis = System.currentTimeMillis() - active.startTime
     return durationMillis >= 60_000L

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
-import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,7 +39,7 @@ class EmployeeSessionViewModel @Inject constructor(
                 punchSessionRepository.getSessionsForEmployee(id)
             }
 
-    val sessionRows: StateFlow<List<SessionUiModel>> =
+    val sessionRows: StateFlow<List<SessionRowUiModel>> =
         combine(sessionsForEmployee, objectRepository.getAllObjects()) { sessions, objects ->
             val objectsById = objects.associateBy { it.id }
             sessions.map { session ->

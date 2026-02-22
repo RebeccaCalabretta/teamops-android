@@ -6,7 +6,7 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 fun mapToSessionUiModel(
     session: PunchSessionEntity,
     obj: ObjectEntity?
-): SessionUiModel {
+): SessionRowUiModel {
     val isCheckedIn = session.endTime == null
 
     val isCheckedOutOutsideRadius =
@@ -14,7 +14,7 @@ fun mapToSessionUiModel(
                 session.checkOutDistanceMeters != null &&
                 session.checkOutDistanceMeters > obj.radiusMeters.toDouble()
 
-    return SessionUiModel(
+    return SessionRowUiModel(
         id = session.id,
         objectName = obj?.name ?: "Unbekannt",
         startTime = session.startTime,

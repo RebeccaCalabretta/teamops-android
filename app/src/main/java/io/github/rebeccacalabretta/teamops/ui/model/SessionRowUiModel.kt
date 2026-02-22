@@ -1,6 +1,6 @@
 package io.github.rebeccacalabretta.teamops.ui.model
 
-data class SessionUiModel(
+data class SessionRowUiModel(
     val id: String,
     val objectName: String,
     val startTime: Long,

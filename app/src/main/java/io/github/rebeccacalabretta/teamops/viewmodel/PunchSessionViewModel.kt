@@ -10,7 +10,7 @@ import io.github.rebeccacalabretta.teamops.data.export.mapToExportSessionRow
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
-import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
 import io.github.rebeccacalabretta.teamops.util.ObjectMatcher
 import io.github.rebeccacalabretta.teamops.util.WorkTimeCalculator
@@ -108,7 +108,7 @@ class PunchSessionViewModel @Inject constructor(
                 "0 h 00 min"
             )
 
-    val sessionRows: StateFlow<List<SessionUiModel>> =
+    val sessionRows: StateFlow<List<SessionRowUiModel>> =
         combine(
             monthlySessions,
             objectRepository.getAllObjects()

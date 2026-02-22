@@ -14,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import io.github.rebeccacalabretta.teamops.domain.schedule.ScheduleEntry
+import io.github.rebeccacalabretta.teamops.ui.model.ScheduleRowUiModel
 
 @Composable
 fun ScheduleTable(
-    entries: List<ScheduleEntry>,
+    entries: List<ScheduleRowUiModel>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -55,7 +55,9 @@ fun ScheduleHeaderRow(
 }
 
 @Composable
-fun ScheduleRow(entry: ScheduleEntry) {
+fun ScheduleRow(
+    entry: ScheduleRowUiModel
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

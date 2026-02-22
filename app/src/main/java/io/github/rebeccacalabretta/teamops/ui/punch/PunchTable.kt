@@ -25,12 +25,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import io.github.rebeccacalabretta.teamops.ui.model.SessionUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
 
 @Composable
 fun PunchTable(
-    rows: List<SessionUiModel>,
+    rows: List<SessionRowUiModel>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -104,10 +104,10 @@ fun SessionHeaderRow(
 
 @Composable
 fun SessionRow(
-    row: SessionUiModel,
+    row: SessionRowUiModel,
     modifier: Modifier = Modifier,
     canEdit: Boolean,
-    onEditClick: (SessionUiModel) -> Unit
+    onEditClick: (SessionRowUiModel) -> Unit
 ) {
     val date = SessionFormat.formatDate(row.startTime)
     val start = SessionFormat.formatTime(row.startTime)
