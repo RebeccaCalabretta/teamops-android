@@ -9,7 +9,9 @@ object PunchRoute
 object EmployeeRoute
 
 @Serializable
-object ScheduleRoute
+data class ScheduleRoute(
+    val employeeId: String
+)
 
 @Serializable
 object VacationRoute

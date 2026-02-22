@@ -30,15 +30,17 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScheduleRoute,
+        startDestination = ScheduleRoute(currentUserId),
         modifier = modifier
     ) {
         composable<PunchRoute> {
             PunchContainer(snackbarHostState = snackbarHostState)
         }
 
-        composable<ScheduleRoute> {
-            ScheduleScreen()
+        composable<ScheduleRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<ScheduleRoute>()
+
+            ScheduleScreen(employeeId = route.employeeId)
         }
 
         composable<VacationRoute> {
