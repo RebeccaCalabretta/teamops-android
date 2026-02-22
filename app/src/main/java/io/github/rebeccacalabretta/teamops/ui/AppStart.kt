@@ -10,10 +10,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -26,11 +24,11 @@ import io.github.rebeccacalabretta.teamops.navigation.ScheduleRoute
 import io.github.rebeccacalabretta.teamops.navigation.VacationRoute
 import io.github.rebeccacalabretta.teamops.ui.components.AppTopBar
 import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
-import io.github.rebeccacalabretta.teamops.ui.state.TopBarConfig
 import kotlinx.coroutines.launch
 
 @Composable
 fun AppStart() {
+
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
 
@@ -39,8 +37,6 @@ fun AppStart() {
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
-
-    var dynamicTitle by remember { mutableStateOf<String?>(null) }
 
     /*val currentUserId = "emp_001"
     val currentRole = EmployeeRole.WORKER
@@ -54,25 +50,17 @@ fun AppStart() {
     val currentRole = EmployeeRole.HR
     val teamMemberIds: Set<String> = emptySet()
 
-    val topBarConfig = when {
-        currentRoute?.contains("PunchRoute") == true ->
-            TopBarConfig.Root("Zeiterfassung")
-
-        currentRoute?.contains("EmployeeRoute") == true ->
-            TopBarConfig.Root("Mitarbeiter")
-
-        currentRoute?.contains("ScheduleRoute") == true ->
-            TopBarConfig.Root("Arbeitsplan")
-
-        currentRoute?.contains("VacationRoute") == true ->
-            TopBarConfig.Root("Urlaub")
-
-        currentRoute?.contains("EmployeeSessionRoute") == true ->
-            TopBarConfig.Child(dynamicTitle ?: "Mitarbeiter")
-
-        else ->
-            TopBarConfig.Root("")
+    val title = when {
+        currentRoute?.contains("PunchRoute") == true -> "Zeiterfassung"
+        currentRoute?.contains("EmployeeRoute") == true -> "Mitarbeiter"
+        currentRoute?.contains("ScheduleRoute") == true -> "Arbeitsplan"
+        currentRoute?.contains("VacationRoute") == true -> "Urlaub"
+        currentRoute?.contains("EmployeeSessionRoute") == true -> "Zeiterfassung"
+        else -> ""
     }
+
+    val showBackButton =
+        currentRoute?.contains("EmployeeSessionRoute") == true
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -83,7 +71,7 @@ fun AppStart() {
                     val targetRoute = when (item.id) {
                         "punch" -> PunchRoute
                         "employees" -> EmployeeRoute
-                        "schedule" -> ScheduleRoute
+                        "schedule" -> ScheduleRoute(currentUserId)
                         "vacation" -> VacationRoute
                         else -> null
                     }
@@ -92,10 +80,7 @@ fun AppStart() {
                         navController.navigate(route) {
                             launchSingleTop = true
                             restoreState = false
-
-                            popUpTo(0) {
-                                inclusive = false
-                            }
+                            popUpTo(0) { inclusive = false }
                         }
                     }
 
@@ -109,7 +94,8 @@ fun AppStart() {
         Scaffold(
             topBar = {
                 AppTopBar(
-                    config = topBarConfig,
+                    title = title,
+                    showBackButton = showBackButton,
                     onMenuClick = { scope.launch { drawerState.open() } },
                     onBackClick = { navController.popBackStack() }
                 )
@@ -123,9 +109,6 @@ fun AppStart() {
                 currentUserId = currentUserId,
                 currentRole = currentRole,
                 teamMemberIds = teamMemberIds,
-                onSetTopBarTitle = { title ->
-                    dynamicTitle = title
-                },
                 modifier = Modifier.padding(padding)
             )
         }

@@ -25,7 +25,6 @@ fun AppNavHost(
     currentUserId: String,
     currentRole: EmployeeRole,
     teamMemberIds: Set<String>,
-    onSetTopBarTitle: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -80,6 +79,16 @@ fun AppNavHost(
                     ) {
                         navController.navigate(EmployeeSessionRoute(employeeId))
                     }
+                },
+                onScheduleClick = { employeeId ->
+                    navController.navigateIfAllowed(
+                        currentUserId = currentUserId,
+                        currentRole = currentRole,
+                        targetEmployeeId = employeeId,
+                        teamMemberIds = teamMemberIds
+                    ) {
+                        navController.navigate(ScheduleRoute(employeeId))
+                    }
                 }
             )
         }
@@ -89,8 +98,7 @@ fun AppNavHost(
             val employeeId = route.employeeId
 
             EmployeeSessionScreen(
-                employeeId = employeeId,
-                setTopBarTitle = onSetTopBarTitle
+                employeeId = employeeId
             )
         }
     }

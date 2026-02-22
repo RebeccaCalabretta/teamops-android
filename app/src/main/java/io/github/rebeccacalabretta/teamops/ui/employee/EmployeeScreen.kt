@@ -26,7 +26,8 @@ import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 fun EmployeeScreen(
     modifier: Modifier = Modifier,
     viewModel: EmployeeViewModel = hiltViewModel(),
-    onEmployeeClick: (String) -> Unit
+    onEmployeeClick: (String) -> Unit,
+    onScheduleClick: (String) -> Unit
 ) {
     val employees = viewModel.employeeRows.collectAsStateWithLifecycle().value
     val selectedRole = viewModel.roleFilter.collectAsStateWithLifecycle().value
@@ -73,7 +74,7 @@ fun EmployeeScreen(
                             },
                             onRowClick = { onEmployeeClick(employee.id) },
                             onSessionsClick = { onEmployeeClick(employee.id) },
-                            onScheduleClick = {},
+                            onScheduleClick = { onScheduleClick(employee.id) },
                             onVacationClick = {}
                         )
 
