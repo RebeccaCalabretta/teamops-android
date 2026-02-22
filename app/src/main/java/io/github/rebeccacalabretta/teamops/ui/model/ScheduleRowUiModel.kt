@@ -7,6 +7,7 @@ data class ScheduleRowUiModel(
     val id: String,
     val employeeId: String,
     val objectId: String,
+    val objectName: String,
     val date: LocalDate,
     val startTime: LocalTime,
     val endTime: LocalTime
