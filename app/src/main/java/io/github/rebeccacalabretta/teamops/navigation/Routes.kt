@@ -3,10 +3,12 @@ package io.github.rebeccacalabretta.teamops.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-object PunchRoute
+data class PunchRoute(
+    val employeeId: String
+)
 
 @Serializable
-object EmployeeRoute
+data object EmployeeRoute
 
 @Serializable
 data class ScheduleRoute(
@@ -14,7 +16,9 @@ data class ScheduleRoute(
 )
 
 @Serializable
-object VacationRoute
+data class VacationRoute(
+    val employeeId: String
+)
 
 @Serializable
 data class EmployeeSessionRoute(

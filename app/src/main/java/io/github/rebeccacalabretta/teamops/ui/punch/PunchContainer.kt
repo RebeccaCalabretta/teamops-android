@@ -3,6 +3,8 @@ package io.github.rebeccacalabretta.teamops.ui.punch
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,17 +16,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.permission.PermissionSettingsDialog
 import io.github.rebeccacalabretta.teamops.util.permission.hasLocationPermission
 import io.github.rebeccacalabretta.teamops.util.permission.openAppSettings
 import io.github.rebeccacalabretta.teamops.util.permission.shouldShowLocationPermissionRationale
+import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.PunchSessionViewModel
 
 @Composable
 fun PunchContainer(
+    employeeId: String,
+    currentUserId: String,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    viewModel: PunchSessionViewModel = hiltViewModel()
+    punchSessionViewModel: PunchSessionViewModel = hiltViewModel(),
+    employeeViewModel: EmployeeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
@@ -52,18 +59,24 @@ fun PunchContainer(
         )
     }
 
-    val isCheckedIn by viewModel.isCheckedIn.collectAsStateWithLifecycle()
-    val sessionRows by viewModel.sessionRows.collectAsStateWithLifecycle()
-    val isProcessing by viewModel.isProcessing.collectAsStateWithLifecycle()
-    val uiMessage by viewModel.uiMessage.collectAsStateWithLifecycle()
-    val selectedMonth by viewModel.selectedMonth.collectAsStateWithLifecycle()
-    val todayWorkText by viewModel.todayWorkText.collectAsStateWithLifecycle()
-    val monthWorkText by viewModel.monthWorkText.collectAsStateWithLifecycle()
+    val isCheckedIn by punchSessionViewModel.isCheckedIn.collectAsStateWithLifecycle()
+    val sessionRows by punchSessionViewModel.sessionRows.collectAsStateWithLifecycle()
+    val isProcessing by punchSessionViewModel.isProcessing.collectAsStateWithLifecycle()
+    val uiMessage by punchSessionViewModel.uiMessage.collectAsStateWithLifecycle()
+    val selectedMonth by punchSessionViewModel.selectedMonth.collectAsStateWithLifecycle()
+    val todayWorkText by punchSessionViewModel.todayWorkText.collectAsStateWithLifecycle()
+    val monthWorkText by punchSessionViewModel.monthWorkText.collectAsStateWithLifecycle()
+
+    val allEmployees by employeeViewModel.allEmployees.collectAsStateWithLifecycle()
+
+    val employee = allEmployees.firstOrNull { it.id == employeeId }
+    val employeeName = employee?.name ?: ""
+    val employeeRole = employee?.role
 
     LaunchedEffect(uiMessage) {
         val message = uiMessage ?: return@LaunchedEffect
         snackbarHostState.showSnackbar(message)
-        viewModel.clearUiMessage()
+        punchSessionViewModel.clearUiMessage()
     }
 
     if (showPermissionSettingsDialog) {
@@ -80,17 +93,27 @@ fun PunchContainer(
         )
     }
 
-    PunchScreen(
-        modifier = modifier,
-        selectedMonth = selectedMonth,
-        onPrevMonthCLick = viewModel::prevMonth,
-        onNextMonthCLick = viewModel::nextMonth,
-        todayWorkText = todayWorkText,
-        monthWorkText = monthWorkText,
-        isCheckedIn = isCheckedIn,
-        isProcessing = isProcessing,
-        onCheckInClick = viewModel::checkIn,
-        onCheckOutClick = viewModel::checkOut,
-        sessionRows = sessionRows
-    )
+    Column(modifier = modifier.fillMaxSize()) {
+
+        EmployeeContextHeader(
+            employeeId = employeeId,
+            currentUserId = currentUserId,
+            employeeName = employeeName,
+            employeeRole = employeeRole
+        )
+
+        PunchScreen(
+            selectedMonth = selectedMonth,
+            onPrevMonthCLick = punchSessionViewModel::prevMonth,
+            onNextMonthCLick = punchSessionViewModel::nextMonth,
+            todayWorkText = todayWorkText,
+            monthWorkText = monthWorkText,
+            isCheckedIn = isCheckedIn,
+            isProcessing = isProcessing,
+            onCheckInClick = punchSessionViewModel::checkIn,
+            onCheckOutClick = punchSessionViewModel::checkOut,
+            sessionRows = sessionRows,
+            modifier = Modifier.weight(1f)
+        )
+    }
 }

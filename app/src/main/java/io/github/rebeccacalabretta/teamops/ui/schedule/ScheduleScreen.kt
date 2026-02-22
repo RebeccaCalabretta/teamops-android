@@ -1,18 +1,14 @@
 package io.github.rebeccacalabretta.teamops.ui.schedule
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
+import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.ScheduleViewModel
 
@@ -51,26 +47,12 @@ fun ScheduleScreen(
 
     Column(modifier = modifier) {
 
-        if (employeeId != currentUserId) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Text(
-                    text = employeeName,
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                employeeRole?.let {
-                    Text(
-                        text = it.displayRole,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
+        EmployeeContextHeader(
+            employeeId = employeeId,
+            currentUserId = currentUserId,
+            employeeName = employeeName,
+            employeeRole = employeeRole
+        )
 
         ScheduleTable(
             entries = scheduleEntries,

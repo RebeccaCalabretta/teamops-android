@@ -32,8 +32,15 @@ fun AppNavHost(
         startDestination = ScheduleRoute(currentUserId),
         modifier = modifier
     ) {
-        composable<PunchRoute> {
-            PunchContainer(snackbarHostState = snackbarHostState)
+
+        composable<PunchRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<PunchRoute>()
+
+            PunchContainer(
+                employeeId = route.employeeId,
+                currentUserId = currentUserId,
+                snackbarHostState = snackbarHostState
+            )
         }
 
         composable<ScheduleRoute> { backStackEntry ->
@@ -47,11 +54,17 @@ fun AppNavHost(
             )
         }
 
-        composable<VacationRoute> {
-            VacationScreen()
+        composable<VacationRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<VacationRoute>()
+
+            VacationScreen(
+                employeeId = route.employeeId,
+                currentUserId = currentUserId
+            )
         }
 
         composable<EmployeeRoute> {
+
             if (currentRole == EmployeeRole.WORKER) {
                 navController.popBackStack()
                 return@composable
@@ -89,16 +102,26 @@ fun AppNavHost(
                     ) {
                         navController.navigate(ScheduleRoute(employeeId))
                     }
+                },
+                onVacationClick = { employeeId ->
+                    navController.navigateIfAllowed(
+                        currentUserId = currentUserId,
+                        currentRole = currentRole,
+                        targetEmployeeId = employeeId,
+                        teamMemberIds = teamMemberIds
+                    ) {
+                        navController.navigate(VacationRoute(employeeId))
+                    }
                 }
             )
         }
 
         composable<EmployeeSessionRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<EmployeeSessionRoute>()
-            val employeeId = route.employeeId
 
             EmployeeSessionScreen(
-                employeeId = employeeId
+                employeeId = route.employeeId,
+                currentUserId = currentUserId
             )
         }
     }

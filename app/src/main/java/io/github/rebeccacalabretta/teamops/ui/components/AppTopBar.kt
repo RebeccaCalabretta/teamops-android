@@ -9,40 +9,27 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import io.github.rebeccacalabretta.teamops.ui.state.TopBarConfig
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
-    config: TopBarConfig,
+    title: String,
+    showBackButton: Boolean,
     onMenuClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    val title = when (config) {
-        is TopBarConfig.Root -> config.title
-        is TopBarConfig.Child -> config.title
-    }
-
-    val isChild = config is TopBarConfig.Child
-
     TopAppBar(
         title = { Text(title) },
         navigationIcon = {
-            if (isChild) {
+            if (showBackButton) {
                 IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                 }
             }
         },
         actions = {
             IconButton(onClick = onMenuClick) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu"
-                )
+                Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
         }
     )

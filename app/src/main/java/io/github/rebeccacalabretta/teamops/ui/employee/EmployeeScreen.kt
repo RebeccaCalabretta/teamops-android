@@ -27,7 +27,8 @@ fun EmployeeScreen(
     modifier: Modifier = Modifier,
     viewModel: EmployeeViewModel = hiltViewModel(),
     onEmployeeClick: (String) -> Unit,
-    onScheduleClick: (String) -> Unit
+    onScheduleClick: (String) -> Unit,
+    onVacationClick: (String) -> Unit
 ) {
     val employees = viewModel.employeeRows.collectAsStateWithLifecycle().value
     val selectedRole = viewModel.roleFilter.collectAsStateWithLifecycle().value
@@ -75,7 +76,7 @@ fun EmployeeScreen(
                             onRowClick = { onEmployeeClick(employee.id) },
                             onSessionsClick = { onEmployeeClick(employee.id) },
                             onScheduleClick = { onScheduleClick(employee.id) },
-                            onVacationClick = {}
+                            onVacationClick = { onVacationClick(employee.id)}
                         )
 
                     }

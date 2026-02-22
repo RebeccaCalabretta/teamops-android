@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionHeaderRow
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionRow
@@ -34,7 +35,7 @@ import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 @Composable
 fun EmployeeSessionScreen(
     employeeId: String,
-    setTopBarTitle: (String) -> Unit,
+    currentUserId: String,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel = hiltViewModel(),
     sessionViewModel: EmployeeSessionViewModel = hiltViewModel()
@@ -48,10 +49,6 @@ fun EmployeeSessionScreen(
     val employee = allEmployees.firstOrNull { it.id == employeeId }
     val employeeName = employee?.name ?: "Mitarbeiter"
     val employeeRole = employee?.role
-
-    LaunchedEffect(employeeName) {
-        setTopBarTitle(employeeName)
-    }
 
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
 
@@ -69,16 +66,12 @@ fun EmployeeSessionScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            employeeRole?.let {
-                Text(
-                    text = it.displayRole,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 6.dp, bottom = 10.dp)
-                )
-            }
+            EmployeeContextHeader(
+                employeeId = employeeId,
+                currentUserId = currentUserId,
+                employeeName = employeeName,
+                employeeRole = employeeRole
+            )
 
             if (sessionRows.isEmpty()) {
                 Column(

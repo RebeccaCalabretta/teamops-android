@@ -10,17 +10,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
+import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.VacationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VacationScreen(
+    employeeId: String,
+    currentUserId: String,
     modifier: Modifier = Modifier,
-    viewModel: VacationViewModel = hiltViewModel()
+    viewModel: VacationViewModel = hiltViewModel(),
+    employeeViewModel: EmployeeViewModel = hiltViewModel()
 ) {
+
     val entries by viewModel.vacationEntries.collectAsStateWithLifecycle()
 
+    val allEmployees by employeeViewModel
+        .allEmployees
+        .collectAsStateWithLifecycle()
+
+    val employee = allEmployees.firstOrNull { it.id == employeeId }
+    val employeeName = employee?.name ?: ""
+    val employeeRole = employee?.role
+
     Column(modifier = modifier.fillMaxSize()) {
+
+        EmployeeContextHeader(
+            employeeId = employeeId,
+            currentUserId = currentUserId,
+            employeeName = employeeName,
+            employeeRole = employeeRole
+        )
+
         VacationTable(
             entries = entries,
             modifier = Modifier

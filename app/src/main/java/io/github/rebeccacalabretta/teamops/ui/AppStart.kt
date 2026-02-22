@@ -42,13 +42,13 @@ fun AppStart() {
     val currentRole = EmployeeRole.WORKER
     val teamMemberIds: Set<String> = emptySet()*/
 
-    /*val currentUserId = "emp_003"
+    val currentUserId = "emp_003"
     val currentRole = EmployeeRole.MANAGER
-    val teamMemberIds = setOf("emp_001", "emp_002")*/
+    val teamMemberIds = setOf("emp_001", "emp_002")
 
-    val currentUserId = "emp_004"
+    /*val currentUserId = "emp_004"
     val currentRole = EmployeeRole.HR
-    val teamMemberIds: Set<String> = emptySet()
+    val teamMemberIds: Set<String> = emptySet()*/
 
     val title = when {
         currentRoute?.contains("PunchRoute") == true -> "Zeiterfassung"
@@ -69,10 +69,10 @@ fun AppStart() {
                 items = RoleMenuConfig.itemsForRole(currentRole),
                 onItemClick = { item ->
                     val targetRoute = when (item.id) {
-                        "punch" -> PunchRoute
+                        "punch" -> PunchRoute(currentUserId)
                         "employees" -> EmployeeRoute
                         "schedule" -> ScheduleRoute(currentUserId)
-                        "vacation" -> VacationRoute
+                        "vacation" -> VacationRoute(currentUserId)
                         else -> null
                     }
 
