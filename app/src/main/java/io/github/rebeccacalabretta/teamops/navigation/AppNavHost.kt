@@ -40,7 +40,12 @@ fun AppNavHost(
         composable<ScheduleRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<ScheduleRoute>()
 
-            ScheduleScreen(employeeId = route.employeeId)
+            ScheduleScreen(
+                employeeId = route.employeeId,
+                currentUserId = currentUserId,
+                currentRole = currentRole,
+                teamMemberIds = teamMemberIds
+            )
         }
 
         composable<VacationRoute> {

@@ -4,11 +4,15 @@ import io.github.rebeccacalabretta.teamops.data.db.ScheduleEntity
 import java.time.Instant
 import java.time.ZoneId
 
-fun ScheduleEntity.toScheduleRowUiModel(): ScheduleRowUiModel =
+fun ScheduleEntity.toScheduleRowUiModel(
+    objectName: String,
+    canEdit: Boolean
+): ScheduleRowUiModel =
     ScheduleRowUiModel(
         id = id,
         employeeId = employeeId,
-        objectId = "",
+        objectId = objectId,
+        objectName = objectName,
         date = Instant.ofEpochMilli(date)
             .atZone(ZoneId.systemDefault())
             .toLocalDate(),
@@ -17,5 +21,6 @@ fun ScheduleEntity.toScheduleRowUiModel(): ScheduleRowUiModel =
             .toLocalTime(),
         endTime = Instant.ofEpochMilli(endTime)
             .atZone(ZoneId.systemDefault())
-            .toLocalTime()
+            .toLocalTime(),
+        canEdit = canEdit
     )

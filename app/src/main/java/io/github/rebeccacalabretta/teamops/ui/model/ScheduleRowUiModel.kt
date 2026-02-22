@@ -10,5 +10,6 @@ data class ScheduleRowUiModel(
     val objectName: String,
     val date: LocalDate,
     val startTime: LocalTime,
-    val endTime: LocalTime
+    val endTime: LocalTime,
+    val canEdit: Boolean
 )
