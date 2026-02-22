@@ -59,8 +59,15 @@ fun AppStart() {
         else -> ""
     }
 
+    val arguments = backStackEntry?.arguments
+
+    val routeEmployeeId = arguments?.getString("employeeId")
+
+    val isForeignEmployeeContext =
+        routeEmployeeId != null && routeEmployeeId != currentUserId
+
     val showBackButton =
-        currentRoute?.contains("EmployeeSessionRoute") == true
+        isForeignEmployeeContext
 
     ModalNavigationDrawer(
         drawerState = drawerState,
