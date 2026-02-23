@@ -22,11 +22,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.rebeccacalabretta.teamops.R
+import io.github.rebeccacalabretta.teamops.domain.model.LoginError
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.viewmodel.LoginViewModel
 
@@ -35,9 +39,26 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val errorText = when (uiState.error) {
+        LoginError.InvalidCredentials ->
+            stringResource(R.string.error_invalid_credentials)
+
+        LoginError.UserNotFound ->
+            stringResource(R.string.error_user_not_found)
+
+        LoginError.Network ->
+            stringResource(R.string.error_network)
+
+        LoginError.Unknown ->
+            stringResource(R.string.error_unknown)
+
+        null -> null
+    }
+
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -45,11 +66,17 @@ fun LoginScreen(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            Text(
+                text = stringResource(R.string.login_title),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineMedium
+            )
 
             OutlinedTextField(
                 value = uiState.email,
                 onValueChange = viewModel::onEmailChanged,
-                label = { Text("Email") },
+                label = { Text(stringResource(R.string.login_email)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -57,7 +84,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = viewModel::onPasswordChanged,
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.login_password)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = if (passwordVisible)
@@ -82,16 +109,18 @@ fun LoginScreen(
             )
 
             GeneralButton(
-                onClick = { },
-                text = "Login",
+                onClick = viewModel::login,
+                text = stringResource(R.string.login_button),
                 enabled = uiState.isLoginEnabled,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            uiState.errorMessage?.let { message ->
+            errorText?.let { message ->
                 Text(
                     text = message,
-                    color = MaterialTheme.colorScheme.error
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.error,
+                    textAlign = TextAlign.Center
                 )
             }
         }

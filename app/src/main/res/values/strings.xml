@@ -1,5 +1,23 @@
 <resources>
     <string name="app_name">TeamOps</string>
+    <!-- LoginScreen -->
+    <string name="login_title">Anmelden</string>
+    <string name="login_email">E-Mail</string>
+    <string name="login_password">Passwort</string>
+    <string name="login_button">Login</string>
+    <!-- PunchScreen -->
+    <string name="status_checked_in">Status: eingestempelt</string>
+    <string name="status_checked_out">Status: ausgestempelt</string>
+    <string name="button_check_in">Check In</string>
+    <string name="button_check_out">Check Out</string>
+    <string name="button_search_location">Suche Standort...</string>
+    <string name="no_work_times">Noch keine Arbeitszeiten vorhanden</string>
+    <!-- ErrorMessage -->
+    <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
+    <string name="error_user_not_found">Benutzer nicht gefunden</string>
+    <string name="error_network">Netzwerkfehler</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
+
     <string name="work_time_today">Heute: %1$s</string>
     <string name="work_time_month">Diesen Monat: %1$s</string>
 </resources>

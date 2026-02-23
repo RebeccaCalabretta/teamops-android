@@ -42,11 +42,18 @@ fun PunchScreen(
     onCheckInClick: () -> Unit = {},
     onCheckOutClick: () -> Unit = {}
 ) {
-    val statusText = if (isCheckedIn) "Status: eingestempelt" else "Status: ausgestempelt"
+    val statusText = if (isCheckedIn)
+        stringResource(R.string.status_checked_in)
+    else
+        stringResource(R.string.status_checked_out)
+
     val buttonText =
-        if (isProcessing) "Suche Standort..."
-        else if (isCheckedIn) "Check Out"
-        else "Check In"
+        if (isProcessing)
+            stringResource(R.string.button_search_location)
+        else if (isCheckedIn)
+            stringResource(R.string.button_check_out)
+        else
+            stringResource(R.string.button_check_in)
 
     var showCheckOutDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -112,7 +119,7 @@ fun PunchScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = "Noch keine Arbeitszeiten vorhanden"
+                    text = stringResource(R.string.no_work_times)
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
