@@ -22,3 +22,4 @@ local.properties
 .idea/gradle.xml
 .idea/migrations.xml
 .idea/runConfigurations.xml
+app/google-services.json
