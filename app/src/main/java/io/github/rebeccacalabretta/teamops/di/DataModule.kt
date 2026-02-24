@@ -2,6 +2,7 @@ package io.github.rebeccacalabretta.teamops.di
 
 import android.content.Context
 import androidx.room.Room
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,12 +15,14 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.ScheduleDao
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepositoryImpl
+import io.github.rebeccacalabretta.teamops.data.repository.FirebaseUserRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepositoryImpl
+import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
 import io.github.rebeccacalabretta.teamops.location.LocationProviderImpl
 import javax.inject.Singleton
@@ -95,4 +98,11 @@ object DataModule {
         dao: ScheduleDao
     ): ScheduleRepository =
         ScheduleRepositoryImpl(dao)
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(
+        firestore: FirebaseFirestore
+    ): UserRepository =
+        FirebaseUserRepository(firestore)
 }

@@ -8,3 +8,7 @@ enum class EmployeeRole(
     HR("HR"),
     ADMIN("Admin")
 }
+
+fun String.toEmployeeRole(): EmployeeRole? =
+    EmployeeRole.entries
+        .firstOrNull { it.name.equals(this, ignoreCase = true) }

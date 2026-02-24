@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.hilt.android)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.firebase.firestore.ktx)
     ksp(libs.androidx.room.compiler)
     ksp(libs.hilt.compiler)
     testImplementation(libs.junit)
@@ -73,4 +74,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.kotlinx.coroutines.play.services)
 }
