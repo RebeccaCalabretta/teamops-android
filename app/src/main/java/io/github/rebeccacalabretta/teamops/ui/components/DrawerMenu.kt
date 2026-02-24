@@ -20,7 +20,7 @@ fun DrawerMenu(
     Column(
         modifier = Modifier
             .fillMaxWidth(0.75f)
-            .background(MaterialTheme.colorScheme.surface) // ← DAS FEHLT
+            .background(MaterialTheme.colorScheme.surface)
             .padding(top = 24.dp)
     ) {
         items.forEach { item ->
