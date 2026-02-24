@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">TeamOps</string>
+    <!-- ErrorMessage -->
+    <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
+    <string name="error_user_not_found">Benutzer nicht gefunden</string>
+    <string name="error_network">Netzwerkfehler</string>
+    <string name="error_unknown">Unbekannter Fehler</string>
     <!-- LoginScreen -->
     <string name="login_title">Anmelden</string>
     <string name="login_email">E-Mail</string>
@@ -12,12 +17,11 @@
     <string name="button_check_out">Check Out</string>
     <string name="button_search_location">Suche Standort...</string>
     <string name="no_work_times">Noch keine Arbeitszeiten vorhanden</string>
-    <!-- ErrorMessage -->
-    <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
-    <string name="error_user_not_found">Benutzer nicht gefunden</string>
-    <string name="error_network">Netzwerkfehler</string>
-    <string name="error_unknown">Unbekannter Fehler</string>
-
     <string name="work_time_today">Heute: %1$s</string>
     <string name="work_time_month">Diesen Monat: %1$s</string>
-</resources>
+    <!-- TopAppBar Titles -->
+    <string name="title_punch">Zeiterfassung</string>
+    <string name="title_employees">Mitarbeiter</string>
+    <string name="title_schedule">Arbeitsplan</string>
+    <string name="title_vacation">Urlaub</string>
+ </resources>
