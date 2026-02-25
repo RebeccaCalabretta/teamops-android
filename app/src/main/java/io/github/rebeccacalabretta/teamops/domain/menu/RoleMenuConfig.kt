@@ -42,9 +42,18 @@ object RoleMenuConfig {
                 EmployeeRole.HR,
                 EmployeeRole.ADMIN
             )
+        ),
+        MenuItem(
+            id = "logout",
+            title = "Abmelden",
+            allowedRoles = setOf(
+                EmployeeRole.WORKER,
+                EmployeeRole.MANAGER,
+                EmployeeRole.HR,
+                EmployeeRole.ADMIN
+            )
         )
     )
-
 
 
     fun itemsForRole(role: EmployeeRole): List<MenuItem> =

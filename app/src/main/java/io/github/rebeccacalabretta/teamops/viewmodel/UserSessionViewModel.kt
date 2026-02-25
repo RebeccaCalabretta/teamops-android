@@ -2,48 +2,50 @@ package io.github.rebeccacalabretta.teamops.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.rebeccacalabretta.teamops.domain.repository.AuthRepository
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class UserSessionViewModel @Inject constructor(
-    private val auth: FirebaseAuth,
+    private val authRepository: AuthRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val _state: MutableStateFlow<UserSessionState> =
-        MutableStateFlow(UserSessionState())
-
-    val state: StateFlow<UserSessionState> =
-        _state.asStateFlow()
+    private val _state = MutableStateFlow(UserSessionState())
+    val state: StateFlow<UserSessionState> = _state.asStateFlow()
 
     init {
-        loadSession()
+        observeSession()
     }
 
-    private fun loadSession() {
-        val uid: String? = auth.currentUser?.uid
+    fun logout() = authRepository.logout()
 
-        if (uid == null) {
-            _state.update { it.copy(isLoading = false) }
-            return
-        }
-
+    private fun observeSession() {
         viewModelScope.launch {
-            val session = userRepository.getUserSession(uid)
+            authRepository.observeAuthState().collectLatest { uid ->
+                if (uid == null) {
+                    _state.update { it.copy(isLoading = false, session = null) }
+                    return@collectLatest
+                }
 
-            _state.update {
-                it.copy(
-                    isLoading = false,
-                    session = session
-                )
+                _state.update { it.copy(isLoading = true) }
+
+                val session = userRepository.getUserSession(uid)
+
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        session = session
+                    )
+                }
             }
         }
     }

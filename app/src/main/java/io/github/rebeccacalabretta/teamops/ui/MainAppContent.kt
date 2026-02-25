@@ -25,10 +25,6 @@ import androidx.navigation.compose.rememberNavController
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.domain.menu.RoleMenuConfig
 import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
-import io.github.rebeccacalabretta.teamops.navigation.EmployeeRoute
-import io.github.rebeccacalabretta.teamops.navigation.PunchRoute
-import io.github.rebeccacalabretta.teamops.navigation.ScheduleRoute
-import io.github.rebeccacalabretta.teamops.navigation.VacationRoute
 import io.github.rebeccacalabretta.teamops.ui.components.AppTopBar
 import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
 import io.github.rebeccacalabretta.teamops.viewmodel.UserSessionViewModel
@@ -90,23 +86,12 @@ fun MainAppContent(
             DrawerMenu(
                 items = RoleMenuConfig.itemsForRole(session.role),
                 onItemClick = { item ->
-                    val targetRoute = when (item.id) {
-                        "punch" -> PunchRoute(session.employeeId)
-                        "employees" -> EmployeeRoute
-                        "schedule" -> ScheduleRoute(session.employeeId)
-                        "vacation" -> VacationRoute(session.employeeId)
-                        else -> null
-                    }
-
-                    targetRoute?.let { route ->
-                        navController.navigate(route) {
-                            launchSingleTop = true
-                            restoreState = false
-                            popUpTo(0) { inclusive = false }
-                        }
-                    }
-
                     scope.launch {
+                        navController.onDrawerMenuClick(
+                            itemId = item.id,
+                            sessionEmployeeId = session.employeeId,
+                            onLogout = viewModel::logout
+                        )
                         drawerState.close()
                     }
                 }
