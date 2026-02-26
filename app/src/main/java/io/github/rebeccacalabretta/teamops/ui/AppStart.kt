@@ -2,6 +2,7 @@ package io.github.rebeccacalabretta.teamops.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.viewmodel.AuthStateViewModel
@@ -14,6 +15,8 @@ fun AppStart() {
     if (userId == null) {
         LoginScreen()
     } else {
-        MainAppContent()
+        key(userId) {
+            MainAppContent()
+        }
     }
 }
