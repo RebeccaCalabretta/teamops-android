@@ -47,14 +47,8 @@ fun LoginScreen(
         LoginError.InvalidCredentials ->
             stringResource(R.string.error_invalid_credentials)
 
-        LoginError.UserNotFound ->
-            stringResource(R.string.error_user_not_found)
-
         LoginError.Network ->
             stringResource(R.string.error_network)
-
-        LoginError.Unknown ->
-            stringResource(R.string.error_unknown)
 
         null -> null
     }

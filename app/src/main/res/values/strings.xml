@@ -2,10 +2,9 @@
     <string name="app_name">TeamOps</string>
     <!-- ErrorMessage -->
     <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
-    <string name="error_network">Netzwerkfehler</string>
+    <string name="error_network">Keine Internetverbindung</string>
     <string name="error_session_load">Session konnte nicht geladen werden</string>
     <string name="error_unknown">Unbekannter Fehler</string>
-    <string name="error_user_not_found">Benutzer nicht gefunden</string>
     <!-- LoginScreen -->
     <string name="login_button">Login</string>
     <string name="login_email">E-Mail</string>

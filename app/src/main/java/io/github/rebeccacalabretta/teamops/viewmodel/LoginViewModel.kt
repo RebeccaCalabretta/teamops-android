@@ -71,19 +71,9 @@ class LoginViewModel @Inject constructor(
                         it.copy(isLoading = false, error = LoginError.InvalidCredentials)
                     }
 
-                AuthResult.Failure.UserNotFound ->
-                    _uiState.update {
-                        it.copy(isLoading = false, error = LoginError.UserNotFound)
-                    }
-
                 AuthResult.Failure.NetworkError ->
                     _uiState.update {
                         it.copy(isLoading = false, error = LoginError.Network)
-                    }
-
-                AuthResult.Failure.Unknown ->
-                    _uiState.update {
-                        it.copy(isLoading = false, error = LoginError.Unknown)
                     }
             }
         }

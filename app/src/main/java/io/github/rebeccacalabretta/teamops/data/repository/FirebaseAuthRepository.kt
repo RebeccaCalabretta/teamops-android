@@ -1,8 +1,8 @@
 package io.github.rebeccacalabretta.teamops.data.repository
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import io.github.rebeccacalabretta.teamops.domain.model.AuthResult
 import io.github.rebeccacalabretta.teamops.domain.repository.AuthRepository
 import kotlinx.coroutines.channels.awaitClose
@@ -27,11 +27,13 @@ class FirebaseAuthRepository @Inject constructor(
                 .await()
 
             AuthResult.Success
+
         } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Log.d("AuthDebug", "InvalidCredentials: ${e::class.java}")
             AuthResult.Failure.InvalidCredentials
-        } catch (e: FirebaseAuthInvalidUserException) {
-            AuthResult.Failure.UserNotFound
+
         } catch (e: Exception) {
+            Log.d("AuthDebug", "Network/Other: ${e::class.java}")
             AuthResult.Failure.NetworkError
         }
     }

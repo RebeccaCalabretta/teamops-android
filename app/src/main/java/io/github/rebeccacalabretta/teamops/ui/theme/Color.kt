@@ -15,6 +15,13 @@ val CyanButtonGradient = verticalGradient(
     colors = listOf(Cyan80, Cyan20)
 )
 
+val DisabledButtonBrush = verticalGradient(
+    colors = listOf(
+        Color(0xFFB0BEC5),
+        Color(0xFF90A4AE)
+    )
+)
+
 // Neutral colors
 val SurfaceLight = Color(0xFFFFFFFF)
 val OnSurfaceLight = Color(0xFF1C1C1C)
