@@ -13,6 +13,7 @@ import io.github.rebeccacalabretta.teamops.data.db.EmployeeDao
 import io.github.rebeccacalabretta.teamops.data.db.ObjectDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.ScheduleDao
+import io.github.rebeccacalabretta.teamops.data.remote.RemotePunchDataSource
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.FirebaseUserRepository
@@ -52,9 +53,10 @@ object DataModule {
     @Provides
     @Singleton
     fun providePunchSessionRepository(
-        dao: PunchSessionDao
+        dao: PunchSessionDao,
+        remote: RemotePunchDataSource
     ): PunchSessionRepository =
-        PunchSessionRepositoryImpl(dao)
+        PunchSessionRepositoryImpl(dao, remote)
 
     @Provides
     fun provideObjectDao(
