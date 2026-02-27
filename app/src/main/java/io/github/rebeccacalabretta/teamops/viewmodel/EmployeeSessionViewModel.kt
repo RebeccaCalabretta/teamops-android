@@ -2,9 +2,11 @@ package io.github.rebeccacalabretta.teamops.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
+import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
 import io.github.rebeccacalabretta.teamops.util.SessionFormat
@@ -25,6 +27,8 @@ import javax.inject.Inject
 class EmployeeSessionViewModel @Inject constructor(
     private val punchSessionRepository: PunchSessionRepository,
     private val objectRepository: ObjectRepository,
+    private val userRepository: UserRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private val _selectedEmployeeId = MutableStateFlow<String?>(null)
@@ -66,10 +70,15 @@ class EmployeeSessionViewModel @Inject constructor(
     ) {
         val employeeId = selectedEmployeeId.value ?: return
 
-        val startMillis = SessionFormat.parseTimeToMillis(dateMillis, startTimeText)
-        val endMillis = SessionFormat.parseTimeToMillis(dateMillis, endTimeText)
-
         viewModelScope.launch {
+
+            val firebaseUid = firebaseAuth.currentUser?.uid ?: return@launch
+            val userSession = userRepository.getUserSession(firebaseUid) ?: return@launch
+            val currentUserId = userSession.employeeId
+
+            val startMillis = SessionFormat.parseTimeToMillis(dateMillis, startTimeText)
+            val endMillis = SessionFormat.parseTimeToMillis(dateMillis, endTimeText)
+
             val session = punchSessionRepository
                 .getSessionsForEmployee(employeeId)
                 .first()
@@ -79,7 +88,8 @@ class EmployeeSessionViewModel @Inject constructor(
                 session.copy(
                     startTime = startMillis,
                     endTime = endMillis
-                )
+                ),
+                currentUserId = currentUserId
             )
         }
     }

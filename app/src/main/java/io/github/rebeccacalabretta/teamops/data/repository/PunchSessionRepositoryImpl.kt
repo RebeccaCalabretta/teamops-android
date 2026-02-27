@@ -21,35 +21,29 @@ class PunchSessionRepositoryImpl(
         createdAt: Long = startTime,
         lastEditedAt: Long? = null,
         lastEditedBy: String? = null
-    ): PunchSessionDocument = PunchSessionDocument(
-        id = id,
-        employeeId = employeeId,
-        objectId = objectId,
-        startTime = startTime,
-        endTime = endTime,
-        createdAt = createdAt,
-        lastEditedAt = lastEditedAt,
-        lastEditedBy = lastEditedBy,
-        checkOutDistanceMeters = checkOutDistanceMeters
-    )
+    ): PunchSessionDocument =
+        PunchSessionDocument(
+            id = id,
+            employeeId = employeeId,
+            objectId = objectId,
+            startTime = startTime,
+            endTime = endTime,
+            createdAt = createdAt,
+            lastEditedAt = lastEditedAt,
+            lastEditedBy = lastEditedBy,
+            checkOutDistanceMeters = checkOutDistanceMeters
+        )
 
-    private suspend fun runRemote(context: String, block: suspend () -> Unit) {
-        try { block() } catch (e: Exception) {
-            throw IllegalStateException("Remote failed ($context)", e)
-        }
-    }
-
-    private suspend fun runLocal(context: String, block: suspend () -> Unit) {
-        try { block() } catch (e: Exception) {
-            throw IllegalStateException("Local failed ($context)", e)
-        }
-    }
-
-    override suspend fun checkIn(objectId: String, employeeId: String) {
+    override suspend fun checkIn(
+        objectId: String,
+        employeeId: String,
+        currentUserId: String
+    ) {
         val open = dao.getOpenSessionOrNull()
         if (open != null) throw IllegalStateException("There is already an open session.")
 
         val now = System.currentTimeMillis()
+
         val entity = PunchSessionEntity(
             objectId = objectId,
             employeeId = employeeId,
@@ -58,15 +52,22 @@ class PunchSessionRepositoryImpl(
             monthKey = MonthKey.fromTimestamp(now)
         )
 
-        runRemote("checkIn id=${entity.id}") {
-            remote.upsert(entity.toDocument(createdAt = now))
-        }
-        runLocal("checkIn id=${entity.id}") {
-            dao.insert(entity)
-        }
+        remote.upsert(
+            entity.toDocument(
+                createdAt = now,
+                lastEditedAt = null,
+                lastEditedBy = null
+            )
+        )
+
+        dao.insert(entity)
     }
 
-    override suspend fun checkOut(endLocation: Location, objectEntity: ObjectEntity) {
+    override suspend fun checkOut(
+        endLocation: Location,
+        objectEntity: ObjectEntity,
+        currentUserId: String
+    ) {
         val open = dao.getOpenSessionOrNull()
             ?: throw IllegalStateException("No open session to check out.")
 
@@ -81,8 +82,8 @@ class PunchSessionRepositoryImpl(
         )
 
         if (duration < 60_000L) {
-            runRemote("short delete id=${open.id}") { remote.delete(open.id) }
-            runLocal("short delete id=${open.id}") { dao.delete(open) }
+            remote.delete(open.id)
+            dao.delete(open)
             return
         }
 
@@ -91,35 +92,32 @@ class PunchSessionRepositoryImpl(
             checkOutDistanceMeters = distance
         )
 
-        runRemote("checkOut id=${updated.id}") {
-            remote.upsert(
-                updated.toDocument(
-                    createdAt = open.startTime,
-                    lastEditedAt = endTime,
-                    lastEditedBy = open.employeeId
-                )
+        remote.upsert(
+            updated.toDocument(
+                createdAt = open.startTime,
+                lastEditedAt = endTime,
+                lastEditedBy = currentUserId
             )
-        }
-        runLocal("checkOut id=${updated.id}") {
-            dao.update(updated)
-        }
+        )
+
+        dao.update(updated)
     }
 
-    override suspend fun updateSession(session: PunchSessionEntity) {
+    override suspend fun updateSession(
+        session: PunchSessionEntity,
+        currentUserId: String
+    ) {
         val now = System.currentTimeMillis()
 
-        runRemote("updateSession id=${session.id}") {
-            remote.upsert(
-                session.toDocument(
-                    createdAt = session.startTime,
-                    lastEditedAt = now,
-                    lastEditedBy = session.employeeId
-                )
+        remote.upsert(
+            session.toDocument(
+                createdAt = session.startTime,
+                lastEditedAt = now,
+                lastEditedBy = currentUserId
             )
-        }
-        runLocal("updateSession id=${session.id}") {
-            dao.update(session)
-        }
+        )
+
+        dao.update(session)
     }
 
     override suspend fun getOpenSessionOrNull(): PunchSessionEntity? =
@@ -130,8 +128,15 @@ class PunchSessionRepositoryImpl(
 
     override fun getSessionsForMonth(yearMonth: YearMonth): Flow<List<PunchSessionEntity>> =
         dao.getSessionBetween(
-            fromMillis = yearMonth.atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            toMillis = yearMonth.plusMonths(1).atDay(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            fromMillis = yearMonth.atDay(1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli(),
+            toMillis = yearMonth.plusMonths(1)
+                .atDay(1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
         )
 
     override fun getSessionsForEmployee(employeeId: String): Flow<List<PunchSessionEntity>> =

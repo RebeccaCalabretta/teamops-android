@@ -7,16 +7,24 @@ import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 
 interface PunchSessionRepository {
-    suspend fun checkIn(objectId: String, employeeId: String)
+    suspend fun checkIn(
+        objectId: String,
+        employeeId: String,
+        currentUserId: String
+    )
 
     suspend fun checkOut(
         endLocation: Location,
-        objectEntity: ObjectEntity
+        objectEntity: ObjectEntity,
+        currentUserId: String
     )
 
     suspend fun getOpenSessionOrNull(): PunchSessionEntity?
 
-    suspend fun updateSession(session: PunchSessionEntity)
+    suspend fun updateSession(
+        session: PunchSessionEntity,
+        currentUserId: String
+    )
 
     fun getSessionsForMonth(yearMonth: YearMonth): Flow<List<PunchSessionEntity>>
 
