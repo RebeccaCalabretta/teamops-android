@@ -1,24 +1,26 @@
 package io.github.rebeccacalabretta.teamops.ui.schedule
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.ScheduleRowUiModel
 
 @Composable
 fun ScheduleTable(
     entries: List<ScheduleRowUiModel>,
+    onRowClick: (ScheduleRowUiModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -33,13 +35,16 @@ fun ScheduleTable(
         }
 
         items(entries, key = { it.id }) { entry ->
-            ScheduleRow(entry)
+            ScheduleRow(
+                entry = entry,
+                onClick = { onRowClick(entry) }
+            )
         }
     }
 }
 
 @Composable
-fun ScheduleHeaderRow(
+private fun ScheduleHeaderRow(
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -47,21 +52,42 @@ fun ScheduleHeaderRow(
             .fillMaxWidth()
             .padding(horizontal = 4.dp, vertical = 4.dp)
     ) {
-        ScheduleCell("Datum", Modifier.weight(1.2f), TextAlign.Start, true)
-        ScheduleCell("Objekt", Modifier.weight(1.6f), TextAlign.Start, true)
-        ScheduleCell("Start", Modifier.weight(0.8f), TextAlign.Center, true)
-        ScheduleCell("Ende", Modifier.weight(0.8f), TextAlign.Center, true)
+        ScheduleCell(
+            text = stringResource(R.string.schedule_header_date),
+            modifier = Modifier.weight(1.2f),
+            align = TextAlign.Start,
+            isHeader = true
+        )
+        ScheduleCell(
+            text = stringResource(R.string.schedule_header_object),
+            modifier = Modifier.weight(1.6f),
+            align = TextAlign.Start,
+            isHeader = true
+        )
+        ScheduleCell(
+            text = stringResource(R.string.schedule_header_start),
+            modifier = Modifier.weight(0.8f),
+            align = TextAlign.Center,
+            isHeader = true
+        )
+        ScheduleCell(
+            text = stringResource(R.string.schedule_header_end),
+            modifier = Modifier.weight(0.8f),
+            align = TextAlign.Center,
+            isHeader = true
+        )
     }
 }
 
 @Composable
-fun ScheduleRow(
-    entry: ScheduleRowUiModel
+private fun ScheduleRow(
+    entry: ScheduleRowUiModel,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clickable(enabled = entry.canEdit) { onClick() }
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.04f))
             .padding(vertical = 6.dp)
     ) {
@@ -73,7 +99,7 @@ fun ScheduleRow(
 }
 
 @Composable
-fun ScheduleCell(
+private fun ScheduleCell(
     text: String,
     modifier: Modifier = Modifier,
     align: TextAlign = TextAlign.Start,
