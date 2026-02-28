@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -61,7 +62,7 @@ class ScheduleViewModel @Inject constructor(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
+                started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = emptyList()
             )
 
@@ -79,6 +80,26 @@ class ScheduleViewModel @Inject constructor(
             currentRole = currentRole,
             teamMemberIds = teamMemberIds
         )
+    }
+
+    fun upsertSchedule(entry: ScheduleEntity) {
+        val user = _userContext.value ?: return
+        viewModelScope.launch {
+            scheduleRepository.upsertSchedule(
+                entry = entry,
+                currentUserId = user.currentUserId
+            )
+        }
+    }
+
+    fun deleteSchedule(entry: ScheduleEntity) {
+        val user = _userContext.value ?: return
+        viewModelScope.launch {
+            scheduleRepository.deleteSchedule(
+                entry = entry,
+                currentUserId = user.currentUserId
+            )
+        }
     }
 
     private fun canEdit(

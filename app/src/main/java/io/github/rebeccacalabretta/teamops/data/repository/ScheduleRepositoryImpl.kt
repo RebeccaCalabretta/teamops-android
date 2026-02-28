@@ -31,13 +31,16 @@ class ScheduleRepositoryImpl @Inject constructor(
     override fun getScheduleForEmployee(employeeId: String): Flow<List<ScheduleEntity>> =
         scheduleDao.getScheduleForEmployee(employeeId)
 
-    override suspend fun upsertSchedule(entry: ScheduleEntity) {
+    override suspend fun upsertSchedule(
+        entry: ScheduleEntity,
+        currentUserId: String
+    ) {
         val now = System.currentTimeMillis()
 
         try {
             remote.upsert(
                 entry.toDocument(
-                    lastEditedBy = entry.lastEditedBy,
+                    lastEditedBy = currentUserId,
                     lastEditedAt = now
                 )
             )
@@ -48,7 +51,10 @@ class ScheduleRepositoryImpl @Inject constructor(
         scheduleDao.upsertSchedule(entry)
     }
 
-    override suspend fun deleteSchedule(entry: ScheduleEntity) {
+    override suspend fun deleteSchedule(
+        entry: ScheduleEntity,
+        currentUserId: String
+    ) {
         try {
             remote.delete(entry.id)
         } catch (e: Exception) {
