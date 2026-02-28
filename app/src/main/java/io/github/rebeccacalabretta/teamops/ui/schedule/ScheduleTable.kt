@@ -87,12 +87,12 @@ private fun ScheduleRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = entry.canEdit) { onClick() }
+            .clickable { onClick() }
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.04f))
             .padding(vertical = 6.dp)
     ) {
         ScheduleCell(entry.date.toString(), Modifier.weight(1.2f))
-        ScheduleCell(entry.objectId, Modifier.weight(1.6f))
+        ScheduleCell(entry.objectName, Modifier.weight(1.6f))
         ScheduleCell(entry.startTime.toString(), Modifier.weight(0.8f), TextAlign.Center)
         ScheduleCell(entry.endTime.toString(), Modifier.weight(0.8f), TextAlign.Center)
     }

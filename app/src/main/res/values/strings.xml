@@ -26,6 +26,11 @@
     <string name="schedule_save">Speichern</string>
     <string name="schedule_add_button">Plan hinzufügen</string>
     <string name="schedule_delete">Eintrag löschen</string>
+    <string name="schedule_ok">OK</string>
+    <string name="schedule_cancel">Abbrechen</string>
+    <string name="schedule_date">Datum</string>
+    <string name="schedule_start">Startzeit</string>
+    <string name="schedule_end">Endzeit</string>
     <!-- ScheduleTable -->
     <string name="schedule_header_date">Datum</string>
     <string name="schedule_header_object">Objekt</string>

@@ -38,7 +38,7 @@ fun ScheduleScreen(
     employeeViewModel: EmployeeViewModel = hiltViewModel()
 ) {
 
-    LaunchedEffect(employeeId) {
+    LaunchedEffect(employeeId, currentUserId, currentRole, teamMemberIds) {
         viewModel.loadSchedule(employeeId)
         viewModel.setUserContext(
             currentUserId = currentUserId,
@@ -69,13 +69,14 @@ fun ScheduleScreen(
         ScheduleTable(
             entries = scheduleEntries,
             onRowClick = { row ->
-                if (row.canEdit) {
-                    editingEntry = row.toScheduleEntity(
-                        employeeId = employeeId,
-                        createdBy = currentUserId
-                    )
-                    showSheet = true
-                }
+                if (!row.canEdit) return@ScheduleTable
+
+                editingEntry = row.toScheduleEntity(
+                    employeeId = employeeId,
+                    createdBy = currentUserId
+                )
+
+                showSheet = true
             },
             modifier = Modifier.weight(1f)
         )
@@ -106,6 +107,7 @@ fun ScheduleScreen(
             initialDate = editingEntry?.date ?: System.currentTimeMillis(),
             initialStart = editingEntry?.startTime ?: System.currentTimeMillis(),
             initialEnd = editingEntry?.endTime ?: (System.currentTimeMillis() + 3_600_000),
+            isEditMode = isEdit,
             onDismiss = { showSheet = false },
             onSave = { objectId, date, start, end ->
 
@@ -120,6 +122,12 @@ fun ScheduleScreen(
                 )
 
                 viewModel.upsertSchedule(entity)
+                showSheet = false
+            },
+            onDelete = {
+                editingEntry?.let {
+                    viewModel.deleteSchedule(it)
+                }
                 showSheet = false
             }
         )
