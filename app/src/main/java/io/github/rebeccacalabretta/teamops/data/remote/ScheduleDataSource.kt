@@ -10,17 +10,18 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PunchSessionDataSource @Inject constructor(
-    firestore: FirebaseFirestore
+class ScheduleDataSource @Inject constructor(
+    private val firestore: FirebaseFirestore
 ) {
-    private val punchSessions = firestore.collection("punchSessions")
-    private val TAG = "PunchSessionDataSource"
+    private val collection = firestore.collection("schedules")
+    private val TAG = "ScheduleDataSource"
 
-    fun observePunchSessions(employeeId: String): Flow<List<PunchSessionDocument>> =
+    fun observeSchedulesForEmployees(employeeId: String): Flow<List<ScheduleDocument>> =
         callbackFlow {
-            val registration = punchSessions
+            val listener = collection
                 .whereEqualTo("employeeId", employeeId)
                 .addSnapshotListener { snapshot, error ->
+
                     if (error != null) {
                         close(error)
                         return@addSnapshotListener
@@ -28,21 +29,18 @@ class PunchSessionDataSource @Inject constructor(
 
                     val docs = snapshot
                         ?.documents
-                        ?.mapNotNull { it.toObject(PunchSessionDocument::class.java) }
+                        ?.mapNotNull { it.toObject(ScheduleDocument::class.java)}
                         .orEmpty()
-                    Log.d(TAG, "observePunchSessions($employeeId) -> ${docs.size} docs")
+                    Log.d(TAG, "observeSchedulesForEmployees($employeeId) -> ${docs.size} docs")
 
                     trySend(docs)
                 }
-
-            awaitClose { registration.remove() }
+            awaitClose { listener.remove()}
         }
-
-    suspend fun upsert(session: PunchSessionDocument) {
-        punchSessions.document(session.id).set(session).await()
-    }
-
-    suspend fun delete(sessionId: String) {
-        punchSessions.document(sessionId).delete().await()
+    suspend fun upsert(document: ScheduleDocument) {
+        collection
+            .document(document.id)
+            .set(document)
+            .await()
     }
 }

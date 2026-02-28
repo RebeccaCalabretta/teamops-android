@@ -4,8 +4,8 @@ import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
+import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDataSource
 import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDocument
-import io.github.rebeccacalabretta.teamops.data.remote.RemotePunchDataSource
 import io.github.rebeccacalabretta.teamops.util.GeoDistance
 import io.github.rebeccacalabretta.teamops.util.MonthKey
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ import java.time.ZoneId
 
 class PunchSessionRepositoryImpl(
     private val dao: PunchSessionDao,
-    private val remote: RemotePunchDataSource
+    private val remote: PunchSessionDataSource
 ) : PunchSessionRepository {
 
     private fun PunchSessionEntity.toDocument(
