@@ -29,18 +29,26 @@ class ScheduleDataSource @Inject constructor(
 
                     val docs = snapshot
                         ?.documents
-                        ?.mapNotNull { it.toObject(ScheduleDocument::class.java)}
+                        ?.mapNotNull { it.toObject(ScheduleDocument::class.java) }
                         .orEmpty()
                     Log.d(TAG, "observeSchedulesForEmployees($employeeId) -> ${docs.size} docs")
 
                     trySend(docs)
                 }
-            awaitClose { listener.remove()}
+            awaitClose { listener.remove() }
         }
+
     suspend fun upsert(document: ScheduleDocument) {
         collection
             .document(document.id)
             .set(document)
+            .await()
+    }
+
+    suspend fun  delete(scheduleId: String) {
+        collection
+            .document(scheduleId)
+            .delete()
             .await()
     }
 }
