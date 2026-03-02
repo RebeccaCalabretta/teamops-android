@@ -15,9 +15,11 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.ScheduleDao
 import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDataSource
 import io.github.rebeccacalabretta.teamops.data.remote.ScheduleDataSource
+import io.github.rebeccacalabretta.teamops.data.remote.VacationDataSource
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.FirebaseUserRepository
+import io.github.rebeccacalabretta.teamops.data.repository.FirebaseVacationRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
@@ -25,6 +27,7 @@ import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositor
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepositoryImpl
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
+import io.github.rebeccacalabretta.teamops.domain.repository.VacationRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
 import io.github.rebeccacalabretta.teamops.location.LocationProviderImpl
 import javax.inject.Singleton
@@ -109,4 +112,11 @@ object DataModule {
         firestore: FirebaseFirestore
     ): UserRepository =
         FirebaseUserRepository(firestore)
+
+    @Provides
+    @Singleton
+    fun provideVacationRepository(
+        remote: VacationDataSource
+    ): VacationRepository =
+        FirebaseVacationRepository(remote)
 }
