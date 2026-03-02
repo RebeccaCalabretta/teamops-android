@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,6 +20,7 @@ import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.db.ScheduleEntity
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
+import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.ui.model.toScheduleEntity
 import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
@@ -59,6 +58,8 @@ fun ScheduleScreen(
     var showSheet by rememberSaveable { mutableStateOf(false) }
     var editingEntry by remember { mutableStateOf<ScheduleEntity?>(null) }
 
+    val addLabel = stringResource(R.string.schedule_add_button)
+
     Column(modifier = modifier.fillMaxSize()) {
 
         EmployeeContextHeader(
@@ -77,13 +78,13 @@ fun ScheduleScreen(
                     employeeId = employeeId,
                     createdBy = currentUserId
                 )
-
                 showSheet = true
             },
             modifier = Modifier.weight(1f)
         )
 
-        Button(
+        GeneralButton(
+            text = addLabel,
             onClick = {
                 editingEntry = null
                 showSheet = true
@@ -91,9 +92,7 @@ fun ScheduleScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-        ) {
-            Text(stringResource(R.string.schedule_add_button))
-        }
+        )
     }
 
     if (showSheet) {

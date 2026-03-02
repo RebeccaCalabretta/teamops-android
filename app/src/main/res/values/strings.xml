@@ -24,7 +24,7 @@
     <string name="schedule_edit_title">Plan bearbeiten</string>
     <string name="schedule_object_label">Objekt</string>
     <string name="schedule_save">Speichern</string>
-    <string name="schedule_add_button">Plan hinzufügen</string>
+    <string name="schedule_add_button">Eintrag hinzufügen</string>
     <string name="schedule_delete">Eintrag löschen</string>
     <string name="schedule_ok">OK</string>
     <string name="schedule_cancel">Abbrechen</string>
@@ -32,6 +32,7 @@
     <string name="schedule_start">Startzeit</string>
     <string name="schedule_end">Endzeit</string>
     <string name="schedule_object_select">Objekt auswählen</string>
+    <string name="schedule_invalid_time_range">Endzeit darf nicht vor der Startzeit liegen.</string>
     <!-- ScheduleTable -->
     <string name="schedule_header_date">Datum</string>
     <string name="schedule_header_object">Objekt</string>
@@ -42,4 +43,11 @@
     <string name="title_punch">Zeiterfassung</string>
     <string name="title_schedule">Arbeitsplan</string>
     <string name="title_vacation">Urlaub</string>
+    <!-- VacationScreen -->
+    <string name="vacation_request_button">Urlaub beantragen</string>
+    <string name="vacation_request_title">Urlaubsantrag</string>
+    <string name="vacation_start">Start</string>
+    <string name="vacation_end">Ende</string>
+    <string name="vacation_submit">Absenden</string>
+    <string name="vacation_invalid_date_range">Enddatum darf nicht vor dem Startdatum liegen.</string>
  </resources>

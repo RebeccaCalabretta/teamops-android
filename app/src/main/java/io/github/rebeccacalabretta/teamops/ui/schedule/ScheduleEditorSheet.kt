@@ -1,28 +1,18 @@
 package io.github.rebeccacalabretta.teamops.ui.schedule
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
+import io.github.rebeccacalabretta.teamops.ui.components.DatePickerDialog
+import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.ui.components.ObjectSelectDropdown
+import io.github.rebeccacalabretta.teamops.ui.components.TimePickerDialog
 import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,13 +31,23 @@ fun ScheduleEditorSheet(
 ) {
 
     var objectId by rememberSaveable { mutableStateOf(selectedObjectId) }
-    var date by rememberSaveable { mutableStateOf(initialDate) }
-    var startTime by rememberSaveable { mutableStateOf(initialStart) }
-    var endTime by rememberSaveable { mutableStateOf(initialEnd) }
+    var date by rememberSaveable { mutableLongStateOf(initialDate) }
+    var startTime by rememberSaveable { mutableLongStateOf(initialStart) }
+    var endTime by rememberSaveable { mutableLongStateOf(initialEnd) }
 
     var showDatePicker by remember { mutableStateOf(false) }
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
+
+    val isTimeValid = endTime >= startTime
+    val isValid = objectId.isNotBlank() && isTimeValid
+
+    val titleText = stringResource(titleRes)
+    val dateLabel = stringResource(R.string.schedule_date)
+    val startLabel = stringResource(R.string.schedule_start)
+    val endLabel = stringResource(R.string.schedule_end)
+    val saveLabel = stringResource(R.string.schedule_save)
+    val deleteLabel = stringResource(R.string.schedule_delete)
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
 
@@ -57,17 +57,14 @@ fun ScheduleEditorSheet(
                 .padding(16.dp)
         ) {
 
-            Text(
-                text = stringResource(titleRes),
-                style = MaterialTheme.typography.titleMedium
-            )
+            Text(titleText, style = MaterialTheme.typography.titleMedium)
 
             Spacer(Modifier.height(16.dp))
 
             ObjectSelectDropdown(
                 objects = objects,
                 selectedObjectId = objectId,
-                onObjectSelected = { obj -> objectId = obj.id },
+                onObjectSelected = { objectId = it.id },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -77,41 +74,39 @@ fun ScheduleEditorSheet(
                 onClick = { showDatePicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "${stringResource(R.string.schedule_date)}: " +
-                            DateTimeFormat.formatDate(date)
-                )
+                Text("$dateLabel: ${DateTimeFormat.formatDate(date)}")
             }
 
             TextButton(
                 onClick = { showStartPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "${stringResource(R.string.schedule_start)}: " +
-                            DateTimeFormat.formatTime(startTime)
-                )
+                Text("$startLabel: ${DateTimeFormat.formatTime(startTime)}")
             }
 
             TextButton(
                 onClick = { showEndPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Text("$endLabel: ${DateTimeFormat.formatTime(endTime)}")
+            }
+
+            if (!isTimeValid) {
+                Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "${stringResource(R.string.schedule_end)}: " +
-                            DateTimeFormat.formatTime(endTime)
+                    text = stringResource(R.string.schedule_invalid_time_range),
+                    color = MaterialTheme.colorScheme.error
                 )
             }
 
             Spacer(Modifier.height(24.dp))
 
-            Button(
+            GeneralButton(
+                text = saveLabel,
                 onClick = { onSave(objectId, date, startTime, endTime) },
-                enabled = objectId.isNotBlank(),
+                enabled = isValid,
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.schedule_save))
-            }
+            )
 
             if (isEditMode) {
                 Spacer(Modifier.height(12.dp))
@@ -120,10 +115,7 @@ fun ScheduleEditorSheet(
                     onClick = onDelete,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = stringResource(R.string.schedule_delete),
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    Text(deleteLabel, color = MaterialTheme.colorScheme.error)
                 }
             }
 
@@ -132,7 +124,7 @@ fun ScheduleEditorSheet(
     }
 
     if (showDatePicker) {
-        ScheduleDatePickerDialog(
+        DatePickerDialog(
             initialDateMillis = date,
             onDismiss = { showDatePicker = false },
             onDateSelected = { date = it }
@@ -140,7 +132,7 @@ fun ScheduleEditorSheet(
     }
 
     if (showStartPicker) {
-        ScheduleTimePickerDialog(
+        TimePickerDialog(
             initialTimeMillis = startTime,
             onDismiss = { showStartPicker = false },
             onTimeSelected = { startTime = it }
@@ -148,7 +140,7 @@ fun ScheduleEditorSheet(
     }
 
     if (showEndPicker) {
-        ScheduleTimePickerDialog(
+        TimePickerDialog(
             initialTimeMillis = endTime,
             onDismiss = { showEndPicker = false },
             onTimeSelected = { endTime = it }

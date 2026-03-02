@@ -1,4 +1,4 @@
-package io.github.rebeccacalabretta.teamops.ui.schedule
+package io.github.rebeccacalabretta.teamops.ui.components
 
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -16,7 +16,7 @@ import java.time.ZoneOffset
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScheduleDatePickerDialog(
+fun DatePickerDialog(
     initialDateMillis: Long,
     onDismiss: () -> Unit,
     onDateSelected: (Long) -> Unit
