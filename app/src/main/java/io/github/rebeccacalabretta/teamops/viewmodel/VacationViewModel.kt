@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,6 +30,22 @@ class VacationViewModel @Inject constructor(
                 .collect { entries ->
                     _vacationEntries.value = entries
                 }
+        }
+    }
+
+    fun submitVacation(
+        employeeId: String,
+        startDate: LocalDate,
+        endDate: LocalDate,
+        currentUserId: String
+    ) {
+        viewModelScope.launch {
+            repository.submitVacationRequest(
+                employeeId = employeeId,
+                startDate = startDate,
+                endDate = endDate,
+                requestedBy = currentUserId
+            )
         }
     }
 }
