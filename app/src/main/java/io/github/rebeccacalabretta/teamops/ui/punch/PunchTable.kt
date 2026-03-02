@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
-import io.github.rebeccacalabretta.teamops.util.SessionFormat
+import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 
 @Composable
 fun PunchTable(
@@ -109,10 +109,10 @@ fun SessionRow(
     canEdit: Boolean,
     onEditClick: (SessionRowUiModel) -> Unit
 ) {
-    val date = SessionFormat.formatDate(row.startTime)
-    val start = SessionFormat.formatTime(row.startTime)
-    val end = SessionFormat.formatTime(row.endTime)
-    val duration = SessionFormat.formatDuration(row.startTime, row.endTime)
+    val date = DateTimeFormat.formatDate(row.startTime)
+    val start = DateTimeFormat.formatTime(row.startTime)
+    val end = DateTimeFormat.formatTime(row.endTime)
+    val duration = DateTimeFormat.formatDuration(row.startTime, row.endTime)
 
     val textColor = if (row.isCheckedOutOutsideRadius) Color.Red else Color.Unspecified
 

@@ -23,6 +23,7 @@ import io.github.rebeccacalabretta.teamops.data.db.ScheduleEntity
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.model.toScheduleEntity
+import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.ScheduleViewModel
 import java.util.UUID
@@ -48,6 +49,7 @@ fun ScheduleScreen(
     }
 
     val scheduleEntries by viewModel.scheduleEntries.collectAsStateWithLifecycle()
+    val objects by viewModel.objects.collectAsStateWithLifecycle()
     val allEmployees by employeeViewModel.allEmployees.collectAsStateWithLifecycle()
 
     val employee = allEmployees.firstOrNull { it.id == employeeId }
@@ -99,18 +101,15 @@ fun ScheduleScreen(
         val isEdit = editingEntry != null
 
         ScheduleEditorSheet(
-            titleRes = if (isEdit)
-                R.string.schedule_edit_title
-            else
-                R.string.schedule_new_title,
-            initialObjectId = editingEntry?.objectId ?: "",
-            initialDate = editingEntry?.date ?: System.currentTimeMillis(),
+            objects = objects,
+            selectedObjectId = editingEntry?.objectId.orEmpty(),
+            titleRes = if (isEdit) R.string.schedule_edit_title else R.string.schedule_new_title,
+            initialDate = editingEntry?.date ?: DateTimeFormat.firstDayOfNextMonthMillis(),
             initialStart = editingEntry?.startTime ?: System.currentTimeMillis(),
             initialEnd = editingEntry?.endTime ?: (System.currentTimeMillis() + 3_600_000),
             isEditMode = isEdit,
             onDismiss = { showSheet = false },
             onSave = { objectId, date, start, end ->
-
                 val entity = ScheduleEntity(
                     id = editingEntry?.id ?: UUID.randomUUID().toString(),
                     employeeId = employeeId,
@@ -120,14 +119,11 @@ fun ScheduleScreen(
                     endTime = end,
                     createdBy = editingEntry?.createdBy ?: currentUserId
                 )
-
                 viewModel.upsertSchedule(entity)
                 showSheet = false
             },
             onDelete = {
-                editingEntry?.let {
-                    viewModel.deleteSchedule(it)
-                }
+                editingEntry?.let(viewModel::deleteSchedule)
                 showSheet = false
             }
         )

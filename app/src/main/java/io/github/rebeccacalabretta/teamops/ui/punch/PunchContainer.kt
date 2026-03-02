@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
@@ -93,7 +95,10 @@ fun PunchContainer(
         )
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
 
         EmployeeContextHeader(
             employeeId = employeeId,
@@ -104,8 +109,8 @@ fun PunchContainer(
 
         PunchScreen(
             selectedMonth = selectedMonth,
-            onPrevMonthCLick = punchSessionViewModel::prevMonth,
-            onNextMonthCLick = punchSessionViewModel::nextMonth,
+            onPrevMonthClick = punchSessionViewModel::prevMonth,
+            onNextMonthClick = punchSessionViewModel::nextMonth,
             todayWorkText = todayWorkText,
             monthWorkText = monthWorkText,
             isCheckedIn = isCheckedIn,
@@ -113,7 +118,9 @@ fun PunchContainer(
             onCheckInClick = punchSessionViewModel::checkIn,
             onCheckOutClick = punchSessionViewModel::checkOut,
             sessionRows = sessionRows,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp)
         )
     }
 }

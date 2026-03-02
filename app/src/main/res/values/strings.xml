@@ -31,6 +31,7 @@
     <string name="schedule_date">Datum</string>
     <string name="schedule_start">Startzeit</string>
     <string name="schedule_end">Endzeit</string>
+    <string name="schedule_object_select">Objekt auswählen</string>
     <!-- ScheduleTable -->
     <string name="schedule_header_date">Datum</string>
     <string name="schedule_header_object">Objekt</string>

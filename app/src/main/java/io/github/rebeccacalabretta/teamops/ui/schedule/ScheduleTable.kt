@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.ScheduleRowUiModel
+import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 
 @Composable
 fun ScheduleTable(
@@ -50,7 +51,7 @@ private fun ScheduleHeaderRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .padding(4.dp)
     ) {
         ScheduleCell(
             text = stringResource(R.string.schedule_header_date),
@@ -89,12 +90,29 @@ private fun ScheduleRow(
             .fillMaxWidth()
             .clickable { onClick() }
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.04f))
-            .padding(vertical = 6.dp)
+            .padding(4.dp)
     ) {
-        ScheduleCell(entry.date.toString(), Modifier.weight(1.2f))
-        ScheduleCell(entry.objectName, Modifier.weight(1.6f))
-        ScheduleCell(entry.startTime.toString(), Modifier.weight(0.8f), TextAlign.Center)
-        ScheduleCell(entry.endTime.toString(), Modifier.weight(0.8f), TextAlign.Center)
+        ScheduleCell(
+            DateTimeFormat.formatDate(entry.date),
+            Modifier.weight(1.2f)
+        )
+
+        ScheduleCell(
+            entry.objectName,
+            Modifier.weight(1.6f)
+        )
+
+        ScheduleCell(
+            DateTimeFormat.formatTime(entry.startTime),
+            Modifier.weight(0.8f),
+            TextAlign.Center
+        )
+
+        ScheduleCell(
+            DateTimeFormat.formatTime(entry.endTime),
+            Modifier.weight(0.8f),
+            TextAlign.Center
+        )
     }
 }
 

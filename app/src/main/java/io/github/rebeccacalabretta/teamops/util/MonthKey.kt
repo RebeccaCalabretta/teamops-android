@@ -21,8 +21,4 @@ object MonthKey {
 
     fun toDisplay(yearMonth: YearMonth): String =
         yearMonth.format(displayFormatter.withLocale(Locale.getDefault()))
-
-    fun toDisplay(monthKey: String): String =
-        YearMonth.parse(monthKey, keyFormatter)
-            .format(displayFormatter.withLocale(Locale.getDefault()))
 }

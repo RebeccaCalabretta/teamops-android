@@ -1,6 +1,7 @@
 package io.github.rebeccacalabretta.teamops.util
 
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -8,7 +9,7 @@ import java.time.format.DateTimeParseException
 import java.util.Locale
 import kotlin.math.max
 
-object SessionFormat {
+object DateTimeFormat {
 
     private val dateFormatter =
         DateTimeFormatter.ofPattern("dd.MM.")
@@ -29,6 +30,12 @@ object SessionFormat {
             Instant.ofEpochMilli(timestamp)
                 .atZone(ZoneId.systemDefault())
                 .format(timeFormatter)
+
+    fun formatDate(date: LocalDate): String =
+        date.format(dateFormatter)
+
+    fun formatTime(time: LocalTime): String =
+        time.format(timeFormatter)
 
     fun formatDuration(startTime: Long, endTime: Long?): String {
         if (endTime == null) return "--"
@@ -61,5 +68,28 @@ object SessionFormat {
             .atZone(zone)
             .toInstant()
             .toEpochMilli()
+    }
+
+    fun firstDayOfNextMonthMillis(): Long {
+        val zone = ZoneId.systemDefault()
+        val now = Instant.now()
+            .atZone(zone)
+            .toLocalDate()
+
+        val firstOfNextMonth = now
+            .plusMonths(1)
+            .withDayOfMonth(1)
+
+        return firstOfNextMonth
+            .atStartOfDay(zone)
+            .toInstant()
+            .toEpochMilli()
+    }
+
+    fun formatDurationMillis(millis: Long): String {
+        val totalMinutes = (millis / 60_000L).coerceAtLeast(0)
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+        return if (hours > 0) "$hours h $minutes m" else "$minutes m"
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
-import io.github.rebeccacalabretta.teamops.util.SessionFormat
+import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -24,10 +24,10 @@ fun EditSessionDialog(
     onSave: (String, String) -> Unit
 ) {
     var startTimeText by remember(session.startTime) {
-        mutableStateOf(SessionFormat.formatTime(session.startTime))
+        mutableStateOf(DateTimeFormat.formatTime(session.startTime))
     }
     var endTimeText by remember(session.endTime) {
-        mutableStateOf(SessionFormat.formatTime(session.endTime))
+        mutableStateOf(DateTimeFormat.formatTime(session.endTime))
     }
     var errorText by remember { mutableStateOf<String?>(null) }
 

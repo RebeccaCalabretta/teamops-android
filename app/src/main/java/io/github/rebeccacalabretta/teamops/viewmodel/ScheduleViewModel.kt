@@ -3,6 +3,7 @@ package io.github.rebeccacalabretta.teamops.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.db.ScheduleEntity
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
@@ -60,6 +61,14 @@ class ScheduleViewModel @Inject constructor(
                     }
                 }
             }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = emptyList()
+            )
+
+    val objects: StateFlow<List<ObjectEntity>> =
+        objectRepository.getAllObjects()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),

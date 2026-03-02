@@ -9,7 +9,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -22,15 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.R
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
+import io.github.rebeccacalabretta.teamops.ui.components.ObjectSelectDropdown
+import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleEditorSheet(
     titleRes: Int,
-    initialObjectId: String,
+    objects: List<ObjectEntity>,
+    selectedObjectId: String,
     initialDate: Long,
     initialStart: Long,
     initialEnd: Long,
@@ -40,7 +40,7 @@ fun ScheduleEditorSheet(
     onDelete: () -> Unit
 ) {
 
-    var objectId by rememberSaveable { mutableStateOf(initialObjectId) }
+    var objectId by rememberSaveable { mutableStateOf(selectedObjectId) }
     var date by rememberSaveable { mutableStateOf(initialDate) }
     var startTime by rememberSaveable { mutableStateOf(initialStart) }
     var endTime by rememberSaveable { mutableStateOf(initialEnd) }
@@ -48,20 +48,6 @@ fun ScheduleEditorSheet(
     var showDatePicker by remember { mutableStateOf(false) }
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
-
-    val zone = ZoneId.systemDefault()
-
-    fun formatDate(millis: Long): String =
-        Instant.ofEpochMilli(millis)
-            .atZone(zone)
-            .toLocalDate()
-            .format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
-
-    fun formatTime(millis: Long): String =
-        Instant.ofEpochMilli(millis)
-            .atZone(zone)
-            .toLocalTime()
-            .format(DateTimeFormatter.ofPattern("HH:mm"))
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
 
@@ -78,10 +64,10 @@ fun ScheduleEditorSheet(
 
             Spacer(Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = objectId,
-                onValueChange = { objectId = it },
-                label = { Text(stringResource(R.string.schedule_object_label)) },
+            ObjectSelectDropdown(
+                objects = objects,
+                selectedObjectId = objectId,
+                onObjectSelected = { obj -> objectId = obj.id },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -91,21 +77,30 @@ fun ScheduleEditorSheet(
                 onClick = { showDatePicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${stringResource(R.string.schedule_date)}: ${formatDate(date)}")
+                Text(
+                    text = "${stringResource(R.string.schedule_date)}: " +
+                            DateTimeFormat.formatDate(date)
+                )
             }
 
             TextButton(
                 onClick = { showStartPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${stringResource(R.string.schedule_start)}: ${formatTime(startTime)}")
+                Text(
+                    text = "${stringResource(R.string.schedule_start)}: " +
+                            DateTimeFormat.formatTime(startTime)
+                )
             }
 
             TextButton(
                 onClick = { showEndPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("${stringResource(R.string.schedule_end)}: ${formatTime(endTime)}")
+                Text(
+                    text = "${stringResource(R.string.schedule_end)}: " +
+                            DateTimeFormat.formatTime(endTime)
+                )
             }
 
             Spacer(Modifier.height(24.dp))
@@ -120,6 +115,7 @@ fun ScheduleEditorSheet(
 
             if (isEditMode) {
                 Spacer(Modifier.height(12.dp))
+
                 TextButton(
                     onClick = onDelete,
                     modifier = Modifier.fillMaxWidth()

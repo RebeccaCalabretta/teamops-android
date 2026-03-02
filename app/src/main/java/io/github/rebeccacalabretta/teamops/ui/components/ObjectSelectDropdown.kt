@@ -22,31 +22,29 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import io.github.rebeccacalabretta.teamops.data.db.EmployeeEntity
+import io.github.rebeccacalabretta.teamops.R
+import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 
 @Composable
-fun EmployeeSelectDropdown(
-    employees: List<EmployeeEntity>,
-    selectedEmployeeId: String?,
-    onEmployeeSelected: (String) -> Unit,
+fun ObjectSelectDropdown(
+    objects: List<ObjectEntity>,
+    selectedObjectId: String,
+    onObjectSelected: (ObjectEntity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    val selectedEmployee =
-        employees.firstOrNull { it.id == selectedEmployeeId }
+    val selectedObject = objects.firstOrNull { it.id == selectedObjectId }
 
     Column(modifier) {
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { expanded = !expanded },
+                .clickable(enabled = objects.isNotEmpty()) { expanded = !expanded },
             shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
-            )
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Row(
                 modifier = Modifier
@@ -55,16 +53,14 @@ fun EmployeeSelectDropdown(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = selectedEmployee?.name ?: "Mitarbeiter auswählen",
+                    text = selectedObject?.name ?: stringResource(R.string.schedule_object_select),
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.bodyLarge
                 )
 
                 Icon(
-                    imageVector = Icons.Default.ExpandMore,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    imageVector = Icons.Filled.ExpandMore,
+                    contentDescription = null
                 )
             }
         }
@@ -79,13 +75,16 @@ fun EmployeeSelectDropdown(
                 LazyColumn(
                     modifier = Modifier.heightIn(max = 320.dp)
                 ) {
-                    items(employees) { employee ->
+                    items(
+                        items = objects,
+                        key = { it.id }
+                    ) { obj ->
                         Text(
-                            text = employee.name,
+                            text = obj.name,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    onEmployeeSelected(employee.id)
+                                    onObjectSelected(obj)
                                     expanded = false
                                 }
                                 .padding(16.dp),
