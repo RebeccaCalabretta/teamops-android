@@ -28,6 +28,9 @@ import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepositoryImpl
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.domain.repository.VacationRepository
+import io.github.rebeccacalabretta.teamops.domain.usecase.vacation.ApproveVacationRequestUseCase
+import io.github.rebeccacalabretta.teamops.domain.usecase.vacation.CalculateRemainingVacationUseCase
+import io.github.rebeccacalabretta.teamops.domain.usecase.vacation.SubmitVacationRequestUseCase
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
 import io.github.rebeccacalabretta.teamops.location.LocationProviderImpl
 import javax.inject.Singleton
@@ -119,4 +122,24 @@ object DataModule {
         remote: VacationDataSource
     ): VacationRepository =
         FirebaseVacationRepository(remote)
+
+    @Provides
+    @Singleton
+    fun provideSubmitVacationRequestUseCase(
+        repository: VacationRepository
+    ): SubmitVacationRequestUseCase =
+        SubmitVacationRequestUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideApproveVacationRequestUseCase(
+        repository: VacationRepository
+    ): ApproveVacationRequestUseCase =
+        ApproveVacationRequestUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideCalculateRemainingVacationUseCase():
+            CalculateRemainingVacationUseCase =
+        CalculateRemainingVacationUseCase()
 }
