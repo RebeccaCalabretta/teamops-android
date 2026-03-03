@@ -12,7 +12,6 @@ import javax.inject.Singleton
 class VacationDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
-
     private val collection = firestore.collection("vacationRequests")
 
     fun observeVacationsForEmployee(
@@ -43,6 +42,24 @@ class VacationDataSource @Inject constructor(
         collection
             .document(document.id)
             .set(document)
+            .await()
+    }
+
+    suspend fun updateStatus(
+        requestId: String,
+        status: String,
+        decidedBy: String,
+        decidedAt: Long
+    ) {
+        collection
+            .document(requestId)
+            .update(
+                mapOf(
+                    "status" to status,
+                    "decidedBy" to decidedBy,
+                    "decidedAt" to decidedAt
+                )
+            )
             .await()
     }
 

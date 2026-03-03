@@ -1,6 +1,7 @@
 package io.github.rebeccacalabretta.teamops.domain.repository
 
 import io.github.rebeccacalabretta.teamops.domain.vacation.VacationEntry
+import io.github.rebeccacalabretta.teamops.domain.vacation.VacationStatus
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -15,5 +16,12 @@ interface VacationRepository {
         startDate: LocalDate,
         endDate: LocalDate,
         requestedBy: String
+    )
+
+    suspend fun updateVacationStatus(
+        requestId: String,
+        status: VacationStatus,
+        decidedBy: String,
+        decidedAt: Long
     )
 }

@@ -53,6 +53,20 @@ class FirebaseVacationRepository @Inject constructor(
         dataSource.upsert(document)
     }
 
+    override suspend fun updateVacationStatus(
+        requestId: String,
+        status: VacationStatus,
+        decidedBy: String,
+        decidedAt: Long
+    ) {
+        dataSource.updateStatus(
+            requestId = requestId,
+            status = status.name,
+            decidedBy = decidedBy,
+            decidedAt = decidedAt
+        )
+    }
+
     private fun VacationDocument.toDomain(): VacationEntry =
         VacationEntry(
             id = id,
