@@ -19,6 +19,13 @@ object DateTimeFormat {
         DateTimeFormatter.ofPattern("HH:mm")
             .withLocale(Locale.getDefault())
 
+    private val fullDateFormatter =
+        DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            .withLocale(Locale.getDefault())
+
+    fun formatFullDate(date: LocalDate): String =
+        date.format(fullDateFormatter)
+
     fun formatDate(timestamp: Long): String =
         Instant.ofEpochMilli(timestamp)
             .atZone(ZoneId.systemDefault())

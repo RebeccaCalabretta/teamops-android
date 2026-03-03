@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.R
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
@@ -25,6 +26,8 @@ import io.github.rebeccacalabretta.teamops.viewmodel.VacationViewModel
 fun VacationScreen(
     employeeId: String,
     currentUserId: String,
+    currentRole: EmployeeRole,
+    teamMemberIds: Set<String>,
     modifier: Modifier = Modifier,
     viewModel: VacationViewModel = hiltViewModel(),
     employeeViewModel: EmployeeViewModel = hiltViewModel()
@@ -35,6 +38,7 @@ fun VacationScreen(
     }
 
     val entries by viewModel.vacationEntries.collectAsStateWithLifecycle()
+    val balance by viewModel.vacationBalance.collectAsStateWithLifecycle()
 
     val allEmployees by employeeViewModel
         .allEmployees
@@ -55,8 +59,22 @@ fun VacationScreen(
             employeeRole = employeeRole
         )
 
+        VacationSummaryRow(
+            balance = balance
+        )
+
         VacationTable(
             entries = entries,
+            currentRole = currentRole,
+            onApprove = { entry, newStatus ->
+                viewModel.approveVacation(
+                    requestId = entry.id,
+                    currentStatus = entry.status,
+                    newStatus = newStatus,
+                    currentUserId = currentUserId,
+                    currentRole = currentRole
+                )
+            },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -80,7 +98,9 @@ fun VacationScreen(
                     employeeId = employeeId,
                     startDate = start,
                     endDate = end,
-                    currentUserId = currentUserId
+                    currentUserId = currentUserId,
+                    currentRole = currentRole,
+                    teamMemberIds= teamMemberIds
                 )
                 showSheet = false
             }

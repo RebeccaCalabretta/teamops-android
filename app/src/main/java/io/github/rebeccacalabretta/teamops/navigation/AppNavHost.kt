@@ -59,7 +59,9 @@ fun AppNavHost(
 
             VacationScreen(
                 employeeId = route.employeeId,
-                currentUserId = currentUserId
+                currentUserId = currentUserId,
+                currentRole = currentRole,
+                teamMemberIds = teamMemberIds
             )
         }
 

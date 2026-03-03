@@ -12,7 +12,7 @@ class ApproveVacationRequestUseCase @Inject constructor(
         requestId: String,
         currentStatus: VacationStatus,
         newStatus: VacationStatus,
-        currentUserID: String,
+        currentUserId: String,
         currentRole: EmployeeRole
     ) {
         if (currentRole != EmployeeRole.HR &&
@@ -38,7 +38,7 @@ class ApproveVacationRequestUseCase @Inject constructor(
         repository.updateVacationStatus(
             requestId = requestId,
             status = newStatus,
-            decidedBy = currentUserID,
+            decidedBy = currentUserId,
             decidedAt = decidedAt
         )
     }
