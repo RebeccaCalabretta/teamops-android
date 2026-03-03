@@ -8,6 +8,7 @@ import javax.inject.Inject
 class SubmitVacationRequestUseCase @Inject constructor(
     private val repository: VacationRepository
 ) {
+
     suspend operator fun invoke(
         employeeId: String,
         startDate: LocalDate,
@@ -16,22 +17,21 @@ class SubmitVacationRequestUseCase @Inject constructor(
         currentRole: EmployeeRole,
         teamMemberIds: Set<String>
     ) {
+
         val isSelfRequest = employeeId == currentUserId
 
-        val allowed = when {
-            isSelfRequest -> true
-
+        val isManagerForEmployee =
             currentRole == EmployeeRole.MANAGER &&
-                    employeeId in teamMemberIds -> true
+                    employeeId in teamMemberIds
 
+        val isPrivileged =
             currentRole == EmployeeRole.HR ||
-                    currentRole == EmployeeRole.ADMIN -> true
+                    currentRole == EmployeeRole.ADMIN
 
-            else -> false
-        }
-
-        if(!allowed) {
-            throw IllegalStateException("Not allowed to submit vacation request")
+        if (!isSelfRequest && !isManagerForEmployee && !isPrivileged) {
+            throw IllegalStateException(
+                "User is not allowed to submit vacation request"
+            )
         }
 
         repository.submitVacationRequest(
