@@ -64,13 +64,13 @@ private fun VacationHeaderRow(
     ) {
         VacationCell(
             text = stringResource(R.string.vacation_start),
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.8f),
             isHeader = true
         )
 
         VacationCell(
             text = stringResource(R.string.vacation_end),
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(0.8f),
             isHeader = true
         )
 
@@ -95,19 +95,19 @@ private fun VacationRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 48.dp) // ← verhindert Springen
+            .defaultMinSize(minHeight = 36.dp)
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         VacationCell(
             text = DateTimeFormat.formatFullDate(entry.startDate),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(0.8f)
         )
 
         VacationCell(
             text = DateTimeFormat.formatFullDate(entry.endDate),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(0.8f)
         )
 
         Box(

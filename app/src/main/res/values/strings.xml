@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">TeamOps</string>
+    <!-- EmployeeScreen -->
+    <string name="employee_action_sessions">Stunden</string>
+    <string name="employee_action_schedule">Arbeitsplan</string>
+    <string name="employee_action_vacation">Urlaub</string>
     <!-- ErrorMessage -->
     <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
     <string name="error_network">Keine Internetverbindung</string>
