@@ -1,6 +1,7 @@
 package io.github.rebeccacalabretta.teamops.ui.vacation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ fun VacationTable(
     entries: List<VacationEntry>,
     currentRole: EmployeeRole,
     onApprove: (VacationEntry, VacationStatus) -> Unit,
+    onRowClick: (VacationEntry) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -47,7 +49,12 @@ fun VacationTable(
         }
 
         items(entries, key = { it.id }) { entry ->
-            VacationRow(entry, currentRole, onApprove)
+            VacationRow(
+                entry = entry,
+                currentRole = currentRole,
+                onApprove = onApprove,
+                onRowClick = { onRowClick(entry) }
+            )
         }
     }
 }
@@ -86,7 +93,8 @@ private fun VacationHeaderRow(
 private fun VacationRow(
     entry: VacationEntry,
     currentRole: EmployeeRole,
-    onApprove: (VacationEntry, VacationStatus) -> Unit
+    onApprove: (VacationEntry, VacationStatus) -> Unit,
+    onRowClick: () -> Unit
 ) {
     val isPrivileged =
         currentRole == EmployeeRole.HR ||
@@ -96,6 +104,7 @@ private fun VacationRow(
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 36.dp)
+            .clickable { onRowClick() }
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -114,9 +123,13 @@ private fun VacationRow(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.CenterStart
         ) {
-            if (isPrivileged && entry.status == VacationStatus.REQUESTED) {
 
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+
+                if (entry.status == VacationStatus.REQUESTED && isPrivileged) {
 
                     IconButton(
                         onClick = { onApprove(entry, VacationStatus.APPROVED) },
@@ -141,15 +154,52 @@ private fun VacationRow(
                             modifier = Modifier.size(18.dp)
                         )
                     }
+
+                } else {
+
+                    Text(
+                        text = stringResource(entry.status.toDisplayRes()),
+                        style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    if (isPrivileged) {
+
+                        when (entry.status) {
+
+                            VacationStatus.APPROVED -> {
+                                IconButton(
+                                    onClick = { onApprove(entry, VacationStatus.REJECTED) },
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = stringResource(R.string.vacation_reject),
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
+
+                            VacationStatus.REJECTED -> {
+                                IconButton(
+                                    onClick = { onApprove(entry, VacationStatus.APPROVED) },
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = stringResource(R.string.vacation_approve),
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
+
+                            else -> {}
+                        }
+                    }
                 }
-
-            } else {
-
-                Text(
-                    text = stringResource(entry.status.toDisplayRes()),
-                    style = MaterialTheme.typography.bodySmall,
-                    textAlign = TextAlign.Start
-                )
             }
         }
     }

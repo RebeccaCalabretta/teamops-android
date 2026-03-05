@@ -67,6 +67,22 @@ class FirebaseVacationRepository @Inject constructor(
         )
     }
 
+    override suspend fun updateVacation(
+        requestId: String,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ) {
+        dataSource.updateVacation(
+            requestId = requestId,
+            startDate = startDate.toStartOfDayMillis(),
+            endDate = endDate.toStartOfDayMillis()
+        )
+    }
+
+    override suspend fun deleteVacation(requestId: String) {
+        dataSource.delete(requestId)
+    }
+
     private fun VacationDocument.toDomain(): VacationEntry =
         VacationEntry(
             id = id,

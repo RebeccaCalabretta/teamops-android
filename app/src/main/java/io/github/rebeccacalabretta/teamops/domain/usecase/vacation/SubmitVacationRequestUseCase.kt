@@ -1,6 +1,7 @@
 package io.github.rebeccacalabretta.teamops.domain.usecase.vacation
 
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
+import io.github.rebeccacalabretta.teamops.domain.error.PermissionDeniedException
 import io.github.rebeccacalabretta.teamops.domain.repository.VacationRepository
 import java.time.LocalDate
 import javax.inject.Inject
@@ -29,9 +30,7 @@ class SubmitVacationRequestUseCase @Inject constructor(
                     currentRole == EmployeeRole.ADMIN
 
         if (!isSelfRequest && !isManagerForEmployee && !isPrivileged) {
-            throw IllegalStateException(
-                "User is not allowed to submit vacation request"
-            )
+            throw PermissionDeniedException()
         }
 
         repository.submitVacationRequest(

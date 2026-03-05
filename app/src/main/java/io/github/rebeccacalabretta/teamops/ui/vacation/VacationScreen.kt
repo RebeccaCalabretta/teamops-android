@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
+import io.github.rebeccacalabretta.teamops.domain.vacation.VacationEntry
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
@@ -40,15 +41,18 @@ fun VacationScreen(
     val entries by viewModel.vacationEntries.collectAsStateWithLifecycle()
     val balance by viewModel.vacationBalance.collectAsStateWithLifecycle()
 
-    val allEmployees by employeeViewModel
-        .allEmployees
-        .collectAsStateWithLifecycle()
-
+    val allEmployees by employeeViewModel.allEmployees.collectAsStateWithLifecycle()
     val employee = allEmployees.firstOrNull { it.id == employeeId }
     val employeeName = employee?.name.orEmpty()
     val employeeRole = employee?.role
 
     var showSheet by rememberSaveable { mutableStateOf(false) }
+    var editingEntry by rememberSaveable { mutableStateOf<VacationEntry?>(null) }
+
+    fun closeSheet() {
+        showSheet = false
+        editingEntry = null
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
 
@@ -75,6 +79,10 @@ fun VacationScreen(
                     currentRole = currentRole
                 )
             },
+            onRowClick = { entry ->
+                editingEntry = entry
+                showSheet = true
+            },
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -83,7 +91,10 @@ fun VacationScreen(
 
         GeneralButton(
             text = stringResource(R.string.vacation_request_button),
-            onClick = { showSheet = true },
+            onClick = {
+                editingEntry = null
+                showSheet = true
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -91,19 +102,53 @@ fun VacationScreen(
     }
 
     if (showSheet) {
+
+        val entry = editingEntry
+
         VacationRequestSheet(
-            onDismiss = { showSheet = false },
+            initialStart = entry?.startDate,
+            initialEnd = entry?.endDate,
+            isEditMode = entry != null,
+            onDismiss = { closeSheet() },
+
             onSubmit = { start, end ->
-                viewModel.submitVacation(
-                    employeeId = employeeId,
-                    startDate = start,
-                    endDate = end,
-                    currentUserId = currentUserId,
-                    currentRole = currentRole,
-                    teamMemberIds= teamMemberIds
-                )
-                showSheet = false
-            }
+
+                if (entry != null) {
+
+                    viewModel.updateVacation(
+                        requestId = entry.id,
+                        startDate = start,
+                        endDate = end,
+                        currentUserId = currentUserId,
+                        currentRole = currentRole
+                    )
+
+                } else {
+
+                    viewModel.submitVacation(
+                        employeeId = employeeId,
+                        startDate = start,
+                        endDate = end,
+                        currentUserId = currentUserId,
+                        currentRole = currentRole,
+                        teamMemberIds = teamMemberIds
+                    )
+                }
+
+                closeSheet()
+            },
+
+            onDelete = if (entry != null) {
+                {
+                    viewModel.deleteVacation(
+                        requestId = entry.id,
+                        currentUserId = currentUserId,
+                        currentRole = currentRole
+                    )
+
+                    closeSheet()
+                }
+            } else null
         )
     }
 }

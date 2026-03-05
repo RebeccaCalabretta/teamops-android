@@ -53,7 +53,7 @@
     <string name="vacation_start">Start</string>
     <string name="vacation_end">Ende</string>
     <string name="vacation_status">Status</string>
-    <string name="vacation_submit">Absenden</string>
+    <string name="vacation_submit">Speichern</string>
     <string name="vacation_invalid_date_range">Enddatum darf nicht vor dem Startdatum liegen.</string>
     <string name="vacation_used_this_year">Dieses Jahr genommen: %1$d</string>
     <string name="vacation_remaining_days">Verbleibend: %1$d</string>
@@ -62,4 +62,6 @@
     <string name="vacation_status_rejected">Abgelehnt</string>
     <string name="vacation_approve">Genehmigen</string>
     <string name="vacation_reject">Ablehnen</string>
+    <string name="vacation_edit_title">Urlaub bearbeiten</string>
+    <string name="vacation_delete">Antrag löschen</string>
  </resources>

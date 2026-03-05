@@ -24,4 +24,14 @@ interface VacationRepository {
         decidedBy: String,
         decidedAt: Long
     )
+
+    suspend fun updateVacation(
+        requestId: String,
+        startDate: LocalDate,
+        endDate: LocalDate
+    )
+
+    suspend fun deleteVacation(
+        requestId: String
+    )
 }

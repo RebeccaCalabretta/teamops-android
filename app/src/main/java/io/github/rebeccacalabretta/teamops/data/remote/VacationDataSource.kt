@@ -63,6 +63,22 @@ class VacationDataSource @Inject constructor(
             .await()
     }
 
+    suspend fun updateVacation(
+        requestId: String,
+        startDate: Long,
+        endDate: Long
+    ) {
+        collection
+            .document(requestId)
+            .update(
+                mapOf(
+                    "startDate" to startDate,
+                    "endDate" to endDate
+                )
+            )
+            .await()
+    }
+
     suspend fun delete(id: String) {
         collection
             .document(id)

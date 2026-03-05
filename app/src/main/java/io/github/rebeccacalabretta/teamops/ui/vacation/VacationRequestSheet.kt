@@ -30,14 +30,24 @@ import java.time.ZoneId
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VacationRequestSheet(
+    initialStart: LocalDate? = null,
+    initialEnd: LocalDate? = null,
+    isEditMode: Boolean = false,
     onDismiss: () -> Unit,
-    onSubmit: (LocalDate, LocalDate) -> Unit
+    onSubmit: (LocalDate, LocalDate) -> Unit,
+    onDelete: (() -> Unit)? = null
 ) {
 
     val zone = ZoneId.systemDefault()
+    val nowMillis = System.currentTimeMillis()
 
-    var startDateMillis by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
-    var endDateMillis by rememberSaveable { mutableLongStateOf(System.currentTimeMillis()) }
+    var startDateMillis by rememberSaveable {
+        mutableLongStateOf((initialStart ?: nowMillis.toLocalDate(zone)).toStartOfDayMillis(zone))
+    }
+
+    var endDateMillis by rememberSaveable {
+        mutableLongStateOf((initialEnd ?: nowMillis.toLocalDate(zone)).toStartOfDayMillis(zone))
+    }
 
     var showStartPicker by remember { mutableStateOf(false) }
     var showEndPicker by remember { mutableStateOf(false) }
@@ -47,11 +57,15 @@ fun VacationRequestSheet(
 
     val isDateValid = !endDate.isBefore(startDate)
 
-    val titleText = stringResource(R.string.vacation_request_title)
+    val titleText = stringResource(
+        if (isEditMode) R.string.vacation_edit_title else R.string.vacation_request_title
+    )
+
     val startLabel = stringResource(R.string.vacation_start)
     val endLabel = stringResource(R.string.vacation_end)
     val submitLabel = stringResource(R.string.vacation_submit)
     val errorText = stringResource(R.string.vacation_invalid_date_range)
+    val deleteLabel = stringResource(R.string.vacation_delete)
 
     ModalBottomSheet(onDismissRequest = onDismiss) {
 
@@ -99,6 +113,20 @@ fun VacationRequestSheet(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            if (isEditMode && onDelete != null) {
+                Spacer(Modifier.height(8.dp))
+
+                TextButton(
+                    onClick = onDelete,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = deleteLabel,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
             Spacer(Modifier.height(8.dp))
         }
     }
@@ -129,3 +157,8 @@ private fun Long.toLocalDate(zone: ZoneId): LocalDate =
     Instant.ofEpochMilli(this)
         .atZone(zone)
         .toLocalDate()
+
+private fun LocalDate.toStartOfDayMillis(zone: ZoneId): Long =
+    atStartOfDay(zone)
+        .toInstant()
+        .toEpochMilli()

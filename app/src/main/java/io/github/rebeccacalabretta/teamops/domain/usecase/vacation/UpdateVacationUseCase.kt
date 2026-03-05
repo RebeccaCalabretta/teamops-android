@@ -3,16 +3,16 @@ package io.github.rebeccacalabretta.teamops.domain.usecase.vacation
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.domain.error.PermissionDeniedException
 import io.github.rebeccacalabretta.teamops.domain.repository.VacationRepository
-import io.github.rebeccacalabretta.teamops.domain.vacation.VacationStatus
+import java.time.LocalDate
 import javax.inject.Inject
 
-class ApproveVacationRequestUseCase @Inject constructor(
+class UpdateVacationUseCase @Inject constructor(
     private val repository: VacationRepository
 ) {
     suspend operator fun invoke(
         requestId: String,
-        currentStatus: VacationStatus,
-        newStatus: VacationStatus,
+        startDate: LocalDate,
+        endDate: LocalDate,
         currentUserId: String,
         currentRole: EmployeeRole
     ) {
@@ -21,26 +21,10 @@ class ApproveVacationRequestUseCase @Inject constructor(
         ) {
             throw PermissionDeniedException()
         }
-
-        if (currentStatus == newStatus) {
-            return
-        }
-
-        val isValidTargetStatus =
-            newStatus == VacationStatus.APPROVED ||
-                    newStatus == VacationStatus.REJECTED
-
-        if (!isValidTargetStatus) {
-            throw PermissionDeniedException()
-        }
-
-        val decidedAt = System.currentTimeMillis()
-
-        repository.updateVacationStatus(
+        repository.updateVacation(
             requestId = requestId,
-            status = newStatus,
-            decidedBy = currentUserId,
-            decidedAt = decidedAt
+            startDate = startDate,
+            endDate = endDate
         )
     }
 }
