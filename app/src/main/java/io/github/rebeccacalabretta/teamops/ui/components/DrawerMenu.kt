@@ -3,6 +3,7 @@ package io.github.rebeccacalabretta.teamops.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -24,14 +25,18 @@ fun DrawerMenu(
             .padding(top = 24.dp)
     ) {
         items.forEach { item ->
-            Text(
-                text = item.title,
-                style = MaterialTheme.typography.bodyLarge,
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onItemClick(item) }
                     .padding(horizontal = 16.dp, vertical = 16.dp)
-            )
+            ) {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 }

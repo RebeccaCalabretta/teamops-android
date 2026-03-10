@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import io.github.rebeccacalabretta.teamops.ui.theme.CyanButtonGradient
-import io.github.rebeccacalabretta.teamops.ui.theme.DisabledButtonBrush
+import io.github.rebeccacalabretta.teamops.ui.theme.DisabledButtonGradient
+import io.github.rebeccacalabretta.teamops.ui.theme.PrimaryButtonGradient
 
 @Composable
 fun GeneralButton(
@@ -26,9 +26,9 @@ fun GeneralButton(
     enabled: Boolean = true
 ) {
     val brush = if (enabled) {
-        CyanButtonGradient
+        PrimaryButtonGradient
     } else {
-        DisabledButtonBrush
+        DisabledButtonGradient
     }
 
     Button(

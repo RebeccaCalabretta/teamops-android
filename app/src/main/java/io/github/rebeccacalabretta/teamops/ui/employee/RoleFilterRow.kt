@@ -8,7 +8,9 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 
 @Composable
@@ -23,7 +25,7 @@ fun RoleFilterRow(
         FilterChip(
             selected = selectedRole == null,
             onClick = { onRoleSelected(null) },
-            label = { Text("Alle") }
+            label = { Text(stringResource(R.string.employee_role_all)) }
         )
         EmployeeRole.entries.forEach { role ->
             FilterChip(

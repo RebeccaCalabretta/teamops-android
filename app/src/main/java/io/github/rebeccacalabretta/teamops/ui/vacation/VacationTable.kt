@@ -28,6 +28,7 @@ import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.domain.vacation.VacationEntry
 import io.github.rebeccacalabretta.teamops.domain.vacation.VacationStatus
+import io.github.rebeccacalabretta.teamops.ui.theme.Success
 import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 
 @Composable
@@ -138,7 +139,7 @@ private fun VacationRow(
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = stringResource(R.string.vacation_approve),
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = Success,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -190,7 +191,7 @@ private fun VacationRow(
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = stringResource(R.string.vacation_approve),
-                                        tint = MaterialTheme.colorScheme.primary,
+                                        tint = Success,
                                         modifier = Modifier.size(18.dp)
                                     )
                                 }
