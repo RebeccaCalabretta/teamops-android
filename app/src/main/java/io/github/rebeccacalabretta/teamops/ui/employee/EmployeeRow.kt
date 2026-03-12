@@ -30,6 +30,7 @@ fun EmployeeRow(
     name: String,
     monthlyWorkTime: String,
     expanded: Boolean,
+    showSchedule: Boolean,
     onToggleExpand: () -> Unit,
     onRowClick: () -> Unit,
     onSessionsClick: () -> Unit,
@@ -44,7 +45,6 @@ fun EmployeeRow(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Text(
             text = name,
             style = MaterialTheme.typography.bodyLarge,
@@ -92,11 +92,13 @@ fun EmployeeRow(
                 onClick = onSessionsClick
             )
 
-            ActionItem(
-                text = stringResource(R.string.schedule),
-                modifier = Modifier.weight(1f),
-                onClick = onScheduleClick
-            )
+            if (showSchedule) {
+                ActionItem(
+                    text = stringResource(R.string.schedule),
+                    modifier = Modifier.weight(1f),
+                    onClick = onScheduleClick
+                )
+            }
 
             ActionItem(
                 text = stringResource(R.string.vacation),
