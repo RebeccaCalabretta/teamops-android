@@ -54,7 +54,8 @@ fun VacationScreen(
         editingEntry = null
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()
+        .padding(horizontal = 16.dp)) {
 
         EmployeeContextHeader(
             employeeId = employeeId,
@@ -86,7 +87,7 @@ fun VacationScreen(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(vertical = 8.dp)
         )
 
         GeneralButton(
@@ -97,7 +98,6 @@ fun VacationScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         )
     }
 

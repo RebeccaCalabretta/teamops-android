@@ -35,7 +35,7 @@ fun PunchTable(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(vertical = 16.dp)
+        contentPadding = PaddingValues(vertical = 4.dp)
     ) {
         stickyHeader {
             SessionHeaderRow(
@@ -64,7 +64,7 @@ fun SessionHeaderRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .padding(vertical = 4.dp)
     ) {
         Cell(
             text = "Datum",
@@ -126,7 +126,7 @@ fun SessionRow(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(background)
-            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .padding(vertical = 4.dp)
     ) {
         Cell(
             text = date,

@@ -1,6 +1,5 @@
 package io.github.rebeccacalabretta.teamops.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,18 +18,22 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.YearMonth
+import java.time.ZoneId
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class EmployeeSessionViewModel @Inject constructor(
     private val punchSessionRepository: PunchSessionRepository,
     private val objectRepository: ObjectRepository,
     private val userRepository: UserRepository,
     private val firebaseAuth: FirebaseAuth
-) : ViewModel() {
+) : MonthViewModel() {
 
     private val _selectedEmployeeId = MutableStateFlow<String?>(null)
     val selectedEmployeeId = _selectedEmployeeId.asStateFlow()
@@ -39,7 +42,6 @@ class EmployeeSessionViewModel @Inject constructor(
         _selectedEmployeeId.value = employeeId
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     private val sessionsForEmployee =
         selectedEmployeeId
             .filterNotNull()
@@ -47,9 +49,22 @@ class EmployeeSessionViewModel @Inject constructor(
                 punchSessionRepository.getSessionsForEmployee(id)
             }
 
+    private val monthlySessions =
+        combine(sessionsForEmployee, selectedMonth) { sessions, month ->
+            sessions.filter { session ->
+                val sessionMonth =
+                    Instant.ofEpochMilli(session.startTime)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                        .let { YearMonth.from(it) }
+
+                sessionMonth == month
+            }
+        }
+
     val sessionRows: StateFlow<List<SessionRowUiModel>> =
         combine(
-            sessionsForEmployee,
+            monthlySessions,
             objectRepository.getAllObjects()
         ) { sessions, objects ->
 
@@ -62,31 +77,34 @@ class EmployeeSessionViewModel @Inject constructor(
                 )
             }
         }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList()
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            emptyList()
         )
 
-    val todayWorkText: String
-        get() {
-            val rows = sessionRows.value
-            val millis = rows.sumOf { it.durationMillis }
-            return DateTimeFormat.formatDurationMillis(millis)
-        }
+    val todayWorkText: StateFlow<String> =
+        sessionRows
+            .map { rows ->
+                val millis = rows.sumOf { it.durationMillis }
+                DateTimeFormat.formatDurationMillis(millis)
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                "0 m"
+            )
 
-    fun monthWorkText(selectedMonth: YearMonth): String {
-        val rows = sessionRows.value
-
-        val millis = rows
-            .filter { it.yearMonth == selectedMonth }
-            .sumOf { it.durationMillis }
-
-        return DateTimeFormat.formatDurationMillis(millis)
-    }
-
-    // -----------------------------
-    // Edit Session
-    // -----------------------------
+    val monthWorkText: StateFlow<String> =
+        sessionRows
+            .map { rows ->
+                val millis = rows.sumOf { it.durationMillis }
+                DateTimeFormat.formatDurationMillis(millis)
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                "0 m"
+            )
 
     fun saveEditedSession(
         sessionId: String,

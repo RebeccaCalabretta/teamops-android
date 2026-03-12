@@ -1,6 +1,5 @@
 package io.github.rebeccacalabretta.teamops.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,10 +22,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.ZoneId
 import javax.inject.Inject
 
@@ -38,7 +35,7 @@ class PunchSessionViewModel @Inject constructor(
     private val locationProvider: LocationProvider,
     private val userRepository: UserRepository,
     private val firebaseAuth: FirebaseAuth
-) : ViewModel() {
+) : MonthViewModel() {
 
     private val currentEmployeeId: StateFlow<String?> =
         flow {
@@ -51,12 +48,6 @@ class PunchSessionViewModel @Inject constructor(
             initialValue = null
         )
 
-    private val _selectedMonth = MutableStateFlow(YearMonth.now())
-    val selectedMonth: StateFlow<YearMonth> = _selectedMonth.asStateFlow()
-
-    fun prevMonth() = _selectedMonth.update { it.minusMonths(1) }
-    fun nextMonth() = _selectedMonth.update { it.plusMonths(1) }
-
     private val _isProcessing = MutableStateFlow(false)
     val isProcessing: StateFlow<Boolean> = _isProcessing.asStateFlow()
 
@@ -68,7 +59,7 @@ class PunchSessionViewModel @Inject constructor(
     }
 
     private val monthlySessions =
-        _selectedMonth.flatMapLatest { month ->
+        selectedMonth.flatMapLatest { month ->
             punchSessionRepository.getSessionsForMonth(month)
         }
 

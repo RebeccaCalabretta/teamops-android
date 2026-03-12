@@ -67,7 +67,7 @@ private fun VacationHeaderRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         VacationCell(
@@ -105,8 +105,7 @@ private fun VacationRow(
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 36.dp)
-            .clickable { onRowClick() }
-            .padding(horizontal = 12.dp),
+            .clickable { onRowClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
 

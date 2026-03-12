@@ -25,8 +25,8 @@
     <string name="work_time_today">Heute: %1$s</string>
     <string name="work_time_month">Diesen Monat: %1$s</string>
     <!-- ScheduleScreen -->
-    <string name="schedule_new_title">Neuer Plan</string>
-    <string name="schedule_edit_title">Plan bearbeiten</string>
+    <string name="schedule_new_title">Neuer Eintrag</string>
+    <string name="schedule_edit_title">Eintrag bearbeiten</string>
     <string name="schedule_object_label">Objekt</string>
     <string name="schedule_save">Speichern</string>
     <string name="schedule_add_button">Eintrag hinzufügen</string>

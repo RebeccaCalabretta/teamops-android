@@ -33,18 +33,12 @@ import io.github.rebeccacalabretta.teamops.ui.punch.SessionHeaderRow
 import io.github.rebeccacalabretta.teamops.ui.punch.SessionRow
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeSessionViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
-import java.time.YearMonth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmployeeSessionScreen(
     employeeId: String,
     currentUserId: String,
-    selectedMonth: YearMonth,
-    onPrevMonthClick: () -> Unit,
-    onNextMonthClick: () -> Unit,
-    todayWorkText: String,
-    monthWorkText: String,
     modifier: Modifier = Modifier,
     employeeViewModel: EmployeeViewModel = hiltViewModel(),
     sessionViewModel: EmployeeSessionViewModel = hiltViewModel()
@@ -56,6 +50,9 @@ fun EmployeeSessionScreen(
 
     val allEmployees by employeeViewModel.allEmployees.collectAsStateWithLifecycle()
     val sessionRows by sessionViewModel.sessionRows.collectAsStateWithLifecycle()
+    val todayWorkText by sessionViewModel.todayWorkText.collectAsStateWithLifecycle()
+    val monthWorkText by sessionViewModel.monthWorkText.collectAsStateWithLifecycle()
+    val selectedMonth by sessionViewModel.selectedMonth.collectAsStateWithLifecycle()
 
     val employee = allEmployees.firstOrNull { it.id == employeeId }
     val employeeName = employee?.name.orEmpty()
@@ -66,7 +63,8 @@ fun EmployeeSessionScreen(
 
     Column(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -79,8 +77,8 @@ fun EmployeeSessionScreen(
 
         MonthStepper(
             month = selectedMonth,
-            onPrevMonth = onPrevMonthClick,
-            onNextMonth = onNextMonthClick,
+            onPrevMonth = { sessionViewModel.prevMonth() },
+            onNextMonth = { sessionViewModel.nextMonth() },
             modifier = Modifier.fillMaxWidth()
         )
 

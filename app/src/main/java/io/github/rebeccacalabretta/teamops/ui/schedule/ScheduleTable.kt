@@ -51,29 +51,29 @@ private fun ScheduleHeaderRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(4.dp)
+            .padding(vertical = 4.dp)
     ) {
         ScheduleCell(
             text = stringResource(R.string.schedule_header_date),
-            modifier = Modifier.weight(1.2f),
+            modifier = Modifier.weight(0.8f),
             align = TextAlign.Start,
             isHeader = true
         )
         ScheduleCell(
             text = stringResource(R.string.schedule_header_object),
-            modifier = Modifier.weight(1.6f),
+            modifier = Modifier.weight(1.8f),
             align = TextAlign.Start,
             isHeader = true
         )
         ScheduleCell(
             text = stringResource(R.string.schedule_header_start),
-            modifier = Modifier.weight(0.8f),
+            modifier = Modifier.weight(0.7f),
             align = TextAlign.Center,
             isHeader = true
         )
         ScheduleCell(
             text = stringResource(R.string.schedule_header_end),
-            modifier = Modifier.weight(0.8f),
+            modifier = Modifier.weight(0.7f),
             align = TextAlign.Center,
             isHeader = true
         )
@@ -90,27 +90,27 @@ private fun ScheduleRow(
             .fillMaxWidth()
             .clickable { onClick() }
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.04f))
-            .padding(4.dp)
+            .padding(vertical = 4.dp)
     ) {
         ScheduleCell(
             DateTimeFormat.formatDate(entry.date),
-            Modifier.weight(1.2f)
+            Modifier.weight(0.8f)
         )
 
         ScheduleCell(
             entry.objectName,
-            Modifier.weight(1.6f)
+            Modifier.weight(1.8f)
         )
 
         ScheduleCell(
             DateTimeFormat.formatTime(entry.startTime),
-            Modifier.weight(0.8f),
+            Modifier.weight(0.7f),
             TextAlign.Center
         )
 
         ScheduleCell(
             DateTimeFormat.formatTime(entry.endTime),
-            Modifier.weight(0.8f),
+            Modifier.weight(0.7f),
             TextAlign.Center
         )
     }
@@ -125,7 +125,7 @@ private fun ScheduleCell(
 ) {
     Text(
         text = text,
-        modifier = modifier.padding(horizontal = 4.dp),
+        modifier = modifier,
         textAlign = align,
         style = if (isHeader)
             MaterialTheme.typography.labelMedium

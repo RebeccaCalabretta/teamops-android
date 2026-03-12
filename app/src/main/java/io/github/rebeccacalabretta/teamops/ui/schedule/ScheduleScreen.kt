@@ -21,6 +21,7 @@ import io.github.rebeccacalabretta.teamops.data.db.ScheduleEntity
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
+import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
 import io.github.rebeccacalabretta.teamops.ui.model.toScheduleEntity
 import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
@@ -58,15 +59,28 @@ fun ScheduleScreen(
     var showSheet by rememberSaveable { mutableStateOf(false) }
     var editingEntry by remember { mutableStateOf<ScheduleEntity?>(null) }
 
+    val selectedMonth by viewModel.selectedMonth.collectAsStateWithLifecycle()
+
     val addLabel = stringResource(R.string.schedule_add_button)
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
 
         EmployeeContextHeader(
             employeeId = employeeId,
             currentUserId = currentUserId,
             employeeName = employeeName,
             employeeRole = employeeRole
+        )
+
+        MonthStepper(
+            month = selectedMonth,
+            onPrevMonth = { viewModel.prevMonth() },
+            onNextMonth = { viewModel.nextMonth() },
+            modifier = Modifier.fillMaxWidth()
         )
 
         ScheduleTable(

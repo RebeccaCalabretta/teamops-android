@@ -29,7 +29,7 @@ fun AppNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ScheduleRoute(currentUserId),
+        startDestination = PunchRoute(currentUserId),
         modifier = modifier
     ) {
 

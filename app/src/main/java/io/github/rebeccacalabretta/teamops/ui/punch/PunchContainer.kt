@@ -98,6 +98,7 @@ fun PunchContainer(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .padding(horizontal = 16.dp)
     ) {
 
         EmployeeContextHeader(
@@ -118,9 +119,7 @@ fun PunchContainer(
             onCheckInClick = punchSessionViewModel::checkIn,
             onCheckOutClick = punchSessionViewModel::checkOut,
             sessionRows = sessionRows,
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 16.dp)
+            modifier = Modifier.weight(1f)
         )
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.components.DatePickerDialog
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
+import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -67,7 +69,14 @@ fun VacationRequestSheet(
     val errorText = stringResource(R.string.vacation_invalid_date_range)
     val deleteLabel = stringResource(R.string.vacation_delete)
 
-    ModalBottomSheet(onDismissRequest = onDismiss) {
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = onDismiss
+    ) {
 
         Column(
             modifier = Modifier
@@ -86,14 +95,13 @@ fun VacationRequestSheet(
                 onClick = { showStartPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("$startLabel: $startDate")
-            }
+                Text("$startLabel: ${DateTimeFormat.formatFullDate(startDate)}")            }
 
             TextButton(
                 onClick = { showEndPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("$endLabel: $endDate")
+                Text("$endLabel: ${DateTimeFormat.formatFullDate(endDate)}")
             }
 
             if (!isDateValid) {

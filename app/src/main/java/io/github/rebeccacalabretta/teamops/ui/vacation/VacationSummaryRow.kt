@@ -23,7 +23,7 @@ fun VacationSummaryRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
