@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
-import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionContainer
-import io.github.rebeccacalabretta.teamops.ui.punch.PunchContainer
+import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
+import io.github.rebeccacalabretta.teamops.ui.punch.PunchScreen
 import io.github.rebeccacalabretta.teamops.ui.schedule.ScheduleScreen
 import io.github.rebeccacalabretta.teamops.ui.vacation.VacationScreen
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
@@ -36,7 +36,7 @@ fun AppNavHost(
         composable<PunchRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<PunchRoute>()
 
-            PunchContainer(
+            PunchScreen(
                 employeeId = route.employeeId,
                 currentUserId = currentUserId,
                 snackbarHostState = snackbarHostState
@@ -121,7 +121,7 @@ fun AppNavHost(
         composable<EmployeeSessionRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<EmployeeSessionRoute>()
 
-            EmployeeSessionContainer(
+            EmployeeSessionScreen(
                 employeeId = route.employeeId,
                 currentUserId = currentUserId
             )

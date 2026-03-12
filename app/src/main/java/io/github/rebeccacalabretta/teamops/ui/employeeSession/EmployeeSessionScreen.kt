@@ -86,9 +86,7 @@ fun EmployeeSessionScreen(
         if (sessionRows.isEmpty()) {
 
             Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1f))
