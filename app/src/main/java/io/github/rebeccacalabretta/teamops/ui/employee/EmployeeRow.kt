@@ -38,7 +38,7 @@ fun EmployeeRow(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onRowClick)
             .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -87,19 +87,19 @@ fun EmployeeRow(
         ) {
 
             ActionItem(
-                text = stringResource(R.string.employee_action_sessions),
+                text = stringResource(R.string.sessions),
                 modifier = Modifier.weight(1f),
                 onClick = onSessionsClick
             )
 
             ActionItem(
-                text = stringResource(R.string.employee_action_schedule),
+                text = stringResource(R.string.schedule),
                 modifier = Modifier.weight(1f),
                 onClick = onScheduleClick
             )
 
             ActionItem(
-                text = stringResource(R.string.employee_action_vacation),
+                text = stringResource(R.string.vacation),
                 modifier = Modifier.weight(1f),
                 onClick = onVacationClick
             )

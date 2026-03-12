@@ -38,7 +38,8 @@ fun PunchScreen(
     isProcessing: Boolean = false,
     sessionRows: List<SessionRowUiModel> = emptyList(),
     onCheckInClick: () -> Unit = {},
-    onCheckOutClick: () -> Unit = {}
+    onCheckOutClick: () -> Unit = {},
+    showObjectColumn: Boolean
 ) {
     val statusText = if (isCheckedIn)
         stringResource(R.string.status_checked_in)
@@ -124,6 +125,7 @@ fun PunchScreen(
         } else {
             PunchTable(
                 rows = sessionRows,
+                showObjectColumn = showObjectColumn,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()

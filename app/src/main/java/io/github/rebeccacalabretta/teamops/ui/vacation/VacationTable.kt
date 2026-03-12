@@ -71,19 +71,19 @@ private fun VacationHeaderRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         VacationCell(
-            text = stringResource(R.string.vacation_start),
+            text = stringResource(R.string.start),
             modifier = Modifier.weight(0.8f),
             isHeader = true
         )
 
         VacationCell(
-            text = stringResource(R.string.vacation_end),
+            text = stringResource(R.string.end),
             modifier = Modifier.weight(0.8f),
             isHeader = true
         )
 
         VacationCell(
-            text = stringResource(R.string.vacation_status),
+            text = stringResource(R.string.status),
             modifier = Modifier.weight(1f),
             isHeader = true
         )

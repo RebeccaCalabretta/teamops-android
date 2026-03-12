@@ -3,6 +3,7 @@ package io.github.rebeccacalabretta.teamops.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
@@ -29,7 +30,7 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class PunchSessionViewModel @Inject constructor(
+class PunchViewModel @Inject constructor(
     private val punchSessionRepository: PunchSessionRepository,
     private val objectRepository: ObjectRepository,
     private val locationProvider: LocationProvider,
@@ -47,6 +48,26 @@ class PunchSessionViewModel @Inject constructor(
             started = SharingStarted.Eagerly,
             initialValue = null
         )
+
+    private val currentRole: StateFlow<EmployeeRole?> =
+        flow {
+            val uid = firebaseAuth.currentUser?.uid
+            if (uid == null) emit(null)
+            else emit(userRepository.getUserSession(uid)?.role)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = null
+        )
+
+    val showObjectColumn: StateFlow<Boolean> =
+        currentRole
+            .map { role -> role == EmployeeRole.WORKER }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = false
+            )
 
     private val _isProcessing = MutableStateFlow(false)
     val isProcessing: StateFlow<Boolean> = _isProcessing.asStateFlow()

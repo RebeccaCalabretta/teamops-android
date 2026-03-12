@@ -69,13 +69,13 @@ fun MainAppContent(
             stringResource(R.string.title_punch)
 
         currentRoute?.contains("EmployeeRoute") == true ->
-            stringResource(R.string.title_employees)
+            stringResource(R.string.employees)
 
         currentRoute?.contains("ScheduleRoute") == true ->
-            stringResource(R.string.title_schedule)
+            stringResource(R.string.schedule)
 
         currentRoute?.contains("VacationRoute") == true ->
-            stringResource(R.string.title_vacation)
+            stringResource(R.string.vacation)
 
         currentRoute?.contains("EmployeeSessionRoute") == true ->
             stringResource(R.string.title_punch)

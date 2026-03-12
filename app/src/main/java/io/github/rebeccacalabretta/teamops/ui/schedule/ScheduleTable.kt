@@ -54,7 +54,7 @@ private fun ScheduleHeaderRow(
             .padding(vertical = 4.dp)
     ) {
         ScheduleCell(
-            text = stringResource(R.string.schedule_header_date),
+            text = stringResource(R.string.date),
             modifier = Modifier.weight(0.8f),
             align = TextAlign.Start,
             isHeader = true
@@ -66,13 +66,13 @@ private fun ScheduleHeaderRow(
             isHeader = true
         )
         ScheduleCell(
-            text = stringResource(R.string.schedule_header_start),
+            text = stringResource(R.string.start),
             modifier = Modifier.weight(0.7f),
             align = TextAlign.Center,
             isHeader = true
         )
         ScheduleCell(
-            text = stringResource(R.string.schedule_header_end),
+            text = stringResource(R.string.end),
             modifier = Modifier.weight(0.7f),
             align = TextAlign.Center,
             isHeader = true

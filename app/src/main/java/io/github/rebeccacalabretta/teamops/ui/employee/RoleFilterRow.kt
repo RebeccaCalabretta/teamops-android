@@ -25,7 +25,7 @@ fun RoleFilterRow(
         FilterChip(
             selected = selectedRole == null,
             onClick = { onRoleSelected(null) },
-            label = { Text(stringResource(R.string.employee_role_all)) }
+            label = { Text(stringResource(R.string.all)) }
         )
         EmployeeRole.entries.forEach { role ->
             FilterChip(

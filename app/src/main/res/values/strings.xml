@@ -1,15 +1,27 @@
 <resources>
     <string name="app_name">TeamOps</string>
-    <!-- EmployeeScreen -->
-    <string name="employee_action_sessions">Stunden</string>
-    <string name="employee_action_schedule">Arbeitsplan</string>
-    <string name="employee_action_vacation">Urlaub</string>
-    <string name="employee_role_all">Alle</string>
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
+    <string name="date">Datum</string>
+    <string name="start">Start</string>
+    <string name="end">Ende</string>
+    <string name="status">Status</string>
+    <string name="schedule">Arbeitsplan</string>
+    <string name="vacation">Urlaub</string>
+    <string name="employees">Mitarbeiter</string>
+    <string name="sessions">Stunden</string>
+    <string name="all">Alle</string>
     <!-- ErrorMessage -->
     <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
     <string name="error_network">Keine Internetverbindung</string>
     <string name="error_session_load">Session konnte nicht geladen werden</string>
     <string name="error_unknown">Unbekannter Fehler</string>
+    <!-- Permissions -->
+    <string name="permission_location_title">Standortberechtigung erforderlich</string>
+    <string name="permission_location_message">Bitte aktiviere den Standort in den App-Einstellungen.</string>
+    <string name="permission_open_settings">Einstellungen öffnen</string>
     <!-- LoginScreen -->
     <string name="login_button">Login</string>
     <string name="login_email">E-Mail</string>
@@ -28,36 +40,23 @@
     <string name="schedule_new_title">Neuer Eintrag</string>
     <string name="schedule_edit_title">Eintrag bearbeiten</string>
     <string name="schedule_object_label">Objekt</string>
-    <string name="schedule_save">Speichern</string>
     <string name="schedule_add_button">Eintrag hinzufügen</string>
     <string name="schedule_delete">Eintrag löschen</string>
-    <string name="schedule_ok">OK</string>
-    <string name="schedule_cancel">Abbrechen</string>
-    <string name="schedule_date">Datum</string>
     <string name="schedule_start">Startzeit</string>
     <string name="schedule_end">Endzeit</string>
     <string name="schedule_object_select">Objekt auswählen</string>
     <string name="schedule_invalid_time_range">Endzeit darf nicht vor der Startzeit liegen.</string>
     <!-- ScheduleTable -->
-    <string name="schedule_header_date">Datum</string>
     <string name="schedule_header_object">Objekt</string>
-    <string name="schedule_header_start">Start</string>
-    <string name="schedule_header_end">Ende</string>
     <!-- TopAppBar Titles -->
-    <string name="title_employees">Mitarbeiter</string>
     <string name="title_punch">Zeiterfassung</string>
-    <string name="title_schedule">Arbeitsplan</string>
-    <string name="title_vacation">Urlaub</string>
     <!-- VacationScreen -->
     <string name="vacation_request_button">Urlaub beantragen</string>
     <string name="vacation_request_title">Urlaubsantrag</string>
-    <string name="vacation_start">Start</string>
-    <string name="vacation_end">Ende</string>
-    <string name="vacation_status">Status</string>
-    <string name="vacation_submit">Speichern</string>
     <string name="vacation_invalid_date_range">Enddatum darf nicht vor dem Startdatum liegen.</string>
     <string name="vacation_used_this_year">Dieses Jahr genommen: %1$d</string>
     <string name="vacation_remaining_days">Verbleibend: %1$d</string>
+    <string name="vacation_submit">Beantragen</string>
     <string name="vacation_status_requested">Angefragt</string>
     <string name="vacation_status_approved">Genehmigt</string>
     <string name="vacation_status_rejected">Abgelehnt</string>
@@ -65,4 +64,4 @@
     <string name="vacation_reject">Ablehnen</string>
     <string name="vacation_edit_title">Urlaub bearbeiten</string>
     <string name="vacation_delete">Antrag löschen</string>
- </resources>
+</resources>

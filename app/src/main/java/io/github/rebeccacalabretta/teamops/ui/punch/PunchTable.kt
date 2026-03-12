@@ -30,15 +30,31 @@ import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
 
 @Composable
 fun PunchTable(
+    modifier: Modifier = Modifier,
     rows: List<SessionRowUiModel>,
-    modifier: Modifier = Modifier
+    showObjectColumn: Boolean,
+    canEdit: Boolean = false,
+    onEditClick: (SessionRowUiModel) -> Unit = {},
 ) {
+    val dateWeight = if (showObjectColumn) 0.7f else 0.7f
+    val objectWeight = 1.6f
+    val startWeight = if (showObjectColumn) 0.6f else 0.6f
+    val endWeight = if (showObjectColumn) 0.6f else 0.6f
+    val durationWeight = if (showObjectColumn) 0.9f else 2f
+
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(vertical = 4.dp)
     ) {
         stickyHeader {
             SessionHeaderRow(
+                showObjectColumn = showObjectColumn,
+                showEditColumn = canEdit,
+                dateWeight = dateWeight,
+                objectWeight = objectWeight,
+                startWeight = startWeight,
+                endWeight = endWeight,
+                durationWeight = durationWeight,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
@@ -49,8 +65,14 @@ fun PunchTable(
         items(rows) { row ->
             SessionRow(
                 row = row,
-                canEdit = false,
-                onEditClick = {}
+                showObjectColumn = showObjectColumn,
+                dateWeight = dateWeight,
+                objectWeight = objectWeight,
+                startWeight = startWeight,
+                endWeight = endWeight,
+                durationWeight = durationWeight,
+                canEdit = canEdit,
+                onEditClick = onEditClick
             )
         }
     }
@@ -58,6 +80,12 @@ fun PunchTable(
 
 @Composable
 fun SessionHeaderRow(
+    showObjectColumn: Boolean,
+    dateWeight: Float,
+    objectWeight: Float,
+    startWeight: Float,
+    endWeight: Float,
+    durationWeight: Float,
     modifier: Modifier = Modifier,
     showEditColumn: Boolean = false
 ) {
@@ -68,34 +96,41 @@ fun SessionHeaderRow(
     ) {
         Cell(
             text = "Datum",
-            modifier = Modifier.weight(0.7f),
+            modifier = Modifier.weight(dateWeight),
             align = TextAlign.Start,
             isHeader = true
         )
-        Cell(
-            text = "Objekt",
-            modifier = Modifier.weight(1.6f),
-            align = TextAlign.Start,
-            isHeader = true
-        )
+
+        if (showObjectColumn) {
+            Cell(
+                text = "Objekt",
+                modifier = Modifier.weight(objectWeight),
+                align = TextAlign.Start,
+                isHeader = true
+            )
+        }
+
         Cell(
             text = "Start",
-            modifier = Modifier.weight(0.6f),
+            modifier = Modifier.weight(startWeight),
             align = TextAlign.Center,
             isHeader = true
         )
+
         Cell(
             text = "Ende",
-            modifier = Modifier.weight(0.6f),
+            modifier = Modifier.weight(endWeight),
             align = TextAlign.Center,
             isHeader = true
         )
+
         Cell(
             text = "Dauer",
-            modifier = Modifier.weight(0.9f),
+            modifier = Modifier.weight(durationWeight),
             align = TextAlign.End,
             isHeader = true
         )
+
         if (showEditColumn) {
             Spacer(modifier = Modifier.width(40.dp))
         }
@@ -105,6 +140,12 @@ fun SessionHeaderRow(
 @Composable
 fun SessionRow(
     row: SessionRowUiModel,
+    showObjectColumn: Boolean,
+    dateWeight: Float,
+    objectWeight: Float,
+    startWeight: Float,
+    endWeight: Float,
+    durationWeight: Float,
     modifier: Modifier = Modifier,
     canEdit: Boolean,
     onEditClick: (SessionRowUiModel) -> Unit
@@ -130,30 +171,37 @@ fun SessionRow(
     ) {
         Cell(
             text = date,
-            modifier = Modifier.weight(0.7f),
+            modifier = Modifier.weight(dateWeight),
             align = TextAlign.Start
         )
-        Cell(
-            text = row.objectName,
-            modifier = Modifier.weight(1.6f),
-            align = TextAlign.Start
-        )
+
+        if (showObjectColumn) {
+            Cell(
+                text = row.objectName,
+                modifier = Modifier.weight(objectWeight),
+                align = TextAlign.Start
+            )
+        }
+
         Cell(
             text = start,
-            modifier = Modifier.weight(0.6f),
+            modifier = Modifier.weight(startWeight),
             align = TextAlign.Center
         )
+
         Cell(
             text = end,
-            modifier = Modifier.weight(0.6f),
+            modifier = Modifier.weight(endWeight),
             align = TextAlign.Center,
             textColor = textColor
         )
+
         Cell(
             text = duration,
-            modifier = Modifier.weight(0.9f),
+            modifier = Modifier.weight(durationWeight),
             align = TextAlign.End
         )
+
         if (canEdit) {
             Icon(
                 imageVector = Icons.Outlined.Edit,

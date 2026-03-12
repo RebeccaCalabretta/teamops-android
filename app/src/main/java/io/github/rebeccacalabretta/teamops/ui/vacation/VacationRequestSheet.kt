@@ -63,8 +63,8 @@ fun VacationRequestSheet(
         if (isEditMode) R.string.vacation_edit_title else R.string.vacation_request_title
     )
 
-    val startLabel = stringResource(R.string.vacation_start)
-    val endLabel = stringResource(R.string.vacation_end)
+    val startLabel = stringResource(R.string.start)
+    val endLabel = stringResource(R.string.end)
     val submitLabel = stringResource(R.string.vacation_submit)
     val errorText = stringResource(R.string.vacation_invalid_date_range)
     val deleteLabel = stringResource(R.string.vacation_delete)

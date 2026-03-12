@@ -57,10 +57,10 @@ fun ScheduleEditorSheet(
     val isValid = objectId.isNotBlank() && isTimeValid
 
     val titleText = stringResource(titleRes)
-    val dateLabel = stringResource(R.string.schedule_date)
+    val dateLabel = stringResource(R.string.date)
     val startLabel = stringResource(R.string.schedule_start)
     val endLabel = stringResource(R.string.schedule_end)
-    val saveLabel = stringResource(R.string.schedule_save)
+    val saveLabel = stringResource(R.string.save)
     val deleteLabel = stringResource(R.string.schedule_delete)
 
     val sheetState = rememberModalBottomSheetState(

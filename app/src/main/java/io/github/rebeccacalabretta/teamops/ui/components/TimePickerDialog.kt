@@ -48,12 +48,12 @@ fun TimePickerDialog(
                     onDismiss()
                 }
             ) {
-                Text(stringResource(R.string.schedule_ok))
+                Text(stringResource(R.string.ok))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.schedule_cancel))
+                Text(stringResource(R.string.cancel))
             }
         },
         text = {

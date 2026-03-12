@@ -1,16 +1,11 @@
 package io.github.rebeccacalabretta.teamops.ui.employeeSession
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,12 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.R
+import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
 import io.github.rebeccacalabretta.teamops.ui.components.WorkTimeSummaryRow
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
-import io.github.rebeccacalabretta.teamops.ui.punch.SessionHeaderRow
-import io.github.rebeccacalabretta.teamops.ui.punch.SessionRow
+import io.github.rebeccacalabretta.teamops.ui.punch.PunchTable
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeSessionViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 
@@ -57,6 +52,7 @@ fun EmployeeSessionScreen(
     val employee = allEmployees.firstOrNull { it.id == employeeId }
     val employeeName = employee?.name.orEmpty()
     val employeeRole = employee?.role
+    val showObjectColumn = employeeRole == EmployeeRole.WORKER
 
     var selectedSession by remember { mutableStateOf<SessionRowUiModel?>(null) }
     var showEditDialog by remember { mutableStateOf(false) }
@@ -102,34 +98,18 @@ fun EmployeeSessionScreen(
 
         } else {
 
-            LazyColumn(
+            PunchTable(
+                rows = sessionRows,
+                showObjectColumn = showObjectColumn,
+                canEdit = true,
+                onEditClick = {
+                    selectedSession = it
+                    showEditDialog = true
+                },
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 16.dp)
-            ) {
-
-                stickyHeader {
-                    SessionHeaderRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(vertical = 4.dp),
-                        showEditColumn = true
-                    )
-                }
-
-                items(sessionRows) { row ->
-                    SessionRow(
-                        row = row,
-                        canEdit = true,
-                        onEditClick = {
-                            selectedSession = it
-                            showEditDialog = true
-                        }
-                    )
-                }
-            }
+                    .fillMaxWidth()
+            )
         }
     }
 
