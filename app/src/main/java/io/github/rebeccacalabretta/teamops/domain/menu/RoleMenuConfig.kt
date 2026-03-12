@@ -15,15 +15,6 @@ object RoleMenuConfig {
             )
         ),
         MenuItem(
-            id = "employees",
-            title = "Mitarbeiter",
-            allowedRoles = setOf(
-                EmployeeRole.MANAGER,
-                EmployeeRole.HR,
-                EmployeeRole.ADMIN
-            )
-        ),
-        MenuItem(
             id = "schedule",
             title = "Arbeitsplan",
             allowedRoles = setOf(
@@ -38,6 +29,15 @@ object RoleMenuConfig {
             title = "Urlaub",
             allowedRoles = setOf(
                 EmployeeRole.WORKER,
+                EmployeeRole.MANAGER,
+                EmployeeRole.HR,
+                EmployeeRole.ADMIN
+            )
+        ),
+        MenuItem(
+            id = "employees",
+            title = "Mitarbeiter",
+            allowedRoles = setOf(
                 EmployeeRole.MANAGER,
                 EmployeeRole.HR,
                 EmployeeRole.ADMIN
