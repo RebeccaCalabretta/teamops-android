@@ -22,4 +22,8 @@ abstract class MonthViewModel : ViewModel() {
     fun nextMonth() {
         _selectedMonth.update { it.plusMonths(1) }
     }
+
+    fun jumpToCurrentMonth() {
+        _selectedMonth.value = YearMonth.now()
+    }
 }

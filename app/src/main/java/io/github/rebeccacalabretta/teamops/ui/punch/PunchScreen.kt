@@ -137,6 +137,16 @@ fun PunchScreen(
         }
     }
 
+    if (showCheckOutDialog) {
+        CheckoutConfirmDialog(
+            onConfirm = {
+                showCheckOutDialog = false
+                punchViewModel.checkOut()
+            },
+            onDismiss = { showCheckOutDialog = false }
+        )
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -159,6 +169,8 @@ fun PunchScreen(
         PunchSessionSection(
             sessionRows = sessionRows,
             showObjectColumn = showObjectColumn,
+            onSwipePrevMonth = punchViewModel::prevMonth,
+            onSwipeNextMonth = punchViewModel::nextMonth,
             modifier = Modifier.weight(1f)
         )
 

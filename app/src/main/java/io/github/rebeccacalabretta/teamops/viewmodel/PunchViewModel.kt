@@ -1,8 +1,12 @@
 package io.github.rebeccacalabretta.teamops.viewmodel
 
+import android.content.Context
+import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
@@ -31,6 +35,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PunchViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val punchSessionRepository: PunchSessionRepository,
     private val objectRepository: ObjectRepository,
     private val locationProvider: LocationProvider,
@@ -70,10 +75,12 @@ class PunchViewModel @Inject constructor(
             )
 
     private val _isProcessing = MutableStateFlow(false)
-    val isProcessing: StateFlow<Boolean> = _isProcessing.asStateFlow()
+    val isProcessing: StateFlow<Boolean> =
+        _isProcessing.asStateFlow()
 
     private val _uiMessage = MutableStateFlow<String?>(null)
-    val uiMessage: StateFlow<String?> = _uiMessage.asStateFlow()
+    val uiMessage: StateFlow<String?> =
+        _uiMessage.asStateFlow()
 
     fun clearUiMessage() {
         _uiMessage.value = null
@@ -85,8 +92,13 @@ class PunchViewModel @Inject constructor(
         }
 
     val sessionRows: StateFlow<List<SessionRowUiModel>> =
-        combine(monthlySessions, objectRepository.getAllObjects()) { sessions, objects ->
+        combine(
+            monthlySessions,
+            objectRepository.getAllObjects()
+        ) { sessions, objects ->
+
             val objectsById = objects.associateBy { it.id }
+
             sessions.map { session ->
                 mapToSessionUiModel(
                     session = session,
@@ -100,59 +112,93 @@ class PunchViewModel @Inject constructor(
         )
 
     val isCheckedIn: StateFlow<Boolean> =
-        monthlySessions
-            .map { sessions -> sessions.any { it.endTime == null } }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+        punchSessionRepository
+            .getLatestSessions(1)
+            .map { sessions ->
+                sessions.firstOrNull()?.endTime == null
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false
+            )
 
     val todayWorkText: StateFlow<String> =
         monthlySessions
             .map { sessions ->
-                val todayStart = LocalDate.now()
-                    .atStartOfDay(ZoneId.systemDefault())
-                    .toInstant()
-                    .toEpochMilli()
+
+                val todayStart =
+                    LocalDate.now()
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli()
 
                 val todayEnd = todayStart + 86_400_000
 
-                val todaySessions = sessions.filter {
-                    it.startTime in todayStart until todayEnd
-                }
+                val todaySessions =
+                    sessions.filter {
+                        it.startTime in todayStart until todayEnd
+                    }
 
-                val total = todaySessions.sumOf {
-                    val end = it.endTime ?: System.currentTimeMillis()
-                    end - it.startTime
-                }
+                val total =
+                    todaySessions.sumOf {
+                        val end = it.endTime ?: System.currentTimeMillis()
+                        end - it.startTime
+                    }
 
                 WorkTimeFormatter.formatMillis(total)
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0 h 00 min")
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = "0 h 00 min"
+            )
 
     val monthWorkText: StateFlow<String> =
         monthlySessions
             .map { sessions ->
-                val total = sessions.sumOf {
-                    val end = it.endTime ?: System.currentTimeMillis()
-                    end - it.startTime
-                }
+
+                val total =
+                    sessions.sumOf {
+                        val end = it.endTime ?: System.currentTimeMillis()
+                        end - it.startTime
+                    }
+
                 WorkTimeFormatter.formatMillis(total)
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0 h 00 min")
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = "0 h 00 min"
+            )
 
     fun checkIn() = runWithLoading {
-        val employeeId = currentEmployeeId.value ?: return@runWithLoading
 
-        val location = locationProvider.getCurrentLocationOrNull()
-            ?: run {
-                _uiMessage.value = "Location unavailable"
-                return@runWithLoading
-            }
+        if (isCheckedIn.value) {
+            _uiMessage.value =
+                context.getString(R.string.error_open_session_exists)
+            return@runWithLoading
+        }
 
-        val objects = objectRepository.getAllObjects().first()
-        val matched = ObjectMatcher.matchNearestObject(objects, location)
-            ?: run {
-                _uiMessage.value = "No matching object found"
-                return@runWithLoading
-            }
+        jumpToCurrentMonth()
+
+        val employeeId = requireNotNull(currentEmployeeId.value)
+
+        val location =
+            locationProvider.getCurrentLocationOrNull()
+                ?: run {
+                    _uiMessage.value =
+                        context.getString(R.string.error_location_unavailable)
+                    return@runWithLoading
+                }
+
+        val matched =
+            findNearestObject(location)
+                ?: run {
+                    _uiMessage.value =
+                        context.getString(R.string.error_no_matching_object)
+                    return@runWithLoading
+                }
 
         punchSessionRepository.checkIn(
             objectId = matched.id,
@@ -162,20 +208,26 @@ class PunchViewModel @Inject constructor(
     }
 
     fun checkOut() = runWithLoading {
-        val employeeId = currentEmployeeId.value ?: return@runWithLoading
 
-        val location = locationProvider.getCurrentLocationOrNull()
-            ?: run {
-                _uiMessage.value = "Location unavailable"
-                return@runWithLoading
-            }
+        jumpToCurrentMonth()
 
-        val objects = objectRepository.getAllObjects().first()
-        val matched = ObjectMatcher.matchNearestObject(objects, location)
-            ?: run {
-                _uiMessage.value = "No matching object found"
-                return@runWithLoading
-            }
+        val employeeId = requireNotNull(currentEmployeeId.value)
+
+        val location =
+            locationProvider.getCurrentLocationOrNull()
+                ?: run {
+                    _uiMessage.value =
+                        context.getString(R.string.error_location_unavailable)
+                    return@runWithLoading
+                }
+
+        val matched =
+            findNearestObject(location)
+                ?: run {
+                    _uiMessage.value =
+                        context.getString(R.string.error_no_matching_object)
+                    return@runWithLoading
+                }
 
         punchSessionRepository.checkOut(
             endLocation = location,
@@ -184,15 +236,34 @@ class PunchViewModel @Inject constructor(
         )
     }
 
+    private suspend fun findNearestObject(location: Location) =
+        ObjectMatcher.matchNearestObject(
+            objectRepository.getAllObjects().first(),
+            location
+        )
+
     private fun runWithLoading(block: suspend () -> Unit) {
+
         if (_isProcessing.value) return
 
         viewModelScope.launch {
+
             _isProcessing.value = true
+
             try {
                 block()
             } catch (e: Exception) {
-                _uiMessage.value = e.message
+
+                _uiMessage.value = when (e.message) {
+                    "OPEN_SESSION_EXISTS" ->
+                        context.getString(R.string.error_open_session_exists)
+
+                    "NO_OPEN_SESSION" ->
+                        context.getString(R.string.error_no_open_session)
+
+                    else ->
+                        context.getString(R.string.error_unknown)
+                }
             } finally {
                 _isProcessing.value = false
             }

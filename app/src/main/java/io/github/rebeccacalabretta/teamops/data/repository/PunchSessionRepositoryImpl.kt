@@ -40,7 +40,7 @@ class PunchSessionRepositoryImpl(
         currentUserId: String
     ) {
         val open = dao.getOpenSessionOrNull()
-        if (open != null) throw IllegalStateException("There is already an open session.")
+        if (open != null) throw IllegalStateException("OPEN_SESSION_EXISTS")
 
         val now = System.currentTimeMillis()
 
@@ -69,7 +69,7 @@ class PunchSessionRepositoryImpl(
         currentUserId: String
     ) {
         val open = dao.getOpenSessionOrNull()
-            ?: throw IllegalStateException("No open session to check out.")
+            ?: throw IllegalStateException("NO_OPEN_SESSION")
 
         val endTime = System.currentTimeMillis()
         val duration = endTime - open.startTime

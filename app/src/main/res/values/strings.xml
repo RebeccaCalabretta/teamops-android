@@ -18,7 +18,11 @@
     <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
     <string name="error_network">Keine Internetverbindung</string>
     <string name="error_session_load">Session konnte nicht geladen werden</string>
-    <string name="error_unknown">Unbekannter Fehler</string>
+    <string name="error_unknown">Ein unbekannter Fehler ist aufgetreten</string>
+    <string name="error_location_unavailable">Standort konnte nicht ermittelt werden</string>
+    <string name="error_no_matching_object">Kein passendes Objekt in der Nähe gefunden</string>
+    <string name="error_open_session_exists">Es existiert bereits eine offene Session</string>
+    <string name="error_no_open_session">Keine offene Session vorhanden.</string>
     <!-- Permissions -->
     <string name="permission_location_title">Standortberechtigung erforderlich</string>
     <string name="permission_location_message">Bitte aktiviere den Standort in den App-Einstellungen.</string>
