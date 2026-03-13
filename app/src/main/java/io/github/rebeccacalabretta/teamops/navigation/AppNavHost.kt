@@ -27,6 +27,7 @@ fun AppNavHost(
     teamMemberIds: Set<String>,
     modifier: Modifier = Modifier
 ) {
+
     NavHost(
         navController = navController,
         startDestination = PunchRoute(currentUserId),
@@ -34,6 +35,7 @@ fun AppNavHost(
     ) {
 
         composable<PunchRoute> { backStackEntry ->
+
             val route = backStackEntry.toRoute<PunchRoute>()
 
             PunchScreen(
@@ -44,6 +46,7 @@ fun AppNavHost(
         }
 
         composable<ScheduleRoute> { backStackEntry ->
+
             val route = backStackEntry.toRoute<ScheduleRoute>()
 
             ScheduleScreen(
@@ -55,6 +58,7 @@ fun AppNavHost(
         }
 
         composable<VacationRoute> { backStackEntry ->
+
             val route = backStackEntry.toRoute<VacationRoute>()
 
             VacationScreen(
@@ -119,6 +123,7 @@ fun AppNavHost(
         }
 
         composable<EmployeeSessionRoute> { backStackEntry ->
+
             val route = backStackEntry.toRoute<EmployeeSessionRoute>()
 
             EmployeeSessionScreen(

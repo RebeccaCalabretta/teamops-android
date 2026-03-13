@@ -29,7 +29,7 @@ import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.domain.vacation.VacationEntry
 import io.github.rebeccacalabretta.teamops.domain.vacation.VacationStatus
 import io.github.rebeccacalabretta.teamops.ui.theme.Success
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 
 @Composable
 fun VacationTable(

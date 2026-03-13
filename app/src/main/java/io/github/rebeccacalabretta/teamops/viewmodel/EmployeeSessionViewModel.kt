@@ -8,7 +8,7 @@ import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositor
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,7 +36,8 @@ class EmployeeSessionViewModel @Inject constructor(
 ) : MonthViewModel() {
 
     private val _selectedEmployeeId = MutableStateFlow<String?>(null)
-    val selectedEmployeeId = _selectedEmployeeId.asStateFlow()
+    val selectedEmployeeId: StateFlow<String?> =
+        _selectedEmployeeId.asStateFlow()
 
     fun loadSessions(employeeId: String) {
         _selectedEmployeeId.value = employeeId
@@ -45,13 +46,18 @@ class EmployeeSessionViewModel @Inject constructor(
     private val sessionsForEmployee =
         selectedEmployeeId
             .filterNotNull()
-            .flatMapLatest { id ->
-                punchSessionRepository.getSessionsForEmployee(id)
+            .flatMapLatest { employeeId ->
+                punchSessionRepository.getSessionsForEmployee(employeeId)
             }
 
     private val monthlySessions =
-        combine(sessionsForEmployee, selectedMonth) { sessions, month ->
+        combine(
+            sessionsForEmployee,
+            selectedMonth
+        ) { sessions, month ->
+
             sessions.filter { session ->
+
                 val sessionMonth =
                     Instant.ofEpochMilli(session.startTime)
                         .atZone(ZoneId.systemDefault())
@@ -77,33 +83,39 @@ class EmployeeSessionViewModel @Inject constructor(
                 )
             }
         }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            emptyList()
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
         )
 
     val todayWorkText: StateFlow<String> =
         sessionRows
             .map { rows ->
-                val millis = rows.sumOf { it.durationMillis }
+
+                val millis =
+                    rows.sumOf { it.durationMillis }
+
                 DateTimeFormat.formatDurationMillis(millis)
             }
             .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                "0 m"
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = "0 m"
             )
 
     val monthWorkText: StateFlow<String> =
         sessionRows
             .map { rows ->
-                val millis = rows.sumOf { it.durationMillis }
+
+                val millis =
+                    rows.sumOf { it.durationMillis }
+
                 DateTimeFormat.formatDurationMillis(millis)
             }
             .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                "0 m"
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = "0 m"
             )
 
     fun saveEditedSession(
@@ -112,13 +124,20 @@ class EmployeeSessionViewModel @Inject constructor(
         startTimeText: String,
         endTimeText: String
     ) {
-        val employeeId = selectedEmployeeId.value ?: return
+
+        val employeeId =
+            selectedEmployeeId.value ?: return
 
         viewModelScope.launch {
 
-            val firebaseUid = firebaseAuth.currentUser?.uid ?: return@launch
-            val userSession = userRepository.getUserSession(firebaseUid) ?: return@launch
-            val currentUserId = userSession.employeeId
+            val firebaseUid =
+                firebaseAuth.currentUser?.uid ?: return@launch
+
+            val userSession =
+                userRepository.getUserSession(firebaseUid) ?: return@launch
+
+            val currentUserId =
+                userSession.employeeId
 
             val startMillis =
                 DateTimeFormat.parseTimeToMillis(dateMillis, startTimeText)

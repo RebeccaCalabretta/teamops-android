@@ -13,7 +13,7 @@ fun ScheduleRowUiModel.toScheduleEntity(
     return ScheduleEntity(
         id = id,
         employeeId = employeeId,
-        objectId = objectId,
+        objectId = objectId.toString(),
         date = date
             .atStartOfDay(zone)
             .toInstant()

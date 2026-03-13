@@ -12,6 +12,7 @@
     <string name="vacation">Urlaub</string>
     <string name="employees">Mitarbeiter</string>
     <string name="no_employees">Keine Mitarbeiter vorhanden</string>
+    <string name="unknown">Unbekannt</string>
     <string name="sessions">Stunden</string>
     <string name="all">Alle</string>
     <!-- ErrorMessage -->

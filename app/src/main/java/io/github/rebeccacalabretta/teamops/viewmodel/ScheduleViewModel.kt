@@ -87,22 +87,21 @@ class ScheduleViewModel @Inject constructor(
             schedules.map { entity ->
 
                 val objectName =
-                    objectMap[entity.objectId]?.name ?: "Unbekannt"
+                    objectMap[entity.objectId]?.name
 
                 val canEdit =
                     canEdit(entity, userContext)
 
                 entity.toScheduleRowUiModel(
-                    objectName = objectName,
+                    objectName = objectName.toString(),
                     canEdit = canEdit
                 )
             }
-        }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                emptyList()
-            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 
     val objects: StateFlow<List<ObjectEntity>> =
         objectRepository.getAllObjects()
@@ -114,6 +113,7 @@ class ScheduleViewModel @Inject constructor(
 
     fun upsertSchedule(entry: ScheduleEntity) {
         val user = _userContext.value ?: return
+
         viewModelScope.launch {
             scheduleRepository.upsertSchedule(
                 entry = entry,
@@ -124,6 +124,7 @@ class ScheduleViewModel @Inject constructor(
 
     fun deleteSchedule(entry: ScheduleEntity) {
         val user = _userContext.value ?: return
+
         viewModelScope.launch {
             scheduleRepository.deleteSchedule(
                 entry = entry,

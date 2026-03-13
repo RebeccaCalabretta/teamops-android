@@ -98,6 +98,7 @@ fun VacationScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 24.dp)
         )
     }
 

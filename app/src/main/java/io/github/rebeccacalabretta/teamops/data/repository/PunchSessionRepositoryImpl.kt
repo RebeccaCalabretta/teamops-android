@@ -6,8 +6,8 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDataSource
 import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDocument
-import io.github.rebeccacalabretta.teamops.util.GeoDistance
-import io.github.rebeccacalabretta.teamops.util.MonthKey
+import io.github.rebeccacalabretta.teamops.util.geo.GeoDistance
+import io.github.rebeccacalabretta.teamops.util.time.MonthKey
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 import java.time.ZoneId

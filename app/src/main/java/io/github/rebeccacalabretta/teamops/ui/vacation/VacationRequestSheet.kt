@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.components.DatePickerDialog
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId

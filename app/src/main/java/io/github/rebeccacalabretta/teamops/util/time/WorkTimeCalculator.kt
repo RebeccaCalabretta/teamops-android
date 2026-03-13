@@ -1,4 +1,4 @@
-package io.github.rebeccacalabretta.teamops.util
+package io.github.rebeccacalabretta.teamops.util.time
 
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 

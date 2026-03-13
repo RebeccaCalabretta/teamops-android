@@ -10,8 +10,8 @@ import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositor
 import io.github.rebeccacalabretta.teamops.domain.access.canAccessEmployee
 import io.github.rebeccacalabretta.teamops.ui.model.EmployeeRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.toEmployeeRowUiModel
-import io.github.rebeccacalabretta.teamops.util.WorkTimeCalculator
-import io.github.rebeccacalabretta.teamops.util.WorkTimeFormatter
+import io.github.rebeccacalabretta.teamops.util.time.WorkTimeCalculator
+import io.github.rebeccacalabretta.teamops.util.time.WorkTimeFormatter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

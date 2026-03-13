@@ -31,7 +31,7 @@ fun PunchBottomSection(
         onClick = onButtonClick,
         enabled = !isProcessing,
         modifier = Modifier
-            .fillMaxWidth(0.5f)
+            .fillMaxWidth()
             .padding(bottom = 24.dp)
     )
 }

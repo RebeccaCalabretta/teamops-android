@@ -25,6 +25,7 @@ import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
 import io.github.rebeccacalabretta.teamops.ui.components.WorkTimeSummaryRow
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
+import io.github.rebeccacalabretta.teamops.ui.modifier.swipeMonthNavigation
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchTable
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeSessionViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
@@ -57,6 +58,11 @@ fun EmployeeSessionScreen(
     var selectedSession by remember { mutableStateOf<SessionRowUiModel?>(null) }
     var showEditDialog by remember { mutableStateOf(false) }
 
+    val swipeModifier = modifier.swipeMonthNavigation(
+        onSwipePrevMonth = sessionViewModel::prevMonth,
+        onSwipeNextMonth = sessionViewModel::nextMonth
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -86,7 +92,9 @@ fun EmployeeSessionScreen(
         if (sessionRows.isEmpty()) {
 
             Column(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
+                modifier = swipeModifier
+                    .weight(1f)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1f))
@@ -104,9 +112,10 @@ fun EmployeeSessionScreen(
                     selectedSession = it
                     showEditDialog = true
                 },
-                modifier = Modifier
+                modifier = swipeModifier
                     .weight(1f)
                     .fillMaxWidth()
+
             )
         }
     }

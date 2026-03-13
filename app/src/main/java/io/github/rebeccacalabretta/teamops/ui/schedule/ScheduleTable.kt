@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.ScheduleRowUiModel
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 
 @Composable
 fun ScheduleTable(

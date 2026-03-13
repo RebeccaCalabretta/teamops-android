@@ -1,7 +1,7 @@
 package io.github.rebeccacalabretta.teamops.data.export
 
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 
 fun mapToExportSessionRow(
     session: PunchSessionEntity,

@@ -1,16 +1,15 @@
 package io.github.rebeccacalabretta.teamops.ui.punch
 
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
+import io.github.rebeccacalabretta.teamops.ui.modifier.swipeMonthNavigation
 
 @Composable
 fun PunchSessionSection(
@@ -20,25 +19,10 @@ fun PunchSessionSection(
     onSwipeNextMonth: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val swipeModifier = modifier.pointerInput(Unit) {
-
-        var totalDrag = 0f
-
-        detectHorizontalDragGestures(
-            onHorizontalDrag = { _, dragAmount ->
-                totalDrag += dragAmount
-            },
-            onDragEnd = {
-
-                when {
-                    totalDrag > 120f -> onSwipePrevMonth()
-                    totalDrag < -120f -> onSwipeNextMonth()
-                }
-
-                totalDrag = 0f
-            }
-        )
-    }
+    val swipeModifier = modifier.swipeMonthNavigation(
+        onSwipePrevMonth = onSwipePrevMonth,
+        onSwipeNextMonth = onSwipeNextMonth
+    )
 
     if (sessionRows.isEmpty()) {
 
@@ -48,9 +32,7 @@ fun PunchSessionSection(
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            Text(
-                text = stringResource(R.string.no_work_times)
-            )
+            Text(text = stringResource(R.string.no_work_times))
 
             Spacer(modifier = Modifier.weight(1f))
         }

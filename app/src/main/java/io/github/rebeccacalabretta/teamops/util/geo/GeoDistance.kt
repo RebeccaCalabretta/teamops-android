@@ -1,4 +1,4 @@
-package io.github.rebeccacalabretta.teamops.util
+package io.github.rebeccacalabretta.teamops.util.geo
 
 import kotlin.math.atan2
 import kotlin.math.cos

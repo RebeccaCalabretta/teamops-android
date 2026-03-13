@@ -23,7 +23,8 @@ import io.github.rebeccacalabretta.teamops.ui.components.EmployeeContextHeader
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.ui.components.MonthStepper
 import io.github.rebeccacalabretta.teamops.ui.model.toScheduleEntity
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.ui.modifier.swipeMonthNavigation
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 import io.github.rebeccacalabretta.teamops.viewmodel.ScheduleViewModel
 import java.util.UUID
@@ -63,6 +64,11 @@ fun ScheduleScreen(
 
     val addLabel = stringResource(R.string.schedule_add_button)
 
+    val swipeModifier = modifier.swipeMonthNavigation(
+        onSwipePrevMonth = viewModel::prevMonth,
+        onSwipeNextMonth = viewModel::nextMonth
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -94,7 +100,7 @@ fun ScheduleScreen(
                 )
                 showSheet = true
             },
-            modifier = Modifier.weight(1f)
+            modifier = swipeModifier.weight(1f)
         )
 
         GeneralButton(
@@ -105,7 +111,7 @@ fun ScheduleScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(bottom = 24.dp)
         )
     }
 

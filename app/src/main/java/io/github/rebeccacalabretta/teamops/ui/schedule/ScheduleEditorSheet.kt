@@ -27,7 +27,7 @@ import io.github.rebeccacalabretta.teamops.ui.components.DatePickerDialog
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.ui.components.ObjectSelectDropdown
 import io.github.rebeccacalabretta.teamops.ui.components.TimePickerDialog
-import io.github.rebeccacalabretta.teamops.util.DateTimeFormat
+import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

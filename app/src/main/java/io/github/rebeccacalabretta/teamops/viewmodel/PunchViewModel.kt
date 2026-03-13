@@ -1,21 +1,19 @@
 package io.github.rebeccacalabretta.teamops.viewmodel
 
-import android.content.Context
 import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.UiMessage
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
-import io.github.rebeccacalabretta.teamops.util.ObjectMatcher
-import io.github.rebeccacalabretta.teamops.util.WorkTimeFormatter
+import io.github.rebeccacalabretta.teamops.util.geo.ObjectMatcher
+import io.github.rebeccacalabretta.teamops.util.time.WorkTimeFormatter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +33,6 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PunchViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val punchSessionRepository: PunchSessionRepository,
     private val objectRepository: ObjectRepository,
     private val locationProvider: LocationProvider,
@@ -78,9 +75,8 @@ class PunchViewModel @Inject constructor(
     val isProcessing: StateFlow<Boolean> =
         _isProcessing.asStateFlow()
 
-    private val _uiMessage = MutableStateFlow<String?>(null)
-    val uiMessage: StateFlow<String?> =
-        _uiMessage.asStateFlow()
+    private val _uiMessage = MutableStateFlow<UiMessage?>(null)
+    val uiMessage: StateFlow<UiMessage?> = _uiMessage.asStateFlow()
 
     fun clearUiMessage() {
         _uiMessage.value = null
@@ -175,8 +171,7 @@ class PunchViewModel @Inject constructor(
     fun checkIn() = runWithLoading {
 
         if (isCheckedIn.value) {
-            _uiMessage.value =
-                context.getString(R.string.error_open_session_exists)
+            _uiMessage.value = UiMessage.OpenSessionExists
             return@runWithLoading
         }
 
@@ -187,16 +182,14 @@ class PunchViewModel @Inject constructor(
         val location =
             locationProvider.getCurrentLocationOrNull()
                 ?: run {
-                    _uiMessage.value =
-                        context.getString(R.string.error_location_unavailable)
+                    _uiMessage.value = UiMessage.LocationUnavailable
                     return@runWithLoading
                 }
 
         val matched =
             findNearestObject(location)
                 ?: run {
-                    _uiMessage.value =
-                        context.getString(R.string.error_no_matching_object)
+                    _uiMessage.value = UiMessage.NoMatchingObject
                     return@runWithLoading
                 }
 
@@ -216,16 +209,14 @@ class PunchViewModel @Inject constructor(
         val location =
             locationProvider.getCurrentLocationOrNull()
                 ?: run {
-                    _uiMessage.value =
-                        context.getString(R.string.error_location_unavailable)
+                    _uiMessage.value = UiMessage.LocationUnavailable
                     return@runWithLoading
                 }
 
         val matched =
             findNearestObject(location)
                 ?: run {
-                    _uiMessage.value =
-                        context.getString(R.string.error_no_matching_object)
+                    _uiMessage.value = UiMessage.NoMatchingObject
                     return@runWithLoading
                 }
 
@@ -254,16 +245,18 @@ class PunchViewModel @Inject constructor(
                 block()
             } catch (e: Exception) {
 
-                _uiMessage.value = when (e.message) {
-                    "OPEN_SESSION_EXISTS" ->
-                        context.getString(R.string.error_open_session_exists)
+                _uiMessage.value =
+                    when (e.message) {
 
-                    "NO_OPEN_SESSION" ->
-                        context.getString(R.string.error_no_open_session)
+                        "OPEN_SESSION_EXISTS" ->
+                            UiMessage.OpenSessionExists
 
-                    else ->
-                        context.getString(R.string.error_unknown)
-                }
+                        "NO_OPEN_SESSION" ->
+                            UiMessage.NoOpenSession
+
+                        else ->
+                            UiMessage.UnknownError
+                    }
             } finally {
                 _isProcessing.value = false
             }

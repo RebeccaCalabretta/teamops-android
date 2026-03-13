@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
+import io.github.rebeccacalabretta.teamops.ui.model.UiMessage
 import io.github.rebeccacalabretta.teamops.ui.permission.PermissionSettingsDialog
 import io.github.rebeccacalabretta.teamops.util.permission.hasLocationPermission
 import io.github.rebeccacalabretta.teamops.util.permission.openAppSettings
@@ -81,9 +82,32 @@ fun PunchScreen(
     val employeeName = employee?.name.orEmpty()
     val employeeRole = employee?.role
 
-    LaunchedEffect(uiMessage) {
-        val message = uiMessage ?: return@LaunchedEffect
+    val snackbarMessage = when (uiMessage) {
+
+        UiMessage.OpenSessionExists ->
+            stringResource(R.string.error_open_session_exists)
+
+        UiMessage.NoOpenSession ->
+            stringResource(R.string.error_no_open_session)
+
+        UiMessage.LocationUnavailable ->
+            stringResource(R.string.error_location_unavailable)
+
+        UiMessage.NoMatchingObject ->
+            stringResource(R.string.error_no_matching_object)
+
+        UiMessage.UnknownError ->
+            stringResource(R.string.error_unknown)
+
+        null -> null
+    }
+
+    LaunchedEffect(snackbarMessage) {
+
+        val message = snackbarMessage ?: return@LaunchedEffect
+
         snackbarHostState.showSnackbar(message)
+
         punchViewModel.clearUiMessage()
     }
 
