@@ -17,6 +17,7 @@ playServicesLocation = "21.3.0"
 hilt = "2.54"
 hiltNavCompose = "1.2.0"
 coroutinesPlayServices = "1.7.3"
+coroutinesTest = "1.8.1"
 kotlinxSerialization = "1.6.3"
 firebaseBom = "33.5.1"
 googleServices = "4.4.1"
@@ -48,6 +49,7 @@ play-services-location = { group = "com.google.android.gms", name = "play-servic
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
