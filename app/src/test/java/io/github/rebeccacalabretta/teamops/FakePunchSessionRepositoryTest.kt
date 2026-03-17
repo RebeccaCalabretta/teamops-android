@@ -5,13 +5,15 @@ import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class FakePunchSessionRepositoryTest {
 
     @Test
-    fun checkIn_creates_open_session() = runTest {
+    fun checkInCreatesOpenSession() = runTest {
         val repository = FakePunchSessionRepository()
 
         repository.checkIn(
@@ -27,7 +29,7 @@ class FakePunchSessionRepositoryTest {
     }
 
     @Test
-    fun checkOut_closes_open_session() = runTest {
+    fun checkOutClosesOpenSession() = runTest {
         val repository = FakePunchSessionRepository()
 
         repository.checkIn(
@@ -55,5 +57,26 @@ class FakePunchSessionRepositoryTest {
         val openSession = repository.getOpenSessionOrNull()
 
         assertNull(openSession)
+    }
+
+    @Test
+    fun checkInThrowsWhenSessionAlreadyOpen() = runTest {
+        val repository = FakePunchSessionRepository()
+
+        repository.checkIn(
+            objectId = "obj1",
+            employeeId = "emp1",
+            currentUserId = "user1"
+        )
+
+        assertThrows(IllegalStateException::class.java) {
+            runBlocking {
+                repository.checkIn(
+                    objectId = "obj1",
+                    employeeId = "emp1",
+                    currentUserId = "user1"
+                )
+            }
+        }
     }
 }
