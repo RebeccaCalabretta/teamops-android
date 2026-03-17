@@ -1,7 +1,8 @@
-package io.github.rebeccacalabretta.teamops
+package io.github.rebeccacalabretta.teamops.repository
 
 import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
+import io.github.rebeccacalabretta.teamops.testdata.FakePunchSessionRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

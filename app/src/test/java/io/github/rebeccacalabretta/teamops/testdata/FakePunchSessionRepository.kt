@@ -1,4 +1,4 @@
-package io.github.rebeccacalabretta.teamops
+package io.github.rebeccacalabretta.teamops.testdata
 
 import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
