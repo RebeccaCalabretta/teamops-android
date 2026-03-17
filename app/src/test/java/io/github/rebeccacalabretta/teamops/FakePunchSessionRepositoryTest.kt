@@ -91,4 +91,31 @@ class FakePunchSessionRepositoryTest {
 
         assertTrue(exceptionThrown)
     }
+
+    @Test
+    fun checkOut_throwsWhenNoOpenSession() = runTest {
+        val repository = FakePunchSessionRepository()
+
+        val location = Location("test")
+
+        val objectEntity = ObjectEntity(
+            id = "obj1",
+            name = "Test Object",
+            latitude = 0.0,
+            longitude = 0.0,
+            radiusMeters = 50
+        )
+
+        var exceptionThrown = false
+        try {
+            repository.checkOut(
+                endLocation = location,
+                objectEntity = objectEntity,
+                currentUserId = "user1"
+            )
+        } catch (_: IllegalStateException) {
+            exceptionThrown = true
+        }
+        assertTrue(exceptionThrown)
+    }
 }
