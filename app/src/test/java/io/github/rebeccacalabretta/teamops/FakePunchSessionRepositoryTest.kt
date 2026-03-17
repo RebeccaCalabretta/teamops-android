@@ -2,18 +2,17 @@ package io.github.rebeccacalabretta.teamops
 
 import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertThrows
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class FakePunchSessionRepositoryTest {
 
     @Test
-    fun checkInCreatesOpenSession() = runTest {
+    fun checkIn_createsOpenSession() = runTest {
         val repository = FakePunchSessionRepository()
 
         repository.checkIn(
@@ -29,7 +28,7 @@ class FakePunchSessionRepositoryTest {
     }
 
     @Test
-    fun checkOutClosesOpenSession() = runTest {
+    fun checkOut_closesOpenSession() = runTest {
         val repository = FakePunchSessionRepository()
 
         repository.checkIn(
@@ -60,7 +59,16 @@ class FakePunchSessionRepositoryTest {
     }
 
     @Test
-    fun checkInThrowsWhenSessionAlreadyOpen() = runTest {
+    fun getOpenSessionOrNull_whenNoSessionExists_returnsNull() = runTest {
+        val repository = FakePunchSessionRepository()
+
+        val result = repository.getOpenSessionOrNull()
+
+        assertNull(result)
+    }
+
+    @Test
+    fun checkIn_throwsWhenSessionAlreadyOpen() = runTest {
         val repository = FakePunchSessionRepository()
 
         repository.checkIn(
@@ -69,14 +77,18 @@ class FakePunchSessionRepositoryTest {
             currentUserId = "user1"
         )
 
-        assertThrows(IllegalStateException::class.java) {
-            runBlocking {
-                repository.checkIn(
-                    objectId = "obj1",
-                    employeeId = "emp1",
-                    currentUserId = "user1"
-                )
-            }
+        var exceptionThrown = false
+
+        try {
+            repository.checkIn(
+                objectId = "obj1",
+                employeeId = "emp1",
+                currentUserId = "user1"
+            )
+        } catch (_: IllegalStateException) {
+            exceptionThrown = true
         }
+
+        assertTrue(exceptionThrown)
     }
 }
