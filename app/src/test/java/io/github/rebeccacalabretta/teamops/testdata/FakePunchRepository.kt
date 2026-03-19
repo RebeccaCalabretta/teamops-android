@@ -3,21 +3,24 @@ package io.github.rebeccacalabretta.teamops.testdata
 import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
-import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
+import io.github.rebeccacalabretta.teamops.data.repository.PunchRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import java.time.YearMonth
 
-class FakePunchSessionRepository : PunchSessionRepository {
+class FakePunchRepository : PunchRepository {
 
     private var openSession: PunchSessionEntity? = null
     private val sessions = mutableListOf<PunchSessionEntity>()
+    var checkInCalled = false
 
     override suspend fun checkIn(
         objectId: String,
         employeeId: String,
         currentUserId: String
     ) {
+        checkInCalled = true
+
         if (openSession != null) throw IllegalStateException("OPEN_SESSION_EXISTS")
 
         val now = System.currentTimeMillis()

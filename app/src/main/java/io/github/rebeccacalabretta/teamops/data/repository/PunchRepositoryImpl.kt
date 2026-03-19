@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 import java.time.ZoneId
 
-class PunchSessionRepositoryImpl(
+class PunchRepositoryImpl(
     private val dao: PunchSessionDao,
     private val remote: PunchSessionDataSource
-) : PunchSessionRepository {
+) : PunchRepository {
 
     private fun PunchSessionEntity.toDocument(
         createdAt: Long = startTime,

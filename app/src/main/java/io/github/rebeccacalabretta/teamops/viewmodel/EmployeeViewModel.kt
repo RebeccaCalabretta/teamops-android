@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.db.EmployeeEntity
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.repository.EmployeeRepository
-import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
+import io.github.rebeccacalabretta.teamops.data.repository.PunchRepository
 import io.github.rebeccacalabretta.teamops.domain.access.canAccessEmployee
 import io.github.rebeccacalabretta.teamops.ui.model.EmployeeRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.toEmployeeRowUiModel
@@ -32,7 +32,7 @@ data class EmployeeVisibility(
 @OptIn(ExperimentalCoroutinesApi::class)
 class EmployeeViewModel @Inject constructor(
     private val employeeRepository: EmployeeRepository,
-    private val punchSessionRepository: PunchSessionRepository
+    private val punchSessionRepository: PunchRepository
 ) : ViewModel() {
 
     private val currentMonth = YearMonth.now()

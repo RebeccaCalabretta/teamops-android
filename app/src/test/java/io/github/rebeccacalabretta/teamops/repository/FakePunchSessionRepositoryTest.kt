@@ -2,7 +2,7 @@ package io.github.rebeccacalabretta.teamops.repository
 
 import android.location.Location
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
-import io.github.rebeccacalabretta.teamops.testdata.FakePunchSessionRepository
+import io.github.rebeccacalabretta.teamops.testdata.FakePunchRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -14,7 +14,7 @@ class FakePunchSessionRepositoryTest {
 
     @Test
     fun checkIn_createsOpenSession() = runTest {
-        val repository = FakePunchSessionRepository()
+        val repository = FakePunchRepository()
 
         repository.checkIn(
             objectId = "obj1",
@@ -30,7 +30,7 @@ class FakePunchSessionRepositoryTest {
 
     @Test
     fun checkOut_closesOpenSession() = runTest {
-        val repository = FakePunchSessionRepository()
+        val repository = FakePunchRepository()
 
         repository.checkIn(
             objectId = "obj1",
@@ -61,7 +61,7 @@ class FakePunchSessionRepositoryTest {
 
     @Test
     fun getOpenSessionOrNull_whenNoSessionExists_returnsNull() = runTest {
-        val repository = FakePunchSessionRepository()
+        val repository = FakePunchRepository()
 
         val result = repository.getOpenSessionOrNull()
 
@@ -70,7 +70,7 @@ class FakePunchSessionRepositoryTest {
 
     @Test
     fun checkIn_throwsWhenSessionAlreadyOpen() = runTest {
-        val repository = FakePunchSessionRepository()
+        val repository = FakePunchRepository()
 
         repository.checkIn(
             objectId = "obj1",
@@ -95,7 +95,7 @@ class FakePunchSessionRepositoryTest {
 
     @Test
     fun checkOut_throwsWhenNoOpenSession() = runTest {
-        val repository = FakePunchSessionRepository()
+        val repository = FakePunchRepository()
 
         val location = Location("test")
 

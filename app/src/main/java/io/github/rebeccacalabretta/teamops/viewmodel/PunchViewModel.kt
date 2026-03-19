@@ -2,11 +2,11 @@ package io.github.rebeccacalabretta.teamops.viewmodel
 
 import android.location.Location
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
-import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
+import io.github.rebeccacalabretta.teamops.data.repository.PunchRepository
+import io.github.rebeccacalabretta.teamops.domain.repository.AuthRepository
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.location.LocationProvider
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
@@ -33,47 +33,40 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PunchViewModel @Inject constructor(
-    private val punchSessionRepository: PunchSessionRepository,
+    private val punchSessionRepository: PunchRepository,
     private val objectRepository: ObjectRepository,
     private val locationProvider: LocationProvider,
     private val userRepository: UserRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val authRepository: AuthRepository
 ) : MonthViewModel() {
 
     private val currentEmployeeId: StateFlow<String?> =
-        flow {
-            val uid = firebaseAuth.currentUser?.uid
-            if (uid == null) emit(null)
-            else emit(userRepository.getUserSession(uid)?.employeeId)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null
-        )
+        authRepository.observeAuthState()
+            .flatMapLatest { uid ->
+                flow {
+                    if (uid == null) emit(null)
+                    else emit(userRepository.getUserSession(uid)?.employeeId)
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     private val currentRole: StateFlow<EmployeeRole?> =
-        flow {
-            val uid = firebaseAuth.currentUser?.uid
-            if (uid == null) emit(null)
-            else emit(userRepository.getUserSession(uid)?.role)
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.Eagerly,
-            initialValue = null
-        )
+        authRepository.observeAuthState()
+            .flatMapLatest { uid ->
+                flow {
+                    if (uid == null) emit(null)
+                    else emit(userRepository.getUserSession(uid)?.role)
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val showObjectColumn: StateFlow<Boolean> =
         currentRole
-            .map { role -> role == EmployeeRole.WORKER }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = false
-            )
+            .map { it == EmployeeRole.WORKER }
+            .stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
     private val _isProcessing = MutableStateFlow(false)
-    val isProcessing: StateFlow<Boolean> =
-        _isProcessing.asStateFlow()
+    val isProcessing: StateFlow<Boolean> = _isProcessing.asStateFlow()
 
     private val _uiMessage = MutableStateFlow<UiMessage?>(null)
     val uiMessage: StateFlow<UiMessage?> = _uiMessage.asStateFlow()
@@ -92,7 +85,6 @@ class PunchViewModel @Inject constructor(
             monthlySessions,
             objectRepository.getAllObjects()
         ) { sessions, objects ->
-
             val objectsById = objects.associateBy { it.id }
 
             sessions.map { session ->
@@ -101,28 +93,20 @@ class PunchViewModel @Inject constructor(
                     obj = objectsById[session.objectId]
                 )
             }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList()
-        )
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val isCheckedIn: StateFlow<Boolean> =
         punchSessionRepository
             .getLatestSessions(1)
             .map { sessions ->
-                sessions.firstOrNull()?.endTime == null
+                val session = sessions.firstOrNull()
+                session != null && session.endTime == null
             }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = false
-            )
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     val todayWorkText: StateFlow<String> =
         monthlySessions
             .map { sessions ->
-
                 val todayStart =
                     LocalDate.now()
                         .atStartOfDay(ZoneId.systemDefault())
@@ -131,29 +115,21 @@ class PunchViewModel @Inject constructor(
 
                 val todayEnd = todayStart + 86_400_000
 
-                val todaySessions =
-                    sessions.filter {
-                        it.startTime in todayStart until todayEnd
-                    }
-
                 val total =
-                    todaySessions.sumOf {
-                        val end = it.endTime ?: System.currentTimeMillis()
-                        end - it.startTime
-                    }
+                    sessions
+                        .filter { it.startTime in todayStart until todayEnd }
+                        .sumOf {
+                            val end = it.endTime ?: System.currentTimeMillis()
+                            end - it.startTime
+                        }
 
                 WorkTimeFormatter.formatMillis(total)
             }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = "0 h 00 min"
-            )
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0 h 00 min")
 
     val monthWorkText: StateFlow<String> =
         monthlySessions
             .map { sessions ->
-
                 val total =
                     sessions.sumOf {
                         val end = it.endTime ?: System.currentTimeMillis()
@@ -162,11 +138,7 @@ class PunchViewModel @Inject constructor(
 
                 WorkTimeFormatter.formatMillis(total)
             }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = "0 h 00 min"
-            )
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), "0 h 00 min")
 
     fun checkIn() = runWithLoading {
 
@@ -247,15 +219,9 @@ class PunchViewModel @Inject constructor(
 
                 _uiMessage.value =
                     when (e.message) {
-
-                        "OPEN_SESSION_EXISTS" ->
-                            UiMessage.OpenSessionExists
-
-                        "NO_OPEN_SESSION" ->
-                            UiMessage.NoOpenSession
-
-                        else ->
-                            UiMessage.UnknownError
+                        "OPEN_SESSION_EXISTS" -> UiMessage.OpenSessionExists
+                        "NO_OPEN_SESSION" -> UiMessage.NoOpenSession
+                        else -> UiMessage.UnknownError
                     }
             } finally {
                 _isProcessing.value = false

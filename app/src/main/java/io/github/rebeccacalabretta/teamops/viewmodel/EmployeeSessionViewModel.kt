@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
-import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
+import io.github.rebeccacalabretta.teamops.data.repository.PunchRepository
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.ui.model.mapToSessionUiModel
@@ -29,7 +29,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class EmployeeSessionViewModel @Inject constructor(
-    private val punchSessionRepository: PunchSessionRepository,
+    private val punchSessionRepository: PunchRepository,
     private val objectRepository: ObjectRepository,
     private val userRepository: UserRepository,
     private val firebaseAuth: FirebaseAuth

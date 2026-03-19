@@ -5,6 +5,9 @@ import io.github.rebeccacalabretta.teamops.location.LocationProvider
 
 class FakeLocationProvider : LocationProvider {
     override suspend fun getCurrentLocationOrNull(): Location? {
-        return null
+        return Location("test").apply {
+            latitude = 0.0
+            longitude = 0.0
+        }
     }
 }

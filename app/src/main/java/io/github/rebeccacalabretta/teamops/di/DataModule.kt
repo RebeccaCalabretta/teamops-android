@@ -22,8 +22,8 @@ import io.github.rebeccacalabretta.teamops.data.repository.FirebaseUserRepositor
 import io.github.rebeccacalabretta.teamops.data.repository.FirebaseVacationRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepositoryImpl
-import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepository
-import io.github.rebeccacalabretta.teamops.data.repository.PunchSessionRepositoryImpl
+import io.github.rebeccacalabretta.teamops.data.repository.PunchRepository
+import io.github.rebeccacalabretta.teamops.data.repository.PunchRepositoryImpl
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepository
 import io.github.rebeccacalabretta.teamops.data.repository.ScheduleRepositoryImpl
 import io.github.rebeccacalabretta.teamops.domain.repository.UserRepository
@@ -62,8 +62,8 @@ object DataModule {
     fun providePunchSessionRepository(
         dao: PunchSessionDao,
         remote: PunchSessionDataSource
-    ): PunchSessionRepository =
-        PunchSessionRepositoryImpl(dao, remote)
+    ): PunchRepository =
+        PunchRepositoryImpl(dao, remote)
 
     @Provides
     fun provideObjectDao(

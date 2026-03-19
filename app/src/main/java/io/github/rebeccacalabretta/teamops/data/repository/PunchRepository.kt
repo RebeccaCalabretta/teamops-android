@@ -6,7 +6,7 @@ import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.YearMonth
 
-interface PunchSessionRepository {
+interface PunchRepository {
     suspend fun checkIn(
         objectId: String,
         employeeId: String,
