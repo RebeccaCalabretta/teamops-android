@@ -8,6 +8,8 @@ import io.github.rebeccacalabretta.teamops.testdata.FakeUserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -32,7 +34,10 @@ class PunchViewModelTest {
     }
 
     @Test
-    fun showObjectColumn_isTrue_forWorker() {
+    fun showObjectColumn_isTrue_forWorker() = runTest {
+
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+
         val viewModel = PunchViewModel(
             punchSessionRepository = FakePunchRepository(),
             objectRepository = FakeObjectRepository(),
@@ -41,8 +46,10 @@ class PunchViewModelTest {
             authRepository = FakeAuthRepository()
         )
 
+        advanceUntilIdle()
+
         val result = viewModel.showObjectColumn.value
 
-        assertTrue(result)
+        assertTrue("showObjectColumn should be true for workers", result)
     }
 }

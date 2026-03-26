@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 
@@ -33,5 +34,6 @@ fun PunchBottomSection(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 24.dp)
+            .testTag("punchButton")
     )
 }
