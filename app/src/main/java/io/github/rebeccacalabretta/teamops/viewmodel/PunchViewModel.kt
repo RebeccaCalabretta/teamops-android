@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -59,6 +60,18 @@ class PunchViewModel @Inject constructor(
                 }
             }
             .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    private val syncedSessions =
+        currentEmployeeId
+            .filterNotNull()
+            .flatMapLatest { employeeId ->
+                punchSessionRepository.observeAndSyncSessions(employeeId)
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                emptyList()
+            )
 
     val showObjectColumn: StateFlow<Boolean> =
         currentRole

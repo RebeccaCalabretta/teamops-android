@@ -1,6 +1,7 @@
 package io.github.rebeccacalabretta.teamops.data.repository
 
 import android.location.Location
+import android.util.Log
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionDao
 import io.github.rebeccacalabretta.teamops.data.db.PunchSessionEntity
@@ -8,7 +9,11 @@ import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDataSource
 import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDocument
 import io.github.rebeccacalabretta.teamops.util.geo.GeoDistance
 import io.github.rebeccacalabretta.teamops.util.time.MonthKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.YearMonth
 import java.time.ZoneId
 
@@ -141,4 +146,31 @@ class PunchRepositoryImpl(
 
     override fun getSessionsForEmployee(employeeId: String): Flow<List<PunchSessionEntity>> =
         dao.getSessionsForEmployee(employeeId)
+
+    override fun observeAndSyncSessions(employeeId: String): Flow<List<PunchSessionEntity>> =
+        remote.observePunchSessions(employeeId).map { docs ->
+            Log.d("PunchSync", "observeAndSyncSessions: employeeId=$employeeId, docs=${docs.size}")
+
+            val entities = docs.map { it.toEntity() }
+
+            Log.d("PunchSync", "mapped entities=${entities.size}")
+
+            CoroutineScope(Dispatchers.IO).launch {
+                dao.insertAllReplace(entities)
+                Log.d("PunchSync", "insertAllReplace finished")
+            }
+
+            entities
+        }
+
+    private fun PunchSessionDocument.toEntity(): PunchSessionEntity =
+        PunchSessionEntity(
+            id = id,
+            employeeId = employeeId,
+            objectId = objectId,
+            startTime = startTime,
+            endTime = endTime,
+            monthKey = MonthKey.fromTimestamp(startTime),
+            checkOutDistanceMeters = checkOutDistanceMeters
+        )
 }

@@ -31,4 +31,6 @@ interface PunchRepository {
     fun getLatestSessions(limit: Int = 20): Flow<List<PunchSessionEntity>>
 
     fun getSessionsForEmployee(employeeId: String): Flow<List<PunchSessionEntity>>
+
+    fun observeAndSyncSessions(employeeId: String): Flow<List<PunchSessionEntity>>
 }

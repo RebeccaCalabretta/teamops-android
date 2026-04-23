@@ -51,8 +51,11 @@ interface PunchSessionDao {
     )
     fun getLatestSessions(limit: Int = 20): Flow<List<PunchSessionEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(session: PunchSessionEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllReplace(sessions: List<PunchSessionEntity>)
 
     @Update
     suspend fun update(session: PunchSessionEntity)
