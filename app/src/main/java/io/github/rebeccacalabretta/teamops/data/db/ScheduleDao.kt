@@ -20,6 +20,9 @@ interface ScheduleDao {
     @Upsert
     suspend fun upsertSchedule(entry: ScheduleEntity)
 
+    @Upsert
+    suspend fun upsertAll(entries: List<ScheduleEntity>)
+
     @Query("DELETE FROM schedule WHERE id = :scheduleId")
     suspend fun deleteSchedule(scheduleId: String)
 }

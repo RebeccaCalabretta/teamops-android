@@ -59,7 +59,7 @@ class ScheduleViewModel @Inject constructor(
         }.flatMapLatest { (employeeId, month) ->
 
             scheduleRepository
-                .getScheduleForEmployee(employeeId)
+                .observeAndSyncSchedules(employeeId)
                 .map { schedules ->
 
                     schedules.filter { entity ->
@@ -85,6 +85,9 @@ class ScheduleViewModel @Inject constructor(
             val objectMap = objects.associateBy { it.id }
 
             schedules.map { entity ->
+
+                android.util.Log.d("ScheduleVM", "entity.objectId=${entity.objectId}")
+                android.util.Log.d("ScheduleVM", "availableObjectIds=${objectMap.keys}")
 
                 val objectName =
                     objectMap[entity.objectId]?.name

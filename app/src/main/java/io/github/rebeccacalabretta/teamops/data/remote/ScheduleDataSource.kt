@@ -31,7 +31,9 @@ class ScheduleDataSource @Inject constructor(
                         ?.documents
                         ?.mapNotNull { it.toObject(ScheduleDocument::class.java) }
                         .orEmpty()
+
                     Log.d(TAG, "observeSchedulesForEmployees($employeeId) -> ${docs.size} docs")
+                    Log.d(TAG, "docs=${docs.map { it.employeeId to it.objectId }}")
 
                     trySend(docs)
                 }

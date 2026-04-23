@@ -4,7 +4,11 @@ import io.github.rebeccacalabretta.teamops.data.db.ScheduleDao
 import io.github.rebeccacalabretta.teamops.data.db.ScheduleEntity
 import io.github.rebeccacalabretta.teamops.data.remote.ScheduleDataSource
 import io.github.rebeccacalabretta.teamops.data.remote.ScheduleDocument
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
@@ -30,6 +34,17 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override fun getScheduleForEmployee(employeeId: String): Flow<List<ScheduleEntity>> =
         scheduleDao.getScheduleForEmployee(employeeId)
+
+    override fun observeAndSyncSchedules(employeeId: String): Flow<List<ScheduleEntity>> =
+        remote.observeSchedulesForEmployees(employeeId).map { docs ->
+            val entities = docs.map { it.toEntity() }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                scheduleDao.upsertAll(entities)
+            }
+
+            entities
+        }
 
     override suspend fun upsertSchedule(
         entry: ScheduleEntity,
@@ -63,4 +78,15 @@ class ScheduleRepositoryImpl @Inject constructor(
         scheduleDao.deleteSchedule(entry.id)
 
     }
+
+    private fun ScheduleDocument.toEntity(): ScheduleEntity =
+        ScheduleEntity(
+            id = id,
+            employeeId = employeeId,
+            objectId = objectId,
+            date = date,
+            startTime = startTime,
+            endTime = endTime,
+            createdBy = createdBy
+        )
 }
