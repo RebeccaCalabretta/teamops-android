@@ -47,7 +47,7 @@ class EmployeeSessionViewModel @Inject constructor(
         selectedEmployeeId
             .filterNotNull()
             .flatMapLatest { employeeId ->
-                punchSessionRepository.getSessionsForEmployee(employeeId)
+                punchSessionRepository.observeAndSyncSessions(employeeId)
             }
 
     private val monthlySessions =
