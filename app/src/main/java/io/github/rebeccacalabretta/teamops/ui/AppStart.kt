@@ -10,13 +10,22 @@ import io.github.rebeccacalabretta.teamops.viewmodel.AuthStateViewModel
 @Composable
 fun AppStart() {
     val authViewModel: AuthStateViewModel = hiltViewModel()
-    val userId by authViewModel.userId.collectAsStateWithLifecycle()
+    val userIdState by authViewModel.userId.collectAsStateWithLifecycle()
 
-    if (userId == null) {
-        LoginScreen()
-    } else {
-        key(userId) {
-            MainAppContent()
+    val userId = userIdState
+
+    when {
+        userId == null -> {
+            LoginScreen()
+        }
+
+        userId.isEmpty() -> {
+        }
+
+        else -> {
+            key(userId) {
+                MainAppContent()
+            }
         }
     }
 }
