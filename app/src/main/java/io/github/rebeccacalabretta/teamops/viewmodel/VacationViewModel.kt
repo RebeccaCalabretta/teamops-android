@@ -46,8 +46,12 @@ class VacationViewModel @Inject constructor(
     val vacationBalance: StateFlow<VacationBalance?> =
         _vacationBalance.asStateFlow()
 
+    private var observeVacationsJob: kotlinx.coroutines.Job? = null
+
     fun observeVacations(employeeId: String) {
-        viewModelScope.launch {
+        observeVacationsJob?.cancel()
+
+        observeVacationsJob = viewModelScope.launch {
             repository
                 .observeVacationsForEmployee(employeeId)
                 .collect { list ->
