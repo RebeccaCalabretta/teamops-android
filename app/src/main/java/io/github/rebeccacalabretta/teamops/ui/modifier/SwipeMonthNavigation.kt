@@ -9,18 +9,20 @@ fun Modifier.swipeMonthNavigation(
     onSwipeNextMonth: () -> Unit
 ) = pointerInput(Unit) {
 
+    var totalDrag = 0f
+
     detectHorizontalDragGestures(
-        onDragEnd = { },
+        onDragStart = {
+            totalDrag = 0f
+        },
         onHorizontalDrag = { change, dragAmount ->
-
-            if (dragAmount > 40) {
-                onSwipePrevMonth()
-                change.consume()
-            }
-
-            if (dragAmount < -40) {
-                onSwipeNextMonth()
-                change.consume()
+            totalDrag += dragAmount
+            change.consume()
+        },
+        onDragEnd = {
+            when {
+                totalDrag > 100 -> onSwipePrevMonth()
+                totalDrag < -100 -> onSwipeNextMonth()
             }
         }
     )
