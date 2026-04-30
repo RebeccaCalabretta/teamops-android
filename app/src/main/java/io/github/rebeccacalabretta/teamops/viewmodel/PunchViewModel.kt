@@ -95,9 +95,29 @@ class PunchViewModel @Inject constructor(
         _uiMessage.value = null
     }
 
+    private fun requiresObjectMatch(): Boolean =
+        currentRole.value == EmployeeRole.WORKER
+
     private val monthlySessions =
-        selectedMonth.flatMapLatest { month ->
-            punchSessionRepository.getSessionsForMonth(month)
+        combine(
+            currentEmployeeId.filterNotNull(),
+            selectedMonth
+        ) { employeeId, month ->
+            employeeId to month
+        }.flatMapLatest { (employeeId, month) ->
+            punchSessionRepository
+                .getSessionsForEmployee(employeeId)
+                .map { sessions ->
+                    sessions.filter { session ->
+                        val sessionMonth =
+                            Instant.ofEpochMilli(session.startTime)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                                .let { java.time.YearMonth.from(it) }
+
+                        sessionMonth == month
+                    }
+                }
         }
 
     val sessionRows: StateFlow<List<SessionRowUiModel>> =
@@ -175,6 +195,15 @@ class PunchViewModel @Inject constructor(
 
         val employeeId = requireNotNull(currentEmployeeId.value)
 
+        if (!requiresObjectMatch()) {
+            punchSessionRepository.checkIn(
+                objectId = "",
+                employeeId = employeeId,
+                currentUserId = employeeId
+            )
+            return@runWithLoading
+        }
+
         val location =
             locationProvider.getCurrentLocationOrNull()
                 ?: run {
@@ -201,6 +230,13 @@ class PunchViewModel @Inject constructor(
         jumpToCurrentMonth()
 
         val employeeId = requireNotNull(currentEmployeeId.value)
+
+        if (!requiresObjectMatch()) {
+            punchSessionRepository.checkOutWithoutLocation(
+                currentUserId = employeeId
+            )
+            return@runWithLoading
+        }
 
         val location =
             locationProvider.getCurrentLocationOrNull()

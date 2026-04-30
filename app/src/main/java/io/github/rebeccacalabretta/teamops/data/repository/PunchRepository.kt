@@ -19,6 +19,10 @@ interface PunchRepository {
         currentUserId: String
     )
 
+    suspend fun checkOutWithoutLocation(
+        currentUserId: String
+    )
+
     suspend fun getOpenSessionOrNull(): PunchSessionEntity?
 
     suspend fun updateSession(

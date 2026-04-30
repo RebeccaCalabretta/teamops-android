@@ -73,18 +73,36 @@ class PunchRepositoryImpl(
         objectEntity: ObjectEntity,
         currentUserId: String
     ) {
-        val open = dao.getOpenSessionOrNull()
-            ?: throw IllegalStateException("NO_OPEN_SESSION")
-
-        val endTime = System.currentTimeMillis()
-        val duration = endTime - open.startTime
-
         val distance = GeoDistance.distanceInMeters(
             lat1 = endLocation.latitude,
             lon1 = endLocation.longitude,
             lat2 = objectEntity.latitude,
             lon2 = objectEntity.longitude
         )
+
+        finishOpenSession(
+            currentUserId = currentUserId,
+            checkOutDistanceMeters = distance
+        )
+    }
+
+    override suspend fun checkOutWithoutLocation(
+        currentUserId: String
+    ) =
+        finishOpenSession(
+            currentUserId = currentUserId,
+            checkOutDistanceMeters = null
+        )
+
+    private suspend fun finishOpenSession(
+        currentUserId: String,
+        checkOutDistanceMeters: Double?
+    ) {
+        val open = dao.getOpenSessionOrNull()
+            ?: throw IllegalStateException("NO_OPEN_SESSION")
+
+        val endTime = System.currentTimeMillis()
+        val duration = endTime - open.startTime
 
         if (duration < 60_000L) {
             remote.delete(open.id)
@@ -94,7 +112,7 @@ class PunchRepositoryImpl(
 
         val updated = open.copy(
             endTime = endTime,
-            checkOutDistanceMeters = distance
+            checkOutDistanceMeters = checkOutDistanceMeters
         )
 
         remote.upsert(

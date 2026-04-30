@@ -16,22 +16,25 @@ import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 @Composable
 fun RoleFilterRow(
     selectedRole: EmployeeRole?,
-    onRoleSelected: (EmployeeRole?) -> Unit
+    onRoleSelected: (EmployeeRole?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.horizontalScroll(rememberScrollState())
-        ) {
+        modifier = modifier
+            .horizontalScroll(rememberScrollState())
+    ) {
         FilterChip(
             selected = selectedRole == null,
             onClick = { onRoleSelected(null) },
             label = { Text(stringResource(R.string.all)) }
         )
+
         EmployeeRole.entries.forEach { role ->
             FilterChip(
                 selected = selectedRole == role,
                 onClick = { onRoleSelected(role) },
-                label = { Text(role.displayRole)}
+                label = { Text(role.displayRole) }
             )
         }
     }
