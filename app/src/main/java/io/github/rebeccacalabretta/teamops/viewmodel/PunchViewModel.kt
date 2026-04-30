@@ -73,6 +73,12 @@ class PunchViewModel @Inject constructor(
                 emptyList()
             )
 
+    init {
+        viewModelScope.launch {
+            syncedSessions.collect { }
+        }
+    }
+
     val showObjectColumn: StateFlow<Boolean> =
         currentRole
             .map { it == EmployeeRole.WORKER }
