@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import javax.inject.Inject
@@ -124,19 +125,23 @@ class PunchViewModel @Inject constructor(
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     val todayWorkText: StateFlow<String> =
-        monthlySessions
+        currentEmployeeId
+            .filterNotNull()
+            .flatMapLatest { employeeId ->
+                punchSessionRepository.getSessionsForEmployee(employeeId)
+            }
             .map { sessions ->
-                val todayStart =
-                    LocalDate.now()
-                        .atStartOfDay(ZoneId.systemDefault())
-                        .toInstant()
-                        .toEpochMilli()
-
-                val todayEnd = todayStart + 86_400_000
+                val today = LocalDate.now()
 
                 val total =
                     sessions
-                        .filter { it.startTime in todayStart until todayEnd }
+                        .filter {
+                            val date = Instant.ofEpochMilli(it.startTime)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+
+                            date == today
+                        }
                         .sumOf {
                             val end = it.endTime ?: System.currentTimeMillis()
                             end - it.startTime

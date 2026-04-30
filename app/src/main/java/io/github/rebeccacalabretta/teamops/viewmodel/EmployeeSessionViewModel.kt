@@ -89,13 +89,26 @@ class EmployeeSessionViewModel @Inject constructor(
         )
 
     val todayWorkText: StateFlow<String> =
-        sessionRows
-            .map { rows ->
+        sessionsForEmployee
+            .map { sessions ->
 
-                val millis =
-                    rows.sumOf { it.durationMillis }
+                val today = java.time.LocalDate.now()
 
-                DateTimeFormat.formatDurationMillis(millis)
+                val totalMillis =
+                    sessions
+                        .filter {
+                            val date = Instant.ofEpochMilli(it.startTime)
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+
+                            date == today
+                        }
+                        .sumOf {
+                            val end = it.endTime ?: System.currentTimeMillis()
+                            end - it.startTime
+                        }
+
+                DateTimeFormat.formatDurationMillis(totalMillis)
             }
             .stateIn(
                 scope = viewModelScope,
