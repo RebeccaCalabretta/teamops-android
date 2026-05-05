@@ -62,16 +62,21 @@ class ScheduleViewModel @Inject constructor(
                 .observeAndSyncSchedules(employeeId)
                 .map { schedules ->
 
-                    schedules.filter { entity ->
+                    schedules
+                        .filter { entity ->
 
-                        val entityMonth =
-                            Instant.ofEpochMilli(entity.date)
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDate()
-                                .let { YearMonth.from(it) }
+                            val entityMonth =
+                                Instant.ofEpochMilli(entity.date)
+                                    .atZone(ZoneId.systemDefault())
+                                    .toLocalDate()
+                                    .let { YearMonth.from(it) }
 
-                        entityMonth == month
-                    }
+                            entityMonth == month
+                        }
+                        .sortedWith(
+                            compareBy<ScheduleEntity> { it.date }
+                                .thenBy { it.startTime }
+                        )
                 }
         }
 
@@ -85,9 +90,6 @@ class ScheduleViewModel @Inject constructor(
             val objectMap = objects.associateBy { it.id }
 
             schedules.map { entity ->
-
-                android.util.Log.d("ScheduleVM", "entity.objectId=${entity.objectId}")
-                android.util.Log.d("ScheduleVM", "availableObjectIds=${objectMap.keys}")
 
                 val objectName =
                     objectMap[entity.objectId]?.name
@@ -117,6 +119,8 @@ class ScheduleViewModel @Inject constructor(
     fun upsertSchedule(entry: ScheduleEntity) {
         val user = _userContext.value ?: return
 
+        if (!canEdit(entry, user)) return
+
         viewModelScope.launch {
             scheduleRepository.upsertSchedule(
                 entry = entry,
@@ -127,6 +131,8 @@ class ScheduleViewModel @Inject constructor(
 
     fun deleteSchedule(entry: ScheduleEntity) {
         val user = _userContext.value ?: return
+
+        if (!canEdit(entry, user)) return
 
         viewModelScope.launch {
             scheduleRepository.deleteSchedule(

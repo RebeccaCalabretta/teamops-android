@@ -57,6 +57,17 @@ fun ScheduleScreen(
     val employeeName = employee?.name ?: ""
     val employeeRole = employee?.role
 
+    val canManageSchedule =
+        when (currentRole) {
+            EmployeeRole.WORKER -> false
+
+            EmployeeRole.MANAGER ->
+                employeeId in teamMemberIds
+
+            EmployeeRole.HR,
+            EmployeeRole.ADMIN -> true
+        }
+
     var showSheet by rememberSaveable { mutableStateOf(false) }
     var editingEntry by remember { mutableStateOf<ScheduleEntity?>(null) }
 
@@ -103,19 +114,21 @@ fun ScheduleScreen(
             modifier = swipeModifier.weight(1f)
         )
 
-        GeneralButton(
-            text = addLabel,
-            onClick = {
-                editingEntry = null
-                showSheet = true
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp)
-        )
+        if (canManageSchedule) {
+            GeneralButton(
+                text = addLabel,
+                onClick = {
+                    editingEntry = null
+                    showSheet = true
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp)
+            )
+        }
     }
 
-    if (showSheet) {
+    if (showSheet && canManageSchedule) {
 
         val isEdit = editingEntry != null
 
