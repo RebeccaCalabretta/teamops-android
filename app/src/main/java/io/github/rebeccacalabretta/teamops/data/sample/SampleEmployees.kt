@@ -31,6 +31,11 @@ object SampleEmployees {
             id = "emp_005",
             name = "Hella Wahnsinn",
             role = EmployeeRole.ADMIN
+        ),
+        EmployeeEntity(
+            id = "emp_006",
+            name = "Demo Worker",
+            role = EmployeeRole.WORKER
         )
     )
 }
