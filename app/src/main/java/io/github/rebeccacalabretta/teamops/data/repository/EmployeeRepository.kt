@@ -9,5 +9,7 @@ interface EmployeeRepository {
 
     fun getEmployeesByRole(role: EmployeeRole): Flow<List<EmployeeEntity>>
 
+    suspend fun upsertEmployee(employee: EmployeeEntity)
+
     suspend fun seedIfEmpty()
 }

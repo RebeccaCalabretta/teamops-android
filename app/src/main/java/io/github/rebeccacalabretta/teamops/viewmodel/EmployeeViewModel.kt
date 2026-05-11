@@ -19,7 +19,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.time.YearMonth
+import java.util.UUID
 import javax.inject.Inject
 
 data class EmployeeVisibility(
@@ -110,4 +112,25 @@ class EmployeeViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    fun addEmployee(
+        name: String,
+        role: EmployeeRole,
+        managerId: String? = null
+    ) {
+        val trimmedName = name.trim()
+
+        if (trimmedName.isBlank()) return
+
+        viewModelScope.launch {
+            employeeRepository.upsertEmployee(
+                EmployeeEntity(
+                    id = UUID.randomUUID().toString(),
+                    name = trimmedName,
+                    role = role,
+                    managerId = managerId
+                )
+            )
+        }
+    }
 }

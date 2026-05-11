@@ -18,6 +18,9 @@ class EmployeeRepositoryImpl @Inject constructor(
     override fun getEmployeesByRole(role: EmployeeRole): Flow<List<EmployeeEntity>> =
     employeeDao.getEmployeesByRole(role)
 
+    override suspend fun upsertEmployee(employee: EmployeeEntity) =
+        employeeDao.upsertEmployee(employee)
+
     override suspend fun seedIfEmpty() {
         val existing = employeeDao.getAllEmployees().first()
         if (existing.isEmpty()) {

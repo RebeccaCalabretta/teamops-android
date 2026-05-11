@@ -22,4 +22,8 @@ interface EmployeeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertEmployees(employees: List<EmployeeEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertEmployee(employee: EmployeeEntity)
+
 }

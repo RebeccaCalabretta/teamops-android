@@ -2,6 +2,7 @@ package io.github.rebeccacalabretta.teamops.ui.employee
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
+import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.viewmodel.EmployeeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +41,7 @@ fun EmployeeScreen(
 
     var expandedEmployeeId by remember { mutableStateOf<String?>(null) }
 
+    var showAddEmployeeSheet by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -54,10 +58,13 @@ fun EmployeeScreen(
         if (employees.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_employees),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.weight(1f)
             )
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
                 items(
                     items = employees,
                     key = { it.id }
@@ -79,5 +86,32 @@ fun EmployeeScreen(
                 }
             }
         }
+
+        if (currentRole == EmployeeRole.HR || currentRole == EmployeeRole.ADMIN) {
+            GeneralButton(
+                text = stringResource(R.string.employee_add_button),
+                onClick = { showAddEmployeeSheet = true },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp)
+            )
+        }
+    }
+
+    if (showAddEmployeeSheet) {
+        AddEmployeeSheet(
+            onDismiss = {
+                showAddEmployeeSheet = false
+            },
+            onSave = { name, role ->
+                viewModel.addEmployee(
+                    name = name,
+                    role = role
+                )
+
+                showAddEmployeeSheet = false
+            }
+        )
     }
 }

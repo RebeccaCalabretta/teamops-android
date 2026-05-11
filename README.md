@@ -103,8 +103,8 @@ Der Fokus des Projekts liegt auf:
 
 ## Geplante Erweiterungen
 
-- Mitarbeitende direkt in der App hinzufügen und verwalten
 - Objekte direkt in der App hinzufügen und verwalten
+- Einladungssystem für neue Mitarbeitende mit eigenem Login-Zugang
 - Export von Arbeitszeiten für Abrechnung und Verwaltung
 - Ausbau der Testabdeckung
 - Weitere UI-Optimierungen für verschiedene Bildschirmgrößen

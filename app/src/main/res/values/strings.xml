@@ -33,6 +33,11 @@
     <string name="login_email">E-Mail</string>
     <string name="login_password">Passwort</string>
     <string name="login_title">Anmelden</string>
+    <!-- EmployeeScreen -->
+    <string name="employee_add_button">Mitarbeiter hinzufügen</string>
+    <string name="employee_add_title">Mitarbeiter hinzufügen</string>
+    <string name="employee_name">Name</string>
+    <string name="employee_role">Rolle</string>
     <!-- PunchScreen -->
     <string name="button_check_in">Einchecken</string>
     <string name="button_check_out">Auschecken</string>
@@ -70,4 +75,13 @@
     <string name="vacation_reject">Ablehnen</string>
     <string name="vacation_edit_title">Urlaub bearbeiten</string>
     <string name="vacation_delete">Antrag löschen</string>
+    <!-- ObjectScreen -->
+    <string name="objects">Objekte</string>
+    <string name="object_add_button">Objekt hinzufügen</string>
+    <string name="object_add_title">Objekt hinzufügen</string>
+    <string name="object_name">Name</string>
+    <string name="object_latitude">Breitengrad</string>
+    <string name="object_longitude">Längengrad</string>
+    <string name="object_radius">Radius in Metern</string>
+    <string name="no_objects">Keine Objekte vorhanden</string>
 </resources>
