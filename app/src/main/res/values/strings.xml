@@ -15,6 +15,9 @@
     <string name="unknown">Unbekannt</string>
     <string name="sessions">Stunden</string>
     <string name="all">Alle</string>
+    <string name="logout_confirm_title">Logout bestätigen</string>
+    <string name="logout_confirm_message">Möchtest du dich wirklich abmelden?</string>
+    <string name="logout_confirm">Abmelden</string>
     <!-- ErrorMessage -->
     <string name="error_invalid_credentials">Ungültige Anmeldedaten</string>
     <string name="error_network">Keine Internetverbindung</string>

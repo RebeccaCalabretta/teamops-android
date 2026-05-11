@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,6 +30,7 @@ import io.github.rebeccacalabretta.teamops.domain.menu.RoleMenuConfig
 import io.github.rebeccacalabretta.teamops.navigation.AppNavHost
 import io.github.rebeccacalabretta.teamops.ui.components.AppTopBar
 import io.github.rebeccacalabretta.teamops.ui.components.DrawerMenu
+import io.github.rebeccacalabretta.teamops.ui.components.LogoutConfirmDialog
 import io.github.rebeccacalabretta.teamops.viewmodel.UserSessionViewModel
 import kotlinx.coroutines.launch
 
@@ -60,6 +63,7 @@ fun MainAppContent(
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -100,11 +104,18 @@ fun MainAppContent(
                 items = RoleMenuConfig.itemsForRole(session.role),
                 onItemClick = { item ->
                     scope.launch {
+                        if (item.id == "logout") {
+                            showLogoutDialog = true
+                            drawerState.close()
+                            return@launch
+                        }
+
                         navController.onDrawerMenuClick(
                             itemId = item.id,
                             sessionEmployeeId = session.employeeId,
                             onLogout = viewModel::logout
                         )
+
                         drawerState.close()
                     }
                 }
@@ -132,5 +143,16 @@ fun MainAppContent(
                 modifier = Modifier.padding(padding)
             )
         }
+    }
+    if (showLogoutDialog) {
+        LogoutConfirmDialog(
+            onConfirm = {
+                showLogoutDialog = false
+                viewModel.logout()
+            },
+            onDismiss = {
+                showLogoutDialog = false
+            }
+        )
     }
 }
