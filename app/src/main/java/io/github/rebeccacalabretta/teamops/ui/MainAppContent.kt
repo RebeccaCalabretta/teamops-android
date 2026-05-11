@@ -80,6 +80,9 @@ fun MainAppContent(
         currentRoute?.contains("EmployeeSessionRoute") == true ->
             stringResource(R.string.title_punch)
 
+        currentRoute?.contains("ObjectRoute") == true ->
+            stringResource(R.string.objects)
+
         else -> ""
     }
 

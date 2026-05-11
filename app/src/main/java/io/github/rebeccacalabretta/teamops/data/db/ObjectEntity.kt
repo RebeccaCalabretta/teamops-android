@@ -8,6 +8,7 @@ import java.util.UUID
 data class ObjectEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val name: String,
+    val address: String,
     val latitude: Double,
     val longitude: Double,
     val radiusMeters: Int

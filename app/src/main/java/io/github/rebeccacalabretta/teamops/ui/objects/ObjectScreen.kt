@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import io.github.rebeccacalabretta.teamops.R
-import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.components.GeneralButton
 import io.github.rebeccacalabretta.teamops.viewmodel.ObjectViewModel
@@ -79,48 +76,14 @@ fun ObjectScreen(
     if (showAddObjectSheet && canAddObject) {
         AddObjectSheet(
             onDismiss = { showAddObjectSheet = false },
-            onSave = { name, latitude, longitude, radius ->
+            onSave = { name, address, radius ->
                 viewModel.addObject(
                     name = name,
-                    latitudeText = latitude,
-                    longitudeText = longitude,
+                    address = address,
                     radiusText = radius
                 )
                 showAddObjectSheet = false
             }
         )
-    }
-}
-
-@Composable
-private fun ObjectRow(
-    objectEntity: ObjectEntity,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(
-                text = objectEntity.name,
-                style = MaterialTheme.typography.titleSmall
-            )
-
-            Text(
-                text = "Lat: ${objectEntity.latitude}, Lon: ${objectEntity.longitude}",
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            Text(
-                text = "Radius: ${objectEntity.radiusMeters} m",
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
     }
 }

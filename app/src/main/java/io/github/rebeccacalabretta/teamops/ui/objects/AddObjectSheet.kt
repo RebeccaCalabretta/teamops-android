@@ -27,23 +27,24 @@ fun AddObjectSheet(
     onDismiss: () -> Unit,
     onSave: (
         name: String,
-        latitude: String,
-        longitude: String,
+        address: String,
         radius: String
     ) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     var name by remember { mutableStateOf("") }
-    var latitude by remember { mutableStateOf("") }
-    var longitude by remember { mutableStateOf("") }
+    var address by remember { mutableStateOf("") }
     var radius by remember { mutableStateOf("") }
 
+    val trimmedName = name.trim()
+    val trimmedAddress = address.trim()
+    val trimmedRadius = radius.trim()
+
     val isSaveEnabled =
-        name.isNotBlank() &&
-                latitude.toDoubleOrNull() != null &&
-                longitude.toDoubleOrNull() != null &&
-                radius.toIntOrNull() != null
+        trimmedName.isNotBlank() &&
+                trimmedAddress.isNotBlank() &&
+                trimmedRadius.toIntOrNull()?.let { it > 0 } == true
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -69,17 +70,9 @@ fun AddObjectSheet(
             )
 
             OutlinedTextField(
-                value = latitude,
-                onValueChange = { latitude = it },
-                label = { Text(stringResource(R.string.object_latitude)) },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true
-            )
-
-            OutlinedTextField(
-                value = longitude,
-                onValueChange = { longitude = it },
-                label = { Text(stringResource(R.string.object_longitude)) },
+                value = address,
+                onValueChange = { address = it },
+                label = { Text(stringResource(R.string.object_address)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -96,10 +89,9 @@ fun AddObjectSheet(
                 text = stringResource(R.string.save),
                 onClick = {
                     onSave(
-                        name.trim(),
-                        latitude.trim(),
-                        longitude.trim(),
-                        radius.trim()
+                        trimmedName,
+                        trimmedAddress,
+                        trimmedRadius
                     )
                 },
                 enabled = isSaveEnabled,

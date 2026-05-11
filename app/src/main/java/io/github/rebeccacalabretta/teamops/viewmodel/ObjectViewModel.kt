@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.rebeccacalabretta.teamops.data.db.ObjectEntity
 import io.github.rebeccacalabretta.teamops.data.repository.ObjectRepository
+import io.github.rebeccacalabretta.teamops.location.AddressGeocoder
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ObjectViewModel @Inject constructor(
-    private val objectRepository: ObjectRepository
+    private val objectRepository: ObjectRepository,
+    private val addressGeocoder: AddressGeocoder
 ) : ViewModel() {
 
     val objects: StateFlow<List<ObjectEntity>> =
@@ -26,29 +28,30 @@ class ObjectViewModel @Inject constructor(
 
     fun addObject(
         name: String,
-        latitudeText: String,
-        longitudeText: String,
+        address: String,
         radiusText: String
     ) {
         val trimmedName = name.trim()
-        val latitude = latitudeText.trim().toDoubleOrNull()
-        val longitude = longitudeText.trim().toDoubleOrNull()
+        val trimmedAddress = address.trim()
         val radius = radiusText.trim().toIntOrNull()
 
         if (
             trimmedName.isBlank() ||
-            latitude == null ||
-            longitude == null ||
+            trimmedAddress.isBlank() ||
             radius == null ||
             radius <= 0
         ) return
 
         viewModelScope.launch {
+            val coordinates =
+                addressGeocoder.getCoordinates(trimmedAddress) ?: return@launch
+
             objectRepository.upsertObject(
                 ObjectEntity(
                     name = trimmedName,
-                    latitude = latitude,
-                    longitude = longitude,
+                    address = trimmedAddress,
+                    latitude = coordinates.latitude,
+                    longitude = coordinates.longitude,
                     radiusMeters = radius
                 )
             )

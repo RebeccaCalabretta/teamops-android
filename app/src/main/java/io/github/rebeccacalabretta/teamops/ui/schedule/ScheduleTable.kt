@@ -51,7 +51,7 @@ private fun ScheduleHeaderRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(4.dp)
     ) {
         ScheduleCell(
             text = stringResource(R.string.date),
@@ -90,7 +90,7 @@ private fun ScheduleRow(
             .fillMaxWidth()
             .clickable { onClick() }
             .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.04f))
-            .padding(vertical = 4.dp)
+            .padding(4.dp)
     ) {
         ScheduleCell(
             DateTimeFormat.formatDate(entry.date),
