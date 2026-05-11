@@ -9,11 +9,8 @@ import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDataSource
 import io.github.rebeccacalabretta.teamops.data.remote.PunchSessionDocument
 import io.github.rebeccacalabretta.teamops.util.geo.GeoDistance
 import io.github.rebeccacalabretta.teamops.util.time.MonthKey
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import java.time.YearMonth
 import java.time.ZoneId
 
@@ -173,10 +170,9 @@ class PunchRepositoryImpl(
 
             Log.d("PunchSync", "mapped entities=${entities.size}")
 
-            CoroutineScope(Dispatchers.IO).launch {
-                dao.insertAllReplace(entities)
-                Log.d("PunchSync", "insertAllReplace finished")
-            }
+            dao.insertAllReplace(entities)
+
+            Log.d("PunchSync", "insertAllReplace finished")
 
             entities
         }
