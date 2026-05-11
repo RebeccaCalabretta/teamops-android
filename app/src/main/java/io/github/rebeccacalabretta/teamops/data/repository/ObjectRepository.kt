@@ -6,5 +6,7 @@ import kotlinx.coroutines.flow.Flow
 interface ObjectRepository {
     fun getAllObjects(): Flow<List<ObjectEntity>>
 
+    suspend fun upsertObject(objectEntity: ObjectEntity)
+
     suspend fun seedIfEmpty()
 }

@@ -12,6 +12,7 @@ import androidx.navigation.toRoute
 import io.github.rebeccacalabretta.teamops.data.model.EmployeeRole
 import io.github.rebeccacalabretta.teamops.ui.employee.EmployeeScreen
 import io.github.rebeccacalabretta.teamops.ui.employeeSession.EmployeeSessionScreen
+import io.github.rebeccacalabretta.teamops.ui.objects.ObjectScreen
 import io.github.rebeccacalabretta.teamops.ui.punch.PunchScreen
 import io.github.rebeccacalabretta.teamops.ui.schedule.ScheduleScreen
 import io.github.rebeccacalabretta.teamops.ui.vacation.VacationScreen
@@ -119,6 +120,18 @@ fun AppNavHost(
                         navController.navigate(VacationRoute(employeeId))
                     }
                 }
+            )
+        }
+
+        composable<ObjectRoute> {
+
+            if (currentRole == EmployeeRole.WORKER) {
+                navController.popBackStack()
+                return@composable
+            }
+
+            ObjectScreen(
+                currentRole = currentRole
             )
         }
 

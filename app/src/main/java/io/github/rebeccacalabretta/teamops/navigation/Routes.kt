@@ -11,6 +11,9 @@ data class PunchRoute(
 data object EmployeeRoute
 
 @Serializable
+data object ObjectRoute
+
+@Serializable
 data class ScheduleRoute(
     val employeeId: String
 )

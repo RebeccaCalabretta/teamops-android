@@ -44,6 +44,15 @@ object RoleMenuConfig {
             )
         ),
         MenuItem(
+            id = "objects",
+            title = "Objekte",
+            allowedRoles = setOf(
+                EmployeeRole.MANAGER,
+                EmployeeRole.HR,
+                EmployeeRole.ADMIN
+            )
+        ),
+        MenuItem(
             id = "logout",
             title = "Abmelden",
             allowedRoles = setOf(

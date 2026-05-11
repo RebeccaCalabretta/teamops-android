@@ -12,6 +12,9 @@ class ObjectRepositoryImpl(
     override fun getAllObjects(): Flow<List<ObjectEntity>> =
         dao.getAllObjects()
 
+    override suspend fun upsertObject(objectEntity: ObjectEntity) =
+        dao.upsertObject(objectEntity)
+
     override suspend fun seedIfEmpty() {
         val existing = dao.getAllObjects().first()
         if (existing.isEmpty()) {
