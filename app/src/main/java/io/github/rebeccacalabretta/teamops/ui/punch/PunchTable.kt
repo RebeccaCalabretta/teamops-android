@@ -20,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 
@@ -93,7 +95,7 @@ fun SessionHeaderRow(
             .padding(4.dp)
     ) {
         Cell(
-            text = "Datum",
+            text = stringResource(R.string.date),
             modifier = Modifier.weight(dateWeight),
             align = TextAlign.Start,
             isHeader = true
@@ -101,7 +103,7 @@ fun SessionHeaderRow(
 
         if (showObjectColumn) {
             Cell(
-                text = "Objekt",
+                text = stringResource(R.string.object_label),
                 modifier = Modifier.weight(objectWeight),
                 align = TextAlign.Start,
                 isHeader = true
@@ -109,21 +111,21 @@ fun SessionHeaderRow(
         }
 
         Cell(
-            text = "Start",
+            text = stringResource(R.string.start),
             modifier = Modifier.weight(startWeight),
             align = TextAlign.Center,
             isHeader = true
         )
 
         Cell(
-            text = "Ende",
+            text = stringResource(R.string.end),
             modifier = Modifier.weight(endWeight),
             align = TextAlign.Center,
             isHeader = true
         )
 
         Cell(
-            text = "Dauer",
+            text = stringResource(R.string.duration),
             modifier = Modifier.weight(durationWeight),
             align = TextAlign.End,
             isHeader = true
@@ -202,7 +204,7 @@ fun SessionRow(
         if (canEdit) {
             Icon(
                 imageVector = Icons.Outlined.Edit,
-                contentDescription = "Edit",
+                contentDescription = stringResource(R.string.edit),
                 modifier = Modifier
                     .width(40.dp)
                     .size(16.dp)

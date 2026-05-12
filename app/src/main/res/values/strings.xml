@@ -7,7 +7,10 @@
     <string name="date">Datum</string>
     <string name="start">Start</string>
     <string name="end">Ende</string>
+    <string name="duration">Dauer</string>
+    <string name="edit">Bearbeiten</string>
     <string name="status">Status</string>
+    <string name="object_label">Objekt</string>
     <string name="schedule">Arbeitsplan</string>
     <string name="vacation">Urlaub</string>
     <string name="employees">Mitarbeiter</string>
@@ -53,7 +56,6 @@
     <!-- ScheduleScreen -->
     <string name="schedule_new_title">Neuer Eintrag</string>
     <string name="schedule_edit_title">Eintrag bearbeiten</string>
-    <string name="schedule_object_label">Objekt</string>
     <string name="schedule_add_button">Eintrag hinzufügen</string>
     <string name="schedule_delete">Eintrag löschen</string>
     <string name="schedule_start">Startzeit</string>
@@ -86,4 +88,22 @@
     <string name="object_address">Adresse</string>
     <string name="object_radius">Radius in Metern</string>
     <string name="no_objects">Keine Objekte vorhanden</string>
+    <!-- Session Dialog -->
+    <string name="session_edit_title">Session bearbeiten</string>
+    <string name="session_start_time">Startzeit</string>
+    <string name="session_end_time">Endzeit</string>
+    <string name="session_error_invalid_start_time">Bitte Startzeit im Format HH:mm eingeben (z. B. 08:30).</string>
+    <string name="session_error_invalid_end_time">Bitte Endzeit im Format HH:mm eingeben (z. B. 17:15).</string>
+    <string name="session_error_start_before_end">Startzeit muss vor Endzeit liegen.</string>
+    <!-- Checkout -->
+    <string name="checkout_confirm_title">Checkout bestätigen</string>
+    <string name="checkout_confirm_message">Willst du wirklich ausstempeln?</string>
+    <string name="checkout_confirm">Check-out</string>
+    <!-- Accessibility -->
+    <string name="content_description_back">Zurück</string>
+    <string name="content_description_menu">Menü</string>
+    <string name="content_description_previous_month">Vorheriger Monat</string>
+    <string name="content_description_next_month">Nächster Monat</string>
+    <string name="content_description_employee_actions">Mitarbeiteraktionen</string>
+    <string name="content_description_edit">Bearbeiten</string>
 </resources>

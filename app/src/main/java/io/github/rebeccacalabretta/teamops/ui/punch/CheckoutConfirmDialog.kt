@@ -4,6 +4,9 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import io.github.rebeccacalabretta.teamops.R
+
 
 @Composable
 fun CheckoutConfirmDialog(
@@ -12,16 +15,20 @@ fun CheckoutConfirmDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Checkout bestätigen") },
-        text = { Text("Willst du wirklich ausstempeln?") },
+        title = {
+            Text(text = stringResource(R.string.checkout_confirm_title))
+        },
+        text = {
+            Text(text = stringResource(R.string.checkout_confirm_message))
+        },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text("Check-out")
+                Text(text = stringResource(R.string.checkout_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Abbrechen")
+                Text(text = stringResource(R.string.cancel))
             }
         }
     )

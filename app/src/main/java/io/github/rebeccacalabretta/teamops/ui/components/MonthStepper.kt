@@ -12,6 +12,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.util.time.MonthKey
 import java.time.YearMonth
 
@@ -31,7 +33,7 @@ fun MonthStepper(
         IconButton(onClick = onPrevMonth) {
             Icon(
                 imageVector = Icons.Default.ChevronLeft,
-                contentDescription = "Vorheriger Monat"
+                contentDescription = stringResource(R.string.content_description_previous_month)
             )
         }
 
@@ -43,7 +45,7 @@ fun MonthStepper(
         IconButton(onClick = onNextMonth) {
             Icon(
                 imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Nächster Monat"
+                contentDescription = stringResource(R.string.content_description_next_month)
             )
         }
     }

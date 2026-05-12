@@ -57,7 +57,7 @@ fun EmployeeRow(
         )
         Icon(
             imageVector = Icons.Outlined.MoreVert,
-            contentDescription = "Employee actions",
+            contentDescription = stringResource(R.string.content_description_employee_actions),
             modifier = Modifier
                 .size(20.dp)
                 .clickable { onToggleExpand() }

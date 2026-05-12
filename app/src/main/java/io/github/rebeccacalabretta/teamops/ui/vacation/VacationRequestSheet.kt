@@ -95,7 +95,8 @@ fun VacationRequestSheet(
                 onClick = { showStartPicker = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("$startLabel: ${DateTimeFormat.formatFullDate(startDate)}")            }
+                Text("$startLabel: ${DateTimeFormat.formatFullDate(startDate)}")
+            }
 
             TextButton(
                 onClick = { showEndPicker = true },

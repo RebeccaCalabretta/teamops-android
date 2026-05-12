@@ -11,6 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
+import io.github.rebeccacalabretta.teamops.R
 import io.github.rebeccacalabretta.teamops.ui.model.SessionRowUiModel
 import io.github.rebeccacalabretta.teamops.util.time.DateTimeFormat
 import java.time.LocalTime
@@ -31,9 +33,16 @@ fun EditSessionDialog(
     }
     var errorText by remember { mutableStateOf<String?>(null) }
 
+    val invalidStartTimeText =
+        stringResource(R.string.session_error_invalid_start_time)
+    val invalidEndTimeText =
+        stringResource(R.string.session_error_invalid_end_time)
+    val startBeforeEndText =
+        stringResource(R.string.session_error_start_before_end)
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Session bearbeiten") },
+        title = { Text(stringResource(R.string.session_edit_title)) },
         text = {
             Column {
                 OutlinedTextField(
@@ -42,7 +51,7 @@ fun EditSessionDialog(
                         startTimeText = it
                         errorText = null
                     },
-                    label = { Text("Startzeit") },
+                    label = { Text(stringResource(R.string.session_start_time)) },
                     singleLine = true
                 )
 
@@ -52,7 +61,7 @@ fun EditSessionDialog(
                         endTimeText = it
                         errorText = null
                     },
-                    label = { Text("Endzeit") },
+                    label = { Text(stringResource(R.string.session_end_time)) },
                     singleLine = true
                 )
 
@@ -68,7 +77,13 @@ fun EditSessionDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val error = validateStartEnd(startTimeText, endTimeText)
+                    val error = validateStartEnd(
+                        startText = startTimeText,
+                        endText = endTimeText,
+                        invalidStartTimeText = invalidStartTimeText,
+                        invalidEndTimeText = invalidEndTimeText,
+                        startBeforeEndText = startBeforeEndText
+                    )
                     if (error != null) {
                         errorText = error
                     } else {
@@ -76,12 +91,12 @@ fun EditSessionDialog(
                     }
                 }
             ) {
-                Text("Speichern")
+                Text(stringResource(R.string.save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Abbrechen")
+                Text(stringResource(R.string.cancel))
             }
         }
     )
@@ -96,11 +111,20 @@ private fun parseTimeOrNull(input: String): LocalTime? =
         null
     }
 
-private fun validateStartEnd(startText: String, endText: String): String? {
+private fun validateStartEnd(
+    startText: String,
+    endText: String,
+    invalidStartTimeText: String,
+    invalidEndTimeText: String,
+    startBeforeEndText: String
+): String? {
     val start = parseTimeOrNull(startText)
-        ?: return "Bitte Startzeit im Format HH:mm eingeben (z. B. 08:30)."
-    val end =
-        parseTimeOrNull(endText) ?: return "Bitte Endzeit im Format HH:mm eingeben (z. B. 17:15)."
-    if (!start.isBefore(end)) return "Startzeit muss vor Endzeit liegen."
+        ?: return invalidStartTimeText
+
+    val end = parseTimeOrNull(endText)
+        ?: return invalidEndTimeText
+
+    if (!start.isBefore(end)) return startBeforeEndText
+
     return null
 }
